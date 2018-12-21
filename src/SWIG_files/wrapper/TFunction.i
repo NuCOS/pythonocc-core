@@ -17,7 +17,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") TFunction
+%define TFUNCTIONDOCSTRING
+"algorithms. Each function contains the ID of a function driver."
+%enddef
+%module (package="OCC.Core", docstring=TFUNCTIONDOCSTRING) TFunction
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,24 +34,10 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include TFunction_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
@@ -63,6 +52,16 @@ enum TFunction_ExecutionStatus {
 };
 
 /* end public enums declaration */
+
+%wrap_handle(TFunction_DataMapNodeOfDataMapOfGUIDDriver)
+%wrap_handle(TFunction_DataMapNodeOfDataMapOfLabelListOfLabel)
+%wrap_handle(TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel)
+%wrap_handle(TFunction_Driver)
+%wrap_handle(TFunction_DriverTable)
+%wrap_handle(TFunction_Function)
+%wrap_handle(TFunction_GraphNode)
+%wrap_handle(TFunction_HArray1OfDataMapOfGUIDDriver)
+%wrap_handle(TFunction_Scope)
 
 %nodefaultctor TFunction_Array1OfDataMapOfGUIDDriver;
 class TFunction_Array1OfDataMapOfGUIDDriver {
@@ -146,6 +145,41 @@ class TFunction_Array1OfDataMapOfGUIDDriver {
 };
 
 
+
+%extend TFunction_Array1OfDataMapOfGUIDDriver {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend TFunction_Array1OfDataMapOfGUIDDriver {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -245,51 +279,7 @@ class TFunction_DataMapNodeOfDataMapOfGUIDDriver : public TCollection_MapNode {
 };
 
 
-%extend TFunction_DataMapNodeOfDataMapOfGUIDDriver {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_TFunction_DataMapNodeOfDataMapOfGUIDDriver(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_TFunction_DataMapNodeOfDataMapOfGUIDDriver::Handle_TFunction_DataMapNodeOfDataMapOfGUIDDriver %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_TFunction_DataMapNodeOfDataMapOfGUIDDriver;
-class Handle_TFunction_DataMapNodeOfDataMapOfGUIDDriver : public Handle_TCollection_MapNode {
-
-    public:
-        // constructors
-        Handle_TFunction_DataMapNodeOfDataMapOfGUIDDriver();
-        Handle_TFunction_DataMapNodeOfDataMapOfGUIDDriver(const Handle_TFunction_DataMapNodeOfDataMapOfGUIDDriver &aHandle);
-        Handle_TFunction_DataMapNodeOfDataMapOfGUIDDriver(const TFunction_DataMapNodeOfDataMapOfGUIDDriver *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_TFunction_DataMapNodeOfDataMapOfGUIDDriver DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_TFunction_DataMapNodeOfDataMapOfGUIDDriver {
-    TFunction_DataMapNodeOfDataMapOfGUIDDriver* _get_reference() {
-    return (TFunction_DataMapNodeOfDataMapOfGUIDDriver*)$self->Access();
-    }
-};
-
-%extend Handle_TFunction_DataMapNodeOfDataMapOfGUIDDriver {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(TFunction_DataMapNodeOfDataMapOfGUIDDriver)
 
 %extend TFunction_DataMapNodeOfDataMapOfGUIDDriver {
 	%pythoncode {
@@ -320,51 +310,7 @@ class TFunction_DataMapNodeOfDataMapOfLabelListOfLabel : public TCollection_MapN
 };
 
 
-%extend TFunction_DataMapNodeOfDataMapOfLabelListOfLabel {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_TFunction_DataMapNodeOfDataMapOfLabelListOfLabel(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_TFunction_DataMapNodeOfDataMapOfLabelListOfLabel::Handle_TFunction_DataMapNodeOfDataMapOfLabelListOfLabel %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_TFunction_DataMapNodeOfDataMapOfLabelListOfLabel;
-class Handle_TFunction_DataMapNodeOfDataMapOfLabelListOfLabel : public Handle_TCollection_MapNode {
-
-    public:
-        // constructors
-        Handle_TFunction_DataMapNodeOfDataMapOfLabelListOfLabel();
-        Handle_TFunction_DataMapNodeOfDataMapOfLabelListOfLabel(const Handle_TFunction_DataMapNodeOfDataMapOfLabelListOfLabel &aHandle);
-        Handle_TFunction_DataMapNodeOfDataMapOfLabelListOfLabel(const TFunction_DataMapNodeOfDataMapOfLabelListOfLabel *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_TFunction_DataMapNodeOfDataMapOfLabelListOfLabel DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_TFunction_DataMapNodeOfDataMapOfLabelListOfLabel {
-    TFunction_DataMapNodeOfDataMapOfLabelListOfLabel* _get_reference() {
-    return (TFunction_DataMapNodeOfDataMapOfLabelListOfLabel*)$self->Access();
-    }
-};
-
-%extend Handle_TFunction_DataMapNodeOfDataMapOfLabelListOfLabel {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(TFunction_DataMapNodeOfDataMapOfLabelListOfLabel)
 
 %extend TFunction_DataMapNodeOfDataMapOfLabelListOfLabel {
 	%pythoncode {
@@ -611,51 +557,7 @@ class TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel : public TCollection_MapN
 };
 
 
-%extend TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel::Handle_TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel;
-class Handle_TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel : public Handle_TCollection_MapNode {
-
-    public:
-        // constructors
-        Handle_TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel();
-        Handle_TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel(const Handle_TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel &aHandle);
-        Handle_TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel(const TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel {
-    TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel* _get_reference() {
-    return (TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel*)$self->Access();
-    }
-};
-
-%extend Handle_TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel)
 
 %extend TFunction_DoubleMapNodeOfDoubleMapOfIntegerLabel {
 	%pythoncode {
@@ -813,51 +715,7 @@ class TFunction_Driver : public MMgt_TShared {
 };
 
 
-%extend TFunction_Driver {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_TFunction_Driver(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_TFunction_Driver::Handle_TFunction_Driver %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_TFunction_Driver;
-class Handle_TFunction_Driver : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_TFunction_Driver();
-        Handle_TFunction_Driver(const Handle_TFunction_Driver &aHandle);
-        Handle_TFunction_Driver(const TFunction_Driver *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_TFunction_Driver DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_TFunction_Driver {
-    TFunction_Driver* _get_reference() {
-    return (TFunction_Driver*)$self->Access();
-    }
-};
-
-%extend Handle_TFunction_Driver {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(TFunction_Driver)
 
 %extend TFunction_Driver {
 	%pythoncode {
@@ -940,51 +798,7 @@ class TFunction_DriverTable : public MMgt_TShared {
 };
 
 
-%extend TFunction_DriverTable {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_TFunction_DriverTable(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_TFunction_DriverTable::Handle_TFunction_DriverTable %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_TFunction_DriverTable;
-class Handle_TFunction_DriverTable : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_TFunction_DriverTable();
-        Handle_TFunction_DriverTable(const Handle_TFunction_DriverTable &aHandle);
-        Handle_TFunction_DriverTable(const TFunction_DriverTable *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_TFunction_DriverTable DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_TFunction_DriverTable {
-    TFunction_DriverTable* _get_reference() {
-    return (TFunction_DriverTable*)$self->Access();
-    }
-};
-
-%extend Handle_TFunction_DriverTable {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(TFunction_DriverTable)
 
 %extend TFunction_DriverTable {
 	%pythoncode {
@@ -1095,51 +909,7 @@ class TFunction_Function : public TDF_Attribute {
         };
 
 
-%extend TFunction_Function {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_TFunction_Function(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_TFunction_Function::Handle_TFunction_Function %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_TFunction_Function;
-class Handle_TFunction_Function : public Handle_TDF_Attribute {
-
-    public:
-        // constructors
-        Handle_TFunction_Function();
-        Handle_TFunction_Function(const Handle_TFunction_Function &aHandle);
-        Handle_TFunction_Function(const TFunction_Function *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_TFunction_Function DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_TFunction_Function {
-    TFunction_Function* _get_reference() {
-    return (TFunction_Function*)$self->Access();
-    }
-};
-
-%extend Handle_TFunction_Function {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(TFunction_Function)
 
 %extend TFunction_Function {
 	%pythoncode {
@@ -1308,51 +1078,7 @@ class TFunction_GraphNode : public TDF_Attribute {
         };
 
 
-%extend TFunction_GraphNode {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_TFunction_GraphNode(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_TFunction_GraphNode::Handle_TFunction_GraphNode %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_TFunction_GraphNode;
-class Handle_TFunction_GraphNode : public Handle_TDF_Attribute {
-
-    public:
-        // constructors
-        Handle_TFunction_GraphNode();
-        Handle_TFunction_GraphNode(const Handle_TFunction_GraphNode &aHandle);
-        Handle_TFunction_GraphNode(const TFunction_GraphNode *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_TFunction_GraphNode DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_TFunction_GraphNode {
-    TFunction_GraphNode* _get_reference() {
-    return (TFunction_GraphNode*)$self->Access();
-    }
-};
-
-%extend Handle_TFunction_GraphNode {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(TFunction_GraphNode)
 
 %extend TFunction_GraphNode {
 	%pythoncode {
@@ -1429,52 +1155,43 @@ class TFunction_HArray1OfDataMapOfGUIDDriver : public MMgt_TShared {
 };
 
 
+%make_alias(TFunction_HArray1OfDataMapOfGUIDDriver)
+
+
 %extend TFunction_HArray1OfDataMapOfGUIDDriver {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_TFunction_HArray1OfDataMapOfGUIDDriver(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_TFunction_HArray1OfDataMapOfGUIDDriver::Handle_TFunction_HArray1OfDataMapOfGUIDDriver %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_TFunction_HArray1OfDataMapOfGUIDDriver;
-class Handle_TFunction_HArray1OfDataMapOfGUIDDriver : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_TFunction_HArray1OfDataMapOfGUIDDriver();
-        Handle_TFunction_HArray1OfDataMapOfGUIDDriver(const Handle_TFunction_HArray1OfDataMapOfGUIDDriver &aHandle);
-        Handle_TFunction_HArray1OfDataMapOfGUIDDriver(const TFunction_HArray1OfDataMapOfGUIDDriver *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_TFunction_HArray1OfDataMapOfGUIDDriver DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_TFunction_HArray1OfDataMapOfGUIDDriver {
-    TFunction_HArray1OfDataMapOfGUIDDriver* _get_reference() {
-    return (TFunction_HArray1OfDataMapOfGUIDDriver*)$self->Access();
-    }
-};
-
-%extend Handle_TFunction_HArray1OfDataMapOfGUIDDriver {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend TFunction_HArray1OfDataMapOfGUIDDriver {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -1968,51 +1685,7 @@ class TFunction_Scope : public TDF_Attribute {
 };
 
 
-%extend TFunction_Scope {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_TFunction_Scope(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_TFunction_Scope::Handle_TFunction_Scope %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_TFunction_Scope;
-class Handle_TFunction_Scope : public Handle_TDF_Attribute {
-
-    public:
-        // constructors
-        Handle_TFunction_Scope();
-        Handle_TFunction_Scope(const Handle_TFunction_Scope &aHandle);
-        Handle_TFunction_Scope(const TFunction_Scope *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_TFunction_Scope DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_TFunction_Scope {
-    TFunction_Scope* _get_reference() {
-    return (TFunction_Scope*)$self->Access();
-    }
-};
-
-%extend Handle_TFunction_Scope {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(TFunction_Scope)
 
 %extend TFunction_Scope {
 	%pythoncode {

@@ -17,7 +17,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") IntWalk
+%define INTWALKDOCSTRING
+"This package defines the 'walking' (marching) algorithmes
+for the intersection between two surfaces.
+One of the surfaces is a parametric one.
+If the other is an implicit one, the 'IWalking' class will
+be used.
+If both surfaces are parametric, the 'PWalking' class will
+be used.
+
+-Level: Internal
+
+All the methods of the classes of this package are Internal.
+"
+%enddef
+%module (package="OCC.Core", docstring=INTWALKDOCSTRING) IntWalk
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,24 +45,10 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include IntWalk_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
@@ -63,6 +63,7 @@ enum IntWalk_StatusDeflection {
 };
 
 /* end public enums declaration */
+
 
 %nodefaultctor IntWalk_PWalking;
 class IntWalk_PWalking {

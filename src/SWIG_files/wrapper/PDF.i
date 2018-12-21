@@ -17,7 +17,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") PDF
+%define PDFDOCSTRING
+"This pakage is the persistent equivalent of
+TDF. It describes persistent classes used to store
+a TDF structure into a Database.
+
+"
+%enddef
+%module (package="OCC.Core", docstring=PDFDOCSTRING) PDF
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,30 +38,17 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include PDF_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
 
 /* public enums */
 /* end public enums declaration */
+
 
 %nodefaultctor PDF_Attribute;
 class PDF_Attribute : public Standard_Persistent {
@@ -71,52 +65,6 @@ class PDF_Attribute : public Standard_Persistent {
 		 PDF_Attribute ();
 };
 
-
-%extend PDF_Attribute {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_PDF_Attribute(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_PDF_Attribute::Handle_PDF_Attribute %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_PDF_Attribute;
-class Handle_PDF_Attribute : public Handle_Standard_Persistent {
-
-    public:
-        // constructors
-        Handle_PDF_Attribute();
-        Handle_PDF_Attribute(const Handle_PDF_Attribute &aHandle);
-        Handle_PDF_Attribute(const PDF_Attribute *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_PDF_Attribute DownCast(const Handle_Standard_Persistent &AnObject);
-
-};
-%extend Handle_PDF_Attribute {
-    PDF_Attribute* _get_reference() {
-    return (PDF_Attribute*)$self->Access();
-    }
-};
-
-%extend Handle_PDF_Attribute {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
 
 %extend PDF_Attribute {
 	%pythoncode {
@@ -211,52 +159,6 @@ class PDF_Data : public Standard_Persistent {
 
 %extend PDF_Data {
 	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_PDF_Data(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_PDF_Data::Handle_PDF_Data %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_PDF_Data;
-class Handle_PDF_Data : public Handle_Standard_Persistent {
-
-    public:
-        // constructors
-        Handle_PDF_Data();
-        Handle_PDF_Data(const Handle_PDF_Data &aHandle);
-        Handle_PDF_Data(const PDF_Data *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_PDF_Data DownCast(const Handle_Standard_Persistent &AnObject);
-
-};
-%extend Handle_PDF_Data {
-    PDF_Data* _get_reference() {
-    return (PDF_Data*)$self->Access();
-    }
-};
-
-%extend Handle_PDF_Data {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
-
-%extend PDF_Data {
-	%pythoncode {
 	__repr__ = _dumps_object
 	}
 };
@@ -318,6 +220,41 @@ class PDF_FieldOfHAttributeArray1 : public DBC_BaseArray {
 };
 
 
+
+%extend PDF_FieldOfHAttributeArray1 {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend PDF_FieldOfHAttributeArray1 {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -407,52 +344,41 @@ class PDF_HAttributeArray1 : public Standard_Persistent {
 };
 
 
+
 %extend PDF_HAttributeArray1 {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_PDF_HAttributeArray1(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_PDF_HAttributeArray1::Handle_PDF_HAttributeArray1 %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_PDF_HAttributeArray1;
-class Handle_PDF_HAttributeArray1 : public Handle_Standard_Persistent {
-
-    public:
-        // constructors
-        Handle_PDF_HAttributeArray1();
-        Handle_PDF_HAttributeArray1(const Handle_PDF_HAttributeArray1 &aHandle);
-        Handle_PDF_HAttributeArray1(const PDF_HAttributeArray1 *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_PDF_HAttributeArray1 DownCast(const Handle_Standard_Persistent &AnObject);
-
-};
-%extend Handle_PDF_HAttributeArray1 {
-    PDF_HAttributeArray1* _get_reference() {
-    return (PDF_HAttributeArray1*)$self->Access();
-    }
-};
-
-%extend Handle_PDF_HAttributeArray1 {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend PDF_HAttributeArray1 {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -500,52 +426,41 @@ class PDF_VArrayNodeOfFieldOfHAttributeArray1 : public PStandard_ArrayNode {
 };
 
 
+
 %extend PDF_VArrayNodeOfFieldOfHAttributeArray1 {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_PDF_VArrayNodeOfFieldOfHAttributeArray1(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_PDF_VArrayNodeOfFieldOfHAttributeArray1::Handle_PDF_VArrayNodeOfFieldOfHAttributeArray1 %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_PDF_VArrayNodeOfFieldOfHAttributeArray1;
-class Handle_PDF_VArrayNodeOfFieldOfHAttributeArray1 : public Handle_PStandard_ArrayNode {
-
-    public:
-        // constructors
-        Handle_PDF_VArrayNodeOfFieldOfHAttributeArray1();
-        Handle_PDF_VArrayNodeOfFieldOfHAttributeArray1(const Handle_PDF_VArrayNodeOfFieldOfHAttributeArray1 &aHandle);
-        Handle_PDF_VArrayNodeOfFieldOfHAttributeArray1(const PDF_VArrayNodeOfFieldOfHAttributeArray1 *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_PDF_VArrayNodeOfFieldOfHAttributeArray1 DownCast(const Handle_Standard_Persistent &AnObject);
-
-};
-%extend Handle_PDF_VArrayNodeOfFieldOfHAttributeArray1 {
-    PDF_VArrayNodeOfFieldOfHAttributeArray1* _get_reference() {
-    return (PDF_VArrayNodeOfFieldOfHAttributeArray1*)$self->Access();
-    }
-};
-
-%extend Handle_PDF_VArrayNodeOfFieldOfHAttributeArray1 {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend PDF_VArrayNodeOfFieldOfHAttributeArray1 {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -577,6 +492,41 @@ class PDF_VArrayTNodeOfFieldOfHAttributeArray1 {
 };
 
 
+
+%extend PDF_VArrayTNodeOfFieldOfHAttributeArray1 {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend PDF_VArrayTNodeOfFieldOfHAttributeArray1 {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -626,52 +576,6 @@ class PDF_Reference : public PDF_Attribute {
 
 %extend PDF_Reference {
 	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_PDF_Reference(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_PDF_Reference::Handle_PDF_Reference %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_PDF_Reference;
-class Handle_PDF_Reference : public Handle_PDF_Attribute {
-
-    public:
-        // constructors
-        Handle_PDF_Reference();
-        Handle_PDF_Reference(const Handle_PDF_Reference &aHandle);
-        Handle_PDF_Reference(const PDF_Reference *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_PDF_Reference DownCast(const Handle_Standard_Persistent &AnObject);
-
-};
-%extend Handle_PDF_Reference {
-    PDF_Reference* _get_reference() {
-    return (PDF_Reference*)$self->Access();
-    }
-};
-
-%extend Handle_PDF_Reference {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
-
-%extend PDF_Reference {
-	%pythoncode {
 	__repr__ = _dumps_object
 	}
 };
@@ -716,52 +620,6 @@ class PDF_TagSource : public PDF_Attribute {
 		void _CSFDB_SetPDF_TagSourcemyValue (const Standard_Integer p);
 };
 
-
-%extend PDF_TagSource {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_PDF_TagSource(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_PDF_TagSource::Handle_PDF_TagSource %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_PDF_TagSource;
-class Handle_PDF_TagSource : public Handle_PDF_Attribute {
-
-    public:
-        // constructors
-        Handle_PDF_TagSource();
-        Handle_PDF_TagSource(const Handle_PDF_TagSource &aHandle);
-        Handle_PDF_TagSource(const PDF_TagSource *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_PDF_TagSource DownCast(const Handle_Standard_Persistent &AnObject);
-
-};
-%extend Handle_PDF_TagSource {
-    PDF_TagSource* _get_reference() {
-    return (PDF_TagSource*)$self->Access();
-    }
-};
-
-%extend Handle_PDF_TagSource {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
 
 %extend PDF_TagSource {
 	%pythoncode {

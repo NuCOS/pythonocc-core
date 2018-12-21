@@ -17,7 +17,22 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") AppCont
+%define APPCONTDOCSTRING
+"This package provides the least square algorithms
+necessary to approximate a set of continous curves
+or a continous surface.
+
+
+It also provides an instantiation of these algorithms
+for a class Function, a function f(t).
+The user will have to inherit class Function to use it.
+
+
+-Level : Advanced.
+All methods of all classes will be advanced.
+"
+%enddef
+%module (package="OCC.Core", docstring=APPCONTDOCSTRING) AppCont
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,30 +46,17 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include AppCont_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
 
 /* public enums */
 /* end public enums declaration */
+
 
 %nodefaultctor AppCont_Function;
 class AppCont_Function {

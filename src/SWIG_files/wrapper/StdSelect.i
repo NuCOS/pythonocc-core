@@ -17,7 +17,29 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") StdSelect
+%define STDSELECTDOCSTRING
+"The StdSelect package provides the following services
+-  the definition of selection modes for topological shapes
+-  the definition of several concrete filtertandard
+Selection2d.ap classes
+-  2D and 3D viewer selectors.
+Note that each new Interactive Object must have all
+its selection modes defined.
+Standard Classes is useful to build
+3D Selectable Objects, and to process
+3D Selections:
+
+- Implementation of View Selector for dynamic selection
+in Views from V3d.
+
+- Implementation of Tool class to decompose 3D BRep Objects
+into sensitive Primitives for every desired mode of selection
+(selection of vertex,edges,wires,faces,...)
+
+- Implementation of dedicated Sensitives Entities:
+Text for 2D Views (linked to Specific 2D projectors.)"
+%enddef
+%module (package="OCC.Core", docstring=STDSELECTDOCSTRING) StdSelect
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,44 +53,23 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include StdSelect_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
 
 /* public enums */
-enum StdSelect_DisplayMode {
-	StdSelect_DM_Wireframe = 0,
-	StdSelect_DM_Shading = 1,
-	StdSelect_DM_HLR = 2,
+enum StdSelect_TypeOfResult {
+	StdSelect_TOR_SIMPLE = 0,
+	StdSelect_TOR_MULTIPLE = 1,
 };
 
 enum StdSelect_SensitivityMode {
 	StdSelect_SM_WINDOW = 0,
 	StdSelect_SM_VIEW = 1,
-};
-
-enum StdSelect_TypeOfEdge {
-	StdSelect_AnyEdge = 0,
-	StdSelect_Line = 1,
-	StdSelect_Circle = 2,
 };
 
 enum StdSelect_TypeOfFace {
@@ -81,9 +82,16 @@ enum StdSelect_TypeOfFace {
 	StdSelect_Cone = 6,
 };
 
-enum StdSelect_TypeOfResult {
-	StdSelect_TOR_SIMPLE = 0,
-	StdSelect_TOR_MULTIPLE = 1,
+enum StdSelect_TypeOfEdge {
+	StdSelect_AnyEdge = 0,
+	StdSelect_Line = 1,
+	StdSelect_Circle = 2,
+};
+
+enum StdSelect_DisplayMode {
+	StdSelect_DM_Wireframe = 0,
+	StdSelect_DM_Shading = 1,
+	StdSelect_DM_HLR = 2,
 };
 
 /* end public enums declaration */

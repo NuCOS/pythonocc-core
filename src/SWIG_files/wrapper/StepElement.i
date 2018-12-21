@@ -17,7 +17,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") StepElement
+%define STEPELEMENTDOCSTRING
+""
+%enddef
+%module (package="OCC.Core", docstring=STEPELEMENTDOCSTRING) StepElement
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,36 +34,28 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include StepElement_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
 
 /* public enums */
+enum StepElement_ElementVolume {
+	StepElement_Volume = 0,
+};
+
 enum StepElement_CurveEdge {
 	StepElement_ElementEdge = 0,
 };
 
-enum StepElement_Element2dShape {
-	StepElement_Quadrilateral = 0,
-	StepElement_Triangle = 1,
+enum StepElement_Volume3dElementShape {
+	StepElement_Hexahedron = 0,
+	StepElement_Wedge = 1,
+	StepElement_Tetrahedron = 2,
+	StepElement_Pyramid = 3,
 };
 
 enum StepElement_ElementOrder {
@@ -69,8 +64,9 @@ enum StepElement_ElementOrder {
 	StepElement_Cubic = 2,
 };
 
-enum StepElement_ElementVolume {
-	StepElement_Volume = 0,
+enum StepElement_Element2dShape {
+	StepElement_Quadrilateral = 0,
+	StepElement_Triangle = 1,
 };
 
 enum StepElement_EnumeratedCurveElementFreedom {
@@ -84,14 +80,8 @@ enum StepElement_EnumeratedCurveElementFreedom {
 	StepElement_None = 7,
 };
 
-enum StepElement_EnumeratedCurveElementPurpose {
-	StepElement_Axial = 0,
-	StepElement_YYBending = 1,
-	StepElement_ZZBending = 2,
-	StepElement_Torsion = 3,
-	StepElement_XYShear = 4,
-	StepElement_XZShear = 5,
-	StepElement_Warping = 6,
+enum StepElement_EnumeratedVolumeElementPurpose {
+	StepElement_StressDisplacement = 0,
 };
 
 enum StepElement_EnumeratedSurfaceElementPurpose {
@@ -102,22 +92,62 @@ enum StepElement_EnumeratedSurfaceElementPurpose {
 	StepElement_NormalToPlaneShear = 4,
 };
 
-enum StepElement_EnumeratedVolumeElementPurpose {
-	StepElement_StressDisplacement = 0,
-};
-
 enum StepElement_UnspecifiedValue {
 	StepElement_Unspecified = 0,
 };
 
-enum StepElement_Volume3dElementShape {
-	StepElement_Hexahedron = 0,
-	StepElement_Wedge = 1,
-	StepElement_Tetrahedron = 2,
-	StepElement_Pyramid = 3,
+enum StepElement_EnumeratedCurveElementPurpose {
+	StepElement_Axial = 0,
+	StepElement_YYBending = 1,
+	StepElement_ZZBending = 2,
+	StepElement_Torsion = 3,
+	StepElement_XYShear = 4,
+	StepElement_XZShear = 5,
+	StepElement_Warping = 6,
 };
 
 /* end public enums declaration */
+
+%wrap_handle(StepElement_AnalysisItemWithinRepresentation)
+%wrap_handle(StepElement_CurveElementEndReleasePacket)
+%wrap_handle(StepElement_CurveElementFreedomMember)
+%wrap_handle(StepElement_CurveElementPurposeMember)
+%wrap_handle(StepElement_CurveElementSectionDefinition)
+%wrap_handle(StepElement_ElementAspectMember)
+%wrap_handle(StepElement_ElementDescriptor)
+%wrap_handle(StepElement_ElementMaterial)
+%wrap_handle(StepElement_HArray1OfCurveElementEndReleasePacket)
+%wrap_handle(StepElement_HArray1OfCurveElementSectionDefinition)
+%wrap_handle(StepElement_HArray1OfHSequenceOfCurveElementPurposeMember)
+%wrap_handle(StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember)
+%wrap_handle(StepElement_HArray1OfMeasureOrUnspecifiedValue)
+%wrap_handle(StepElement_HArray1OfSurfaceSection)
+%wrap_handle(StepElement_HArray1OfVolumeElementPurpose)
+%wrap_handle(StepElement_HArray1OfVolumeElementPurposeMember)
+%wrap_handle(StepElement_HArray2OfCurveElementPurposeMember)
+%wrap_handle(StepElement_HArray2OfSurfaceElementPurpose)
+%wrap_handle(StepElement_HArray2OfSurfaceElementPurposeMember)
+%wrap_handle(StepElement_HSequenceOfCurveElementPurposeMember)
+%wrap_handle(StepElement_HSequenceOfCurveElementSectionDefinition)
+%wrap_handle(StepElement_HSequenceOfElementMaterial)
+%wrap_handle(StepElement_HSequenceOfSurfaceElementPurposeMember)
+%wrap_handle(StepElement_MeasureOrUnspecifiedValueMember)
+%wrap_handle(StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember)
+%wrap_handle(StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition)
+%wrap_handle(StepElement_SequenceNodeOfSequenceOfElementMaterial)
+%wrap_handle(StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember)
+%wrap_handle(StepElement_SurfaceElementProperty)
+%wrap_handle(StepElement_SurfaceElementPurposeMember)
+%wrap_handle(StepElement_SurfaceSection)
+%wrap_handle(StepElement_SurfaceSectionField)
+%wrap_handle(StepElement_VolumeElementPurposeMember)
+%wrap_handle(StepElement_Curve3dElementDescriptor)
+%wrap_handle(StepElement_CurveElementSectionDerivedDefinitions)
+%wrap_handle(StepElement_Surface3dElementDescriptor)
+%wrap_handle(StepElement_SurfaceSectionFieldConstant)
+%wrap_handle(StepElement_SurfaceSectionFieldVarying)
+%wrap_handle(StepElement_UniformSurfaceSection)
+%wrap_handle(StepElement_Volume3dElementDescriptor)
 
 %nodefaultctor StepElement_AnalysisItemWithinRepresentation;
 class StepElement_AnalysisItemWithinRepresentation : public MMgt_TShared {
@@ -201,51 +231,7 @@ class StepElement_AnalysisItemWithinRepresentation : public MMgt_TShared {
 };
 
 
-%extend StepElement_AnalysisItemWithinRepresentation {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_AnalysisItemWithinRepresentation(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_AnalysisItemWithinRepresentation::Handle_StepElement_AnalysisItemWithinRepresentation %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_AnalysisItemWithinRepresentation;
-class Handle_StepElement_AnalysisItemWithinRepresentation : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_AnalysisItemWithinRepresentation();
-        Handle_StepElement_AnalysisItemWithinRepresentation(const Handle_StepElement_AnalysisItemWithinRepresentation &aHandle);
-        Handle_StepElement_AnalysisItemWithinRepresentation(const StepElement_AnalysisItemWithinRepresentation *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_AnalysisItemWithinRepresentation DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_AnalysisItemWithinRepresentation {
-    StepElement_AnalysisItemWithinRepresentation* _get_reference() {
-    return (StepElement_AnalysisItemWithinRepresentation*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_AnalysisItemWithinRepresentation {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_AnalysisItemWithinRepresentation)
 
 %extend StepElement_AnalysisItemWithinRepresentation {
 	%pythoncode {
@@ -334,6 +320,41 @@ class StepElement_Array1OfCurveElementEndReleasePacket {
 };
 
 
+
+%extend StepElement_Array1OfCurveElementEndReleasePacket {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend StepElement_Array1OfCurveElementEndReleasePacket {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -421,6 +442,41 @@ class StepElement_Array1OfCurveElementSectionDefinition {
 };
 
 
+
+%extend StepElement_Array1OfCurveElementSectionDefinition {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend StepElement_Array1OfCurveElementSectionDefinition {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -508,6 +564,41 @@ class StepElement_Array1OfHSequenceOfCurveElementPurposeMember {
 };
 
 
+
+%extend StepElement_Array1OfHSequenceOfCurveElementPurposeMember {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend StepElement_Array1OfHSequenceOfCurveElementPurposeMember {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -595,6 +686,41 @@ class StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember {
 };
 
 
+
+%extend StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend StepElement_Array1OfHSequenceOfSurfaceElementPurposeMember {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -682,6 +808,41 @@ class StepElement_Array1OfMeasureOrUnspecifiedValue {
 };
 
 
+
+%extend StepElement_Array1OfMeasureOrUnspecifiedValue {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend StepElement_Array1OfMeasureOrUnspecifiedValue {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -769,6 +930,41 @@ class StepElement_Array1OfSurfaceSection {
 };
 
 
+
+%extend StepElement_Array1OfSurfaceSection {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend StepElement_Array1OfSurfaceSection {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -856,6 +1052,41 @@ class StepElement_Array1OfVolumeElementPurpose {
 };
 
 
+
+%extend StepElement_Array1OfVolumeElementPurpose {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend StepElement_Array1OfVolumeElementPurpose {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -943,6 +1174,41 @@ class StepElement_Array1OfVolumeElementPurposeMember {
 };
 
 
+
+%extend StepElement_Array1OfVolumeElementPurposeMember {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend StepElement_Array1OfVolumeElementPurposeMember {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -1325,51 +1591,7 @@ class StepElement_CurveElementEndReleasePacket : public MMgt_TShared {
 };
 
 
-%extend StepElement_CurveElementEndReleasePacket {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_CurveElementEndReleasePacket(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_CurveElementEndReleasePacket::Handle_StepElement_CurveElementEndReleasePacket %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_CurveElementEndReleasePacket;
-class Handle_StepElement_CurveElementEndReleasePacket : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_CurveElementEndReleasePacket();
-        Handle_StepElement_CurveElementEndReleasePacket(const Handle_StepElement_CurveElementEndReleasePacket &aHandle);
-        Handle_StepElement_CurveElementEndReleasePacket(const StepElement_CurveElementEndReleasePacket *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_CurveElementEndReleasePacket DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_CurveElementEndReleasePacket {
-    StepElement_CurveElementEndReleasePacket* _get_reference() {
-    return (StepElement_CurveElementEndReleasePacket*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_CurveElementEndReleasePacket {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_CurveElementEndReleasePacket)
 
 %extend StepElement_CurveElementEndReleasePacket {
 	%pythoncode {
@@ -1483,51 +1705,7 @@ class StepElement_CurveElementFreedomMember : public StepData_SelectNamed {
 };
 
 
-%extend StepElement_CurveElementFreedomMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_CurveElementFreedomMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_CurveElementFreedomMember::Handle_StepElement_CurveElementFreedomMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_CurveElementFreedomMember;
-class Handle_StepElement_CurveElementFreedomMember : public Handle_StepData_SelectNamed {
-
-    public:
-        // constructors
-        Handle_StepElement_CurveElementFreedomMember();
-        Handle_StepElement_CurveElementFreedomMember(const Handle_StepElement_CurveElementFreedomMember &aHandle);
-        Handle_StepElement_CurveElementFreedomMember(const StepElement_CurveElementFreedomMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_CurveElementFreedomMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_CurveElementFreedomMember {
-    StepElement_CurveElementFreedomMember* _get_reference() {
-    return (StepElement_CurveElementFreedomMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_CurveElementFreedomMember {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_CurveElementFreedomMember)
 
 %extend StepElement_CurveElementFreedomMember {
 	%pythoncode {
@@ -1641,51 +1819,7 @@ class StepElement_CurveElementPurposeMember : public StepData_SelectNamed {
 };
 
 
-%extend StepElement_CurveElementPurposeMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_CurveElementPurposeMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_CurveElementPurposeMember::Handle_StepElement_CurveElementPurposeMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_CurveElementPurposeMember;
-class Handle_StepElement_CurveElementPurposeMember : public Handle_StepData_SelectNamed {
-
-    public:
-        // constructors
-        Handle_StepElement_CurveElementPurposeMember();
-        Handle_StepElement_CurveElementPurposeMember(const Handle_StepElement_CurveElementPurposeMember &aHandle);
-        Handle_StepElement_CurveElementPurposeMember(const StepElement_CurveElementPurposeMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_CurveElementPurposeMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_CurveElementPurposeMember {
-    StepElement_CurveElementPurposeMember* _get_reference() {
-    return (StepElement_CurveElementPurposeMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_CurveElementPurposeMember {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_CurveElementPurposeMember)
 
 %extend StepElement_CurveElementPurposeMember {
 	%pythoncode {
@@ -1742,51 +1876,7 @@ class StepElement_CurveElementSectionDefinition : public MMgt_TShared {
 };
 
 
-%extend StepElement_CurveElementSectionDefinition {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_CurveElementSectionDefinition(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_CurveElementSectionDefinition::Handle_StepElement_CurveElementSectionDefinition %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_CurveElementSectionDefinition;
-class Handle_StepElement_CurveElementSectionDefinition : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_CurveElementSectionDefinition();
-        Handle_StepElement_CurveElementSectionDefinition(const Handle_StepElement_CurveElementSectionDefinition &aHandle);
-        Handle_StepElement_CurveElementSectionDefinition(const StepElement_CurveElementSectionDefinition *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_CurveElementSectionDefinition DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_CurveElementSectionDefinition {
-    StepElement_CurveElementSectionDefinition* _get_reference() {
-    return (StepElement_CurveElementSectionDefinition*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_CurveElementSectionDefinition {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_CurveElementSectionDefinition)
 
 %extend StepElement_CurveElementSectionDefinition {
 	%pythoncode {
@@ -2012,51 +2102,7 @@ class StepElement_ElementAspectMember : public StepData_SelectNamed {
 };
 
 
-%extend StepElement_ElementAspectMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_ElementAspectMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_ElementAspectMember::Handle_StepElement_ElementAspectMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_ElementAspectMember;
-class Handle_StepElement_ElementAspectMember : public Handle_StepData_SelectNamed {
-
-    public:
-        // constructors
-        Handle_StepElement_ElementAspectMember();
-        Handle_StepElement_ElementAspectMember(const Handle_StepElement_ElementAspectMember &aHandle);
-        Handle_StepElement_ElementAspectMember(const StepElement_ElementAspectMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_ElementAspectMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_ElementAspectMember {
-    StepElement_ElementAspectMember* _get_reference() {
-    return (StepElement_ElementAspectMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_ElementAspectMember {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_ElementAspectMember)
 
 %extend StepElement_ElementAspectMember {
 	%pythoncode {
@@ -2113,51 +2159,7 @@ class StepElement_ElementDescriptor : public MMgt_TShared {
 };
 
 
-%extend StepElement_ElementDescriptor {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_ElementDescriptor(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_ElementDescriptor::Handle_StepElement_ElementDescriptor %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_ElementDescriptor;
-class Handle_StepElement_ElementDescriptor : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_ElementDescriptor();
-        Handle_StepElement_ElementDescriptor(const Handle_StepElement_ElementDescriptor &aHandle);
-        Handle_StepElement_ElementDescriptor(const StepElement_ElementDescriptor *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_ElementDescriptor DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_ElementDescriptor {
-    StepElement_ElementDescriptor* _get_reference() {
-    return (StepElement_ElementDescriptor*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_ElementDescriptor {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_ElementDescriptor)
 
 %extend StepElement_ElementDescriptor {
 	%pythoncode {
@@ -2230,51 +2232,7 @@ class StepElement_ElementMaterial : public MMgt_TShared {
 };
 
 
-%extend StepElement_ElementMaterial {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_ElementMaterial(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_ElementMaterial::Handle_StepElement_ElementMaterial %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_ElementMaterial;
-class Handle_StepElement_ElementMaterial : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_ElementMaterial();
-        Handle_StepElement_ElementMaterial(const Handle_StepElement_ElementMaterial &aHandle);
-        Handle_StepElement_ElementMaterial(const StepElement_ElementMaterial *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_ElementMaterial DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_ElementMaterial {
-    StepElement_ElementMaterial* _get_reference() {
-    return (StepElement_ElementMaterial*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_ElementMaterial {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_ElementMaterial)
 
 %extend StepElement_ElementMaterial {
 	%pythoncode {
@@ -2351,52 +2309,43 @@ class StepElement_HArray1OfCurveElementEndReleasePacket : public MMgt_TShared {
 };
 
 
+%make_alias(StepElement_HArray1OfCurveElementEndReleasePacket)
+
+
 %extend StepElement_HArray1OfCurveElementEndReleasePacket {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HArray1OfCurveElementEndReleasePacket(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HArray1OfCurveElementEndReleasePacket::Handle_StepElement_HArray1OfCurveElementEndReleasePacket %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HArray1OfCurveElementEndReleasePacket;
-class Handle_StepElement_HArray1OfCurveElementEndReleasePacket : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HArray1OfCurveElementEndReleasePacket();
-        Handle_StepElement_HArray1OfCurveElementEndReleasePacket(const Handle_StepElement_HArray1OfCurveElementEndReleasePacket &aHandle);
-        Handle_StepElement_HArray1OfCurveElementEndReleasePacket(const StepElement_HArray1OfCurveElementEndReleasePacket *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HArray1OfCurveElementEndReleasePacket DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HArray1OfCurveElementEndReleasePacket {
-    StepElement_HArray1OfCurveElementEndReleasePacket* _get_reference() {
-    return (StepElement_HArray1OfCurveElementEndReleasePacket*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HArray1OfCurveElementEndReleasePacket {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend StepElement_HArray1OfCurveElementEndReleasePacket {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -2472,52 +2421,43 @@ class StepElement_HArray1OfCurveElementSectionDefinition : public MMgt_TShared {
 };
 
 
+%make_alias(StepElement_HArray1OfCurveElementSectionDefinition)
+
+
 %extend StepElement_HArray1OfCurveElementSectionDefinition {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HArray1OfCurveElementSectionDefinition(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HArray1OfCurveElementSectionDefinition::Handle_StepElement_HArray1OfCurveElementSectionDefinition %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HArray1OfCurveElementSectionDefinition;
-class Handle_StepElement_HArray1OfCurveElementSectionDefinition : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HArray1OfCurveElementSectionDefinition();
-        Handle_StepElement_HArray1OfCurveElementSectionDefinition(const Handle_StepElement_HArray1OfCurveElementSectionDefinition &aHandle);
-        Handle_StepElement_HArray1OfCurveElementSectionDefinition(const StepElement_HArray1OfCurveElementSectionDefinition *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HArray1OfCurveElementSectionDefinition DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HArray1OfCurveElementSectionDefinition {
-    StepElement_HArray1OfCurveElementSectionDefinition* _get_reference() {
-    return (StepElement_HArray1OfCurveElementSectionDefinition*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HArray1OfCurveElementSectionDefinition {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend StepElement_HArray1OfCurveElementSectionDefinition {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -2593,52 +2533,43 @@ class StepElement_HArray1OfHSequenceOfCurveElementPurposeMember : public MMgt_TS
 };
 
 
+%make_alias(StepElement_HArray1OfHSequenceOfCurveElementPurposeMember)
+
+
 %extend StepElement_HArray1OfHSequenceOfCurveElementPurposeMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HArray1OfHSequenceOfCurveElementPurposeMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HArray1OfHSequenceOfCurveElementPurposeMember::Handle_StepElement_HArray1OfHSequenceOfCurveElementPurposeMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HArray1OfHSequenceOfCurveElementPurposeMember;
-class Handle_StepElement_HArray1OfHSequenceOfCurveElementPurposeMember : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HArray1OfHSequenceOfCurveElementPurposeMember();
-        Handle_StepElement_HArray1OfHSequenceOfCurveElementPurposeMember(const Handle_StepElement_HArray1OfHSequenceOfCurveElementPurposeMember &aHandle);
-        Handle_StepElement_HArray1OfHSequenceOfCurveElementPurposeMember(const StepElement_HArray1OfHSequenceOfCurveElementPurposeMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HArray1OfHSequenceOfCurveElementPurposeMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HArray1OfHSequenceOfCurveElementPurposeMember {
-    StepElement_HArray1OfHSequenceOfCurveElementPurposeMember* _get_reference() {
-    return (StepElement_HArray1OfHSequenceOfCurveElementPurposeMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HArray1OfHSequenceOfCurveElementPurposeMember {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend StepElement_HArray1OfHSequenceOfCurveElementPurposeMember {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -2714,52 +2645,43 @@ class StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember : public MMgt_
 };
 
 
+%make_alias(StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember)
+
+
 %extend StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember::Handle_StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember;
-class Handle_StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember();
-        Handle_StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember(const Handle_StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember &aHandle);
-        Handle_StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember(const StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember {
-    StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember* _get_reference() {
-    return (StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend StepElement_HArray1OfHSequenceOfSurfaceElementPurposeMember {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -2835,52 +2757,43 @@ class StepElement_HArray1OfMeasureOrUnspecifiedValue : public MMgt_TShared {
 };
 
 
+%make_alias(StepElement_HArray1OfMeasureOrUnspecifiedValue)
+
+
 %extend StepElement_HArray1OfMeasureOrUnspecifiedValue {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HArray1OfMeasureOrUnspecifiedValue(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HArray1OfMeasureOrUnspecifiedValue::Handle_StepElement_HArray1OfMeasureOrUnspecifiedValue %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HArray1OfMeasureOrUnspecifiedValue;
-class Handle_StepElement_HArray1OfMeasureOrUnspecifiedValue : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HArray1OfMeasureOrUnspecifiedValue();
-        Handle_StepElement_HArray1OfMeasureOrUnspecifiedValue(const Handle_StepElement_HArray1OfMeasureOrUnspecifiedValue &aHandle);
-        Handle_StepElement_HArray1OfMeasureOrUnspecifiedValue(const StepElement_HArray1OfMeasureOrUnspecifiedValue *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HArray1OfMeasureOrUnspecifiedValue DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HArray1OfMeasureOrUnspecifiedValue {
-    StepElement_HArray1OfMeasureOrUnspecifiedValue* _get_reference() {
-    return (StepElement_HArray1OfMeasureOrUnspecifiedValue*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HArray1OfMeasureOrUnspecifiedValue {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend StepElement_HArray1OfMeasureOrUnspecifiedValue {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -2956,52 +2869,43 @@ class StepElement_HArray1OfSurfaceSection : public MMgt_TShared {
 };
 
 
+%make_alias(StepElement_HArray1OfSurfaceSection)
+
+
 %extend StepElement_HArray1OfSurfaceSection {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HArray1OfSurfaceSection(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HArray1OfSurfaceSection::Handle_StepElement_HArray1OfSurfaceSection %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HArray1OfSurfaceSection;
-class Handle_StepElement_HArray1OfSurfaceSection : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HArray1OfSurfaceSection();
-        Handle_StepElement_HArray1OfSurfaceSection(const Handle_StepElement_HArray1OfSurfaceSection &aHandle);
-        Handle_StepElement_HArray1OfSurfaceSection(const StepElement_HArray1OfSurfaceSection *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HArray1OfSurfaceSection DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HArray1OfSurfaceSection {
-    StepElement_HArray1OfSurfaceSection* _get_reference() {
-    return (StepElement_HArray1OfSurfaceSection*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HArray1OfSurfaceSection {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend StepElement_HArray1OfSurfaceSection {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -3077,52 +2981,43 @@ class StepElement_HArray1OfVolumeElementPurpose : public MMgt_TShared {
 };
 
 
+%make_alias(StepElement_HArray1OfVolumeElementPurpose)
+
+
 %extend StepElement_HArray1OfVolumeElementPurpose {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HArray1OfVolumeElementPurpose(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HArray1OfVolumeElementPurpose::Handle_StepElement_HArray1OfVolumeElementPurpose %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HArray1OfVolumeElementPurpose;
-class Handle_StepElement_HArray1OfVolumeElementPurpose : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HArray1OfVolumeElementPurpose();
-        Handle_StepElement_HArray1OfVolumeElementPurpose(const Handle_StepElement_HArray1OfVolumeElementPurpose &aHandle);
-        Handle_StepElement_HArray1OfVolumeElementPurpose(const StepElement_HArray1OfVolumeElementPurpose *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HArray1OfVolumeElementPurpose DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HArray1OfVolumeElementPurpose {
-    StepElement_HArray1OfVolumeElementPurpose* _get_reference() {
-    return (StepElement_HArray1OfVolumeElementPurpose*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HArray1OfVolumeElementPurpose {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend StepElement_HArray1OfVolumeElementPurpose {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -3198,52 +3093,43 @@ class StepElement_HArray1OfVolumeElementPurposeMember : public MMgt_TShared {
 };
 
 
+%make_alias(StepElement_HArray1OfVolumeElementPurposeMember)
+
+
 %extend StepElement_HArray1OfVolumeElementPurposeMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HArray1OfVolumeElementPurposeMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HArray1OfVolumeElementPurposeMember::Handle_StepElement_HArray1OfVolumeElementPurposeMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HArray1OfVolumeElementPurposeMember;
-class Handle_StepElement_HArray1OfVolumeElementPurposeMember : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HArray1OfVolumeElementPurposeMember();
-        Handle_StepElement_HArray1OfVolumeElementPurposeMember(const Handle_StepElement_HArray1OfVolumeElementPurposeMember &aHandle);
-        Handle_StepElement_HArray1OfVolumeElementPurposeMember(const StepElement_HArray1OfVolumeElementPurposeMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HArray1OfVolumeElementPurposeMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HArray1OfVolumeElementPurposeMember {
-    StepElement_HArray1OfVolumeElementPurposeMember* _get_reference() {
-    return (StepElement_HArray1OfVolumeElementPurposeMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HArray1OfVolumeElementPurposeMember {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend StepElement_HArray1OfVolumeElementPurposeMember {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -3345,51 +3231,7 @@ class StepElement_HArray2OfCurveElementPurposeMember : public MMgt_TShared {
 };
 
 
-%extend StepElement_HArray2OfCurveElementPurposeMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HArray2OfCurveElementPurposeMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HArray2OfCurveElementPurposeMember::Handle_StepElement_HArray2OfCurveElementPurposeMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HArray2OfCurveElementPurposeMember;
-class Handle_StepElement_HArray2OfCurveElementPurposeMember : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HArray2OfCurveElementPurposeMember();
-        Handle_StepElement_HArray2OfCurveElementPurposeMember(const Handle_StepElement_HArray2OfCurveElementPurposeMember &aHandle);
-        Handle_StepElement_HArray2OfCurveElementPurposeMember(const StepElement_HArray2OfCurveElementPurposeMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HArray2OfCurveElementPurposeMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HArray2OfCurveElementPurposeMember {
-    StepElement_HArray2OfCurveElementPurposeMember* _get_reference() {
-    return (StepElement_HArray2OfCurveElementPurposeMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HArray2OfCurveElementPurposeMember {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_HArray2OfCurveElementPurposeMember)
 
 %extend StepElement_HArray2OfCurveElementPurposeMember {
 	%pythoncode {
@@ -3492,51 +3334,7 @@ class StepElement_HArray2OfSurfaceElementPurpose : public MMgt_TShared {
 };
 
 
-%extend StepElement_HArray2OfSurfaceElementPurpose {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HArray2OfSurfaceElementPurpose(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HArray2OfSurfaceElementPurpose::Handle_StepElement_HArray2OfSurfaceElementPurpose %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HArray2OfSurfaceElementPurpose;
-class Handle_StepElement_HArray2OfSurfaceElementPurpose : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HArray2OfSurfaceElementPurpose();
-        Handle_StepElement_HArray2OfSurfaceElementPurpose(const Handle_StepElement_HArray2OfSurfaceElementPurpose &aHandle);
-        Handle_StepElement_HArray2OfSurfaceElementPurpose(const StepElement_HArray2OfSurfaceElementPurpose *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HArray2OfSurfaceElementPurpose DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HArray2OfSurfaceElementPurpose {
-    StepElement_HArray2OfSurfaceElementPurpose* _get_reference() {
-    return (StepElement_HArray2OfSurfaceElementPurpose*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HArray2OfSurfaceElementPurpose {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_HArray2OfSurfaceElementPurpose)
 
 %extend StepElement_HArray2OfSurfaceElementPurpose {
 	%pythoncode {
@@ -3639,51 +3437,7 @@ class StepElement_HArray2OfSurfaceElementPurposeMember : public MMgt_TShared {
 };
 
 
-%extend StepElement_HArray2OfSurfaceElementPurposeMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HArray2OfSurfaceElementPurposeMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HArray2OfSurfaceElementPurposeMember::Handle_StepElement_HArray2OfSurfaceElementPurposeMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HArray2OfSurfaceElementPurposeMember;
-class Handle_StepElement_HArray2OfSurfaceElementPurposeMember : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HArray2OfSurfaceElementPurposeMember();
-        Handle_StepElement_HArray2OfSurfaceElementPurposeMember(const Handle_StepElement_HArray2OfSurfaceElementPurposeMember &aHandle);
-        Handle_StepElement_HArray2OfSurfaceElementPurposeMember(const StepElement_HArray2OfSurfaceElementPurposeMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HArray2OfSurfaceElementPurposeMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HArray2OfSurfaceElementPurposeMember {
-    StepElement_HArray2OfSurfaceElementPurposeMember* _get_reference() {
-    return (StepElement_HArray2OfSurfaceElementPurposeMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HArray2OfSurfaceElementPurposeMember {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_HArray2OfSurfaceElementPurposeMember)
 
 %extend StepElement_HArray2OfSurfaceElementPurposeMember {
 	%pythoncode {
@@ -3828,51 +3582,7 @@ class StepElement_HSequenceOfCurveElementPurposeMember : public MMgt_TShared {
 };
 
 
-%extend StepElement_HSequenceOfCurveElementPurposeMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HSequenceOfCurveElementPurposeMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HSequenceOfCurveElementPurposeMember::Handle_StepElement_HSequenceOfCurveElementPurposeMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HSequenceOfCurveElementPurposeMember;
-class Handle_StepElement_HSequenceOfCurveElementPurposeMember : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HSequenceOfCurveElementPurposeMember();
-        Handle_StepElement_HSequenceOfCurveElementPurposeMember(const Handle_StepElement_HSequenceOfCurveElementPurposeMember &aHandle);
-        Handle_StepElement_HSequenceOfCurveElementPurposeMember(const StepElement_HSequenceOfCurveElementPurposeMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HSequenceOfCurveElementPurposeMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HSequenceOfCurveElementPurposeMember {
-    StepElement_HSequenceOfCurveElementPurposeMember* _get_reference() {
-    return (StepElement_HSequenceOfCurveElementPurposeMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HSequenceOfCurveElementPurposeMember {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_HSequenceOfCurveElementPurposeMember)
 
 %extend StepElement_HSequenceOfCurveElementPurposeMember {
 	%pythoncode {
@@ -4017,51 +3727,7 @@ class StepElement_HSequenceOfCurveElementSectionDefinition : public MMgt_TShared
 };
 
 
-%extend StepElement_HSequenceOfCurveElementSectionDefinition {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HSequenceOfCurveElementSectionDefinition(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HSequenceOfCurveElementSectionDefinition::Handle_StepElement_HSequenceOfCurveElementSectionDefinition %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HSequenceOfCurveElementSectionDefinition;
-class Handle_StepElement_HSequenceOfCurveElementSectionDefinition : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HSequenceOfCurveElementSectionDefinition();
-        Handle_StepElement_HSequenceOfCurveElementSectionDefinition(const Handle_StepElement_HSequenceOfCurveElementSectionDefinition &aHandle);
-        Handle_StepElement_HSequenceOfCurveElementSectionDefinition(const StepElement_HSequenceOfCurveElementSectionDefinition *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HSequenceOfCurveElementSectionDefinition DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HSequenceOfCurveElementSectionDefinition {
-    StepElement_HSequenceOfCurveElementSectionDefinition* _get_reference() {
-    return (StepElement_HSequenceOfCurveElementSectionDefinition*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HSequenceOfCurveElementSectionDefinition {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_HSequenceOfCurveElementSectionDefinition)
 
 %extend StepElement_HSequenceOfCurveElementSectionDefinition {
 	%pythoncode {
@@ -4206,51 +3872,7 @@ class StepElement_HSequenceOfElementMaterial : public MMgt_TShared {
 };
 
 
-%extend StepElement_HSequenceOfElementMaterial {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HSequenceOfElementMaterial(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HSequenceOfElementMaterial::Handle_StepElement_HSequenceOfElementMaterial %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HSequenceOfElementMaterial;
-class Handle_StepElement_HSequenceOfElementMaterial : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HSequenceOfElementMaterial();
-        Handle_StepElement_HSequenceOfElementMaterial(const Handle_StepElement_HSequenceOfElementMaterial &aHandle);
-        Handle_StepElement_HSequenceOfElementMaterial(const StepElement_HSequenceOfElementMaterial *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HSequenceOfElementMaterial DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HSequenceOfElementMaterial {
-    StepElement_HSequenceOfElementMaterial* _get_reference() {
-    return (StepElement_HSequenceOfElementMaterial*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HSequenceOfElementMaterial {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_HSequenceOfElementMaterial)
 
 %extend StepElement_HSequenceOfElementMaterial {
 	%pythoncode {
@@ -4395,51 +4017,7 @@ class StepElement_HSequenceOfSurfaceElementPurposeMember : public MMgt_TShared {
 };
 
 
-%extend StepElement_HSequenceOfSurfaceElementPurposeMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_HSequenceOfSurfaceElementPurposeMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_HSequenceOfSurfaceElementPurposeMember::Handle_StepElement_HSequenceOfSurfaceElementPurposeMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_HSequenceOfSurfaceElementPurposeMember;
-class Handle_StepElement_HSequenceOfSurfaceElementPurposeMember : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_HSequenceOfSurfaceElementPurposeMember();
-        Handle_StepElement_HSequenceOfSurfaceElementPurposeMember(const Handle_StepElement_HSequenceOfSurfaceElementPurposeMember &aHandle);
-        Handle_StepElement_HSequenceOfSurfaceElementPurposeMember(const StepElement_HSequenceOfSurfaceElementPurposeMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_HSequenceOfSurfaceElementPurposeMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_HSequenceOfSurfaceElementPurposeMember {
-    StepElement_HSequenceOfSurfaceElementPurposeMember* _get_reference() {
-    return (StepElement_HSequenceOfSurfaceElementPurposeMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_HSequenceOfSurfaceElementPurposeMember {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_HSequenceOfSurfaceElementPurposeMember)
 
 %extend StepElement_HSequenceOfSurfaceElementPurposeMember {
 	%pythoncode {
@@ -4553,51 +4131,7 @@ class StepElement_MeasureOrUnspecifiedValueMember : public StepData_SelectNamed 
 };
 
 
-%extend StepElement_MeasureOrUnspecifiedValueMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_MeasureOrUnspecifiedValueMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_MeasureOrUnspecifiedValueMember::Handle_StepElement_MeasureOrUnspecifiedValueMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_MeasureOrUnspecifiedValueMember;
-class Handle_StepElement_MeasureOrUnspecifiedValueMember : public Handle_StepData_SelectNamed {
-
-    public:
-        // constructors
-        Handle_StepElement_MeasureOrUnspecifiedValueMember();
-        Handle_StepElement_MeasureOrUnspecifiedValueMember(const Handle_StepElement_MeasureOrUnspecifiedValueMember &aHandle);
-        Handle_StepElement_MeasureOrUnspecifiedValueMember(const StepElement_MeasureOrUnspecifiedValueMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_MeasureOrUnspecifiedValueMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_MeasureOrUnspecifiedValueMember {
-    StepElement_MeasureOrUnspecifiedValueMember* _get_reference() {
-    return (StepElement_MeasureOrUnspecifiedValueMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_MeasureOrUnspecifiedValueMember {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_MeasureOrUnspecifiedValueMember)
 
 %extend StepElement_MeasureOrUnspecifiedValueMember {
 	%pythoncode {
@@ -4624,51 +4158,7 @@ class StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember : public TCo
 };
 
 
-%extend StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember::Handle_StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember;
-class Handle_StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember();
-        Handle_StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember(const Handle_StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember &aHandle);
-        Handle_StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember(const StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember {
-    StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember* _get_reference() {
-    return (StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember)
 
 %extend StepElement_SequenceNodeOfSequenceOfCurveElementPurposeMember {
 	%pythoncode {
@@ -4695,51 +4185,7 @@ class StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition : public
 };
 
 
-%extend StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition::Handle_StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition;
-class Handle_StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition();
-        Handle_StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition(const Handle_StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition &aHandle);
-        Handle_StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition(const StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition {
-    StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition* _get_reference() {
-    return (StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition)
 
 %extend StepElement_SequenceNodeOfSequenceOfCurveElementSectionDefinition {
 	%pythoncode {
@@ -4766,51 +4212,7 @@ class StepElement_SequenceNodeOfSequenceOfElementMaterial : public TCollection_S
 };
 
 
-%extend StepElement_SequenceNodeOfSequenceOfElementMaterial {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_SequenceNodeOfSequenceOfElementMaterial(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_SequenceNodeOfSequenceOfElementMaterial::Handle_StepElement_SequenceNodeOfSequenceOfElementMaterial %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_SequenceNodeOfSequenceOfElementMaterial;
-class Handle_StepElement_SequenceNodeOfSequenceOfElementMaterial : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_StepElement_SequenceNodeOfSequenceOfElementMaterial();
-        Handle_StepElement_SequenceNodeOfSequenceOfElementMaterial(const Handle_StepElement_SequenceNodeOfSequenceOfElementMaterial &aHandle);
-        Handle_StepElement_SequenceNodeOfSequenceOfElementMaterial(const StepElement_SequenceNodeOfSequenceOfElementMaterial *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_SequenceNodeOfSequenceOfElementMaterial DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_SequenceNodeOfSequenceOfElementMaterial {
-    StepElement_SequenceNodeOfSequenceOfElementMaterial* _get_reference() {
-    return (StepElement_SequenceNodeOfSequenceOfElementMaterial*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_SequenceNodeOfSequenceOfElementMaterial {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_SequenceNodeOfSequenceOfElementMaterial)
 
 %extend StepElement_SequenceNodeOfSequenceOfElementMaterial {
 	%pythoncode {
@@ -4837,51 +4239,7 @@ class StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember : public T
 };
 
 
-%extend StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember::Handle_StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember;
-class Handle_StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember();
-        Handle_StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember(const Handle_StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember &aHandle);
-        Handle_StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember(const StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember {
-    StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember* _get_reference() {
-    return (StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember)
 
 %extend StepElement_SequenceNodeOfSequenceOfSurfaceElementPurposeMember {
 	%pythoncode {
@@ -5526,51 +4884,7 @@ class StepElement_SurfaceElementProperty : public MMgt_TShared {
 };
 
 
-%extend StepElement_SurfaceElementProperty {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_SurfaceElementProperty(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_SurfaceElementProperty::Handle_StepElement_SurfaceElementProperty %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_SurfaceElementProperty;
-class Handle_StepElement_SurfaceElementProperty : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_SurfaceElementProperty();
-        Handle_StepElement_SurfaceElementProperty(const Handle_StepElement_SurfaceElementProperty &aHandle);
-        Handle_StepElement_SurfaceElementProperty(const StepElement_SurfaceElementProperty *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_SurfaceElementProperty DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_SurfaceElementProperty {
-    StepElement_SurfaceElementProperty* _get_reference() {
-    return (StepElement_SurfaceElementProperty*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_SurfaceElementProperty {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_SurfaceElementProperty)
 
 %extend StepElement_SurfaceElementProperty {
 	%pythoncode {
@@ -5684,51 +4998,7 @@ class StepElement_SurfaceElementPurposeMember : public StepData_SelectNamed {
 };
 
 
-%extend StepElement_SurfaceElementPurposeMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_SurfaceElementPurposeMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_SurfaceElementPurposeMember::Handle_StepElement_SurfaceElementPurposeMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_SurfaceElementPurposeMember;
-class Handle_StepElement_SurfaceElementPurposeMember : public Handle_StepData_SelectNamed {
-
-    public:
-        // constructors
-        Handle_StepElement_SurfaceElementPurposeMember();
-        Handle_StepElement_SurfaceElementPurposeMember(const Handle_StepElement_SurfaceElementPurposeMember &aHandle);
-        Handle_StepElement_SurfaceElementPurposeMember(const StepElement_SurfaceElementPurposeMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_SurfaceElementPurposeMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_SurfaceElementPurposeMember {
-    StepElement_SurfaceElementPurposeMember* _get_reference() {
-    return (StepElement_SurfaceElementPurposeMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_SurfaceElementPurposeMember {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_SurfaceElementPurposeMember)
 
 %extend StepElement_SurfaceElementPurposeMember {
 	%pythoncode {
@@ -5801,51 +5071,7 @@ class StepElement_SurfaceSection : public MMgt_TShared {
 };
 
 
-%extend StepElement_SurfaceSection {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_SurfaceSection(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_SurfaceSection::Handle_StepElement_SurfaceSection %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_SurfaceSection;
-class Handle_StepElement_SurfaceSection : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_SurfaceSection();
-        Handle_StepElement_SurfaceSection(const Handle_StepElement_SurfaceSection &aHandle);
-        Handle_StepElement_SurfaceSection(const StepElement_SurfaceSection *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_SurfaceSection DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_SurfaceSection {
-    StepElement_SurfaceSection* _get_reference() {
-    return (StepElement_SurfaceSection*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_SurfaceSection {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_SurfaceSection)
 
 %extend StepElement_SurfaceSection {
 	%pythoncode {
@@ -5864,51 +5090,7 @@ class StepElement_SurfaceSectionField : public MMgt_TShared {
 };
 
 
-%extend StepElement_SurfaceSectionField {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_SurfaceSectionField(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_SurfaceSectionField::Handle_StepElement_SurfaceSectionField %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_SurfaceSectionField;
-class Handle_StepElement_SurfaceSectionField : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_StepElement_SurfaceSectionField();
-        Handle_StepElement_SurfaceSectionField(const Handle_StepElement_SurfaceSectionField &aHandle);
-        Handle_StepElement_SurfaceSectionField(const StepElement_SurfaceSectionField *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_SurfaceSectionField DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_SurfaceSectionField {
-    StepElement_SurfaceSectionField* _get_reference() {
-    return (StepElement_SurfaceSectionField*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_SurfaceSectionField {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_SurfaceSectionField)
 
 %extend StepElement_SurfaceSectionField {
 	%pythoncode {
@@ -6022,51 +5204,7 @@ class StepElement_VolumeElementPurposeMember : public StepData_SelectNamed {
 };
 
 
-%extend StepElement_VolumeElementPurposeMember {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_VolumeElementPurposeMember(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_VolumeElementPurposeMember::Handle_StepElement_VolumeElementPurposeMember %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_VolumeElementPurposeMember;
-class Handle_StepElement_VolumeElementPurposeMember : public Handle_StepData_SelectNamed {
-
-    public:
-        // constructors
-        Handle_StepElement_VolumeElementPurposeMember();
-        Handle_StepElement_VolumeElementPurposeMember(const Handle_StepElement_VolumeElementPurposeMember &aHandle);
-        Handle_StepElement_VolumeElementPurposeMember(const StepElement_VolumeElementPurposeMember *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_VolumeElementPurposeMember DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_VolumeElementPurposeMember {
-    StepElement_VolumeElementPurposeMember* _get_reference() {
-    return (StepElement_VolumeElementPurposeMember*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_VolumeElementPurposeMember {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_VolumeElementPurposeMember)
 
 %extend StepElement_VolumeElementPurposeMember {
 	%pythoncode {
@@ -6111,51 +5249,7 @@ class StepElement_Curve3dElementDescriptor : public StepElement_ElementDescripto
 };
 
 
-%extend StepElement_Curve3dElementDescriptor {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_Curve3dElementDescriptor(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_Curve3dElementDescriptor::Handle_StepElement_Curve3dElementDescriptor %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_Curve3dElementDescriptor;
-class Handle_StepElement_Curve3dElementDescriptor : public Handle_StepElement_ElementDescriptor {
-
-    public:
-        // constructors
-        Handle_StepElement_Curve3dElementDescriptor();
-        Handle_StepElement_Curve3dElementDescriptor(const Handle_StepElement_Curve3dElementDescriptor &aHandle);
-        Handle_StepElement_Curve3dElementDescriptor(const StepElement_Curve3dElementDescriptor *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_Curve3dElementDescriptor DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_Curve3dElementDescriptor {
-    StepElement_Curve3dElementDescriptor* _get_reference() {
-    return (StepElement_Curve3dElementDescriptor*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_Curve3dElementDescriptor {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_Curve3dElementDescriptor)
 
 %extend StepElement_Curve3dElementDescriptor {
 	%pythoncode {
@@ -6344,51 +5438,7 @@ class StepElement_CurveElementSectionDerivedDefinitions : public StepElement_Cur
 };
 
 
-%extend StepElement_CurveElementSectionDerivedDefinitions {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_CurveElementSectionDerivedDefinitions(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_CurveElementSectionDerivedDefinitions::Handle_StepElement_CurveElementSectionDerivedDefinitions %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_CurveElementSectionDerivedDefinitions;
-class Handle_StepElement_CurveElementSectionDerivedDefinitions : public Handle_StepElement_CurveElementSectionDefinition {
-
-    public:
-        // constructors
-        Handle_StepElement_CurveElementSectionDerivedDefinitions();
-        Handle_StepElement_CurveElementSectionDerivedDefinitions(const Handle_StepElement_CurveElementSectionDerivedDefinitions &aHandle);
-        Handle_StepElement_CurveElementSectionDerivedDefinitions(const StepElement_CurveElementSectionDerivedDefinitions *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_CurveElementSectionDerivedDefinitions DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_CurveElementSectionDerivedDefinitions {
-    StepElement_CurveElementSectionDerivedDefinitions* _get_reference() {
-    return (StepElement_CurveElementSectionDerivedDefinitions*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_CurveElementSectionDerivedDefinitions {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_CurveElementSectionDerivedDefinitions)
 
 %extend StepElement_CurveElementSectionDerivedDefinitions {
 	%pythoncode {
@@ -6449,51 +5499,7 @@ class StepElement_Surface3dElementDescriptor : public StepElement_ElementDescrip
 };
 
 
-%extend StepElement_Surface3dElementDescriptor {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_Surface3dElementDescriptor(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_Surface3dElementDescriptor::Handle_StepElement_Surface3dElementDescriptor %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_Surface3dElementDescriptor;
-class Handle_StepElement_Surface3dElementDescriptor : public Handle_StepElement_ElementDescriptor {
-
-    public:
-        // constructors
-        Handle_StepElement_Surface3dElementDescriptor();
-        Handle_StepElement_Surface3dElementDescriptor(const Handle_StepElement_Surface3dElementDescriptor &aHandle);
-        Handle_StepElement_Surface3dElementDescriptor(const StepElement_Surface3dElementDescriptor *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_Surface3dElementDescriptor DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_Surface3dElementDescriptor {
-    StepElement_Surface3dElementDescriptor* _get_reference() {
-    return (StepElement_Surface3dElementDescriptor*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_Surface3dElementDescriptor {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_Surface3dElementDescriptor)
 
 %extend StepElement_Surface3dElementDescriptor {
 	%pythoncode {
@@ -6534,51 +5540,7 @@ class StepElement_SurfaceSectionFieldConstant : public StepElement_SurfaceSectio
 };
 
 
-%extend StepElement_SurfaceSectionFieldConstant {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_SurfaceSectionFieldConstant(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_SurfaceSectionFieldConstant::Handle_StepElement_SurfaceSectionFieldConstant %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_SurfaceSectionFieldConstant;
-class Handle_StepElement_SurfaceSectionFieldConstant : public Handle_StepElement_SurfaceSectionField {
-
-    public:
-        // constructors
-        Handle_StepElement_SurfaceSectionFieldConstant();
-        Handle_StepElement_SurfaceSectionFieldConstant(const Handle_StepElement_SurfaceSectionFieldConstant &aHandle);
-        Handle_StepElement_SurfaceSectionFieldConstant(const StepElement_SurfaceSectionFieldConstant *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_SurfaceSectionFieldConstant DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_SurfaceSectionFieldConstant {
-    StepElement_SurfaceSectionFieldConstant* _get_reference() {
-    return (StepElement_SurfaceSectionFieldConstant*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_SurfaceSectionFieldConstant {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_SurfaceSectionFieldConstant)
 
 %extend StepElement_SurfaceSectionFieldConstant {
 	%pythoncode {
@@ -6635,51 +5597,7 @@ class StepElement_SurfaceSectionFieldVarying : public StepElement_SurfaceSection
 };
 
 
-%extend StepElement_SurfaceSectionFieldVarying {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_SurfaceSectionFieldVarying(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_SurfaceSectionFieldVarying::Handle_StepElement_SurfaceSectionFieldVarying %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_SurfaceSectionFieldVarying;
-class Handle_StepElement_SurfaceSectionFieldVarying : public Handle_StepElement_SurfaceSectionField {
-
-    public:
-        // constructors
-        Handle_StepElement_SurfaceSectionFieldVarying();
-        Handle_StepElement_SurfaceSectionFieldVarying(const Handle_StepElement_SurfaceSectionFieldVarying &aHandle);
-        Handle_StepElement_SurfaceSectionFieldVarying(const StepElement_SurfaceSectionFieldVarying *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_SurfaceSectionFieldVarying DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_SurfaceSectionFieldVarying {
-    StepElement_SurfaceSectionFieldVarying* _get_reference() {
-    return (StepElement_SurfaceSectionFieldVarying*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_SurfaceSectionFieldVarying {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_SurfaceSectionFieldVarying)
 
 %extend StepElement_SurfaceSectionFieldVarying {
 	%pythoncode {
@@ -6758,51 +5676,7 @@ class StepElement_UniformSurfaceSection : public StepElement_SurfaceSection {
 };
 
 
-%extend StepElement_UniformSurfaceSection {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_UniformSurfaceSection(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_UniformSurfaceSection::Handle_StepElement_UniformSurfaceSection %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_UniformSurfaceSection;
-class Handle_StepElement_UniformSurfaceSection : public Handle_StepElement_SurfaceSection {
-
-    public:
-        // constructors
-        Handle_StepElement_UniformSurfaceSection();
-        Handle_StepElement_UniformSurfaceSection(const Handle_StepElement_UniformSurfaceSection &aHandle);
-        Handle_StepElement_UniformSurfaceSection(const StepElement_UniformSurfaceSection *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_UniformSurfaceSection DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_UniformSurfaceSection {
-    StepElement_UniformSurfaceSection* _get_reference() {
-    return (StepElement_UniformSurfaceSection*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_UniformSurfaceSection {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_UniformSurfaceSection)
 
 %extend StepElement_UniformSurfaceSection {
 	%pythoncode {
@@ -6863,51 +5737,7 @@ class StepElement_Volume3dElementDescriptor : public StepElement_ElementDescript
 };
 
 
-%extend StepElement_Volume3dElementDescriptor {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_StepElement_Volume3dElementDescriptor(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_StepElement_Volume3dElementDescriptor::Handle_StepElement_Volume3dElementDescriptor %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_StepElement_Volume3dElementDescriptor;
-class Handle_StepElement_Volume3dElementDescriptor : public Handle_StepElement_ElementDescriptor {
-
-    public:
-        // constructors
-        Handle_StepElement_Volume3dElementDescriptor();
-        Handle_StepElement_Volume3dElementDescriptor(const Handle_StepElement_Volume3dElementDescriptor &aHandle);
-        Handle_StepElement_Volume3dElementDescriptor(const StepElement_Volume3dElementDescriptor *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_StepElement_Volume3dElementDescriptor DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_StepElement_Volume3dElementDescriptor {
-    StepElement_Volume3dElementDescriptor* _get_reference() {
-    return (StepElement_Volume3dElementDescriptor*)$self->Access();
-    }
-};
-
-%extend Handle_StepElement_Volume3dElementDescriptor {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(StepElement_Volume3dElementDescriptor)
 
 %extend StepElement_Volume3dElementDescriptor {
 	%pythoncode {

@@ -17,7 +17,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") BinLDrivers
+%define BINLDRIVERSDOCSTRING
+""
+%enddef
+%module (package="OCC.Core", docstring=BINLDRIVERSDOCSTRING) BinLDrivers
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,24 +34,10 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include BinLDrivers_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 typedef NCollection_Vector <BinLDrivers_DocumentSection> BinLDrivers_VectorOfDocumentSection;
@@ -61,6 +50,9 @@ enum BinLDrivers_Marker {
 };
 
 /* end public enums declaration */
+
+%wrap_handle(BinLDrivers_DocumentRetrievalDriver)
+%wrap_handle(BinLDrivers_DocumentStorageDriver)
 
 %rename(binldrivers) BinLDrivers;
 class BinLDrivers {
@@ -145,51 +137,7 @@ class BinLDrivers_DocumentRetrievalDriver : public PCDM_RetrievalDriver {
 };
 
 
-%extend BinLDrivers_DocumentRetrievalDriver {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_BinLDrivers_DocumentRetrievalDriver(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_BinLDrivers_DocumentRetrievalDriver::Handle_BinLDrivers_DocumentRetrievalDriver %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_BinLDrivers_DocumentRetrievalDriver;
-class Handle_BinLDrivers_DocumentRetrievalDriver : public Handle_PCDM_RetrievalDriver {
-
-    public:
-        // constructors
-        Handle_BinLDrivers_DocumentRetrievalDriver();
-        Handle_BinLDrivers_DocumentRetrievalDriver(const Handle_BinLDrivers_DocumentRetrievalDriver &aHandle);
-        Handle_BinLDrivers_DocumentRetrievalDriver(const BinLDrivers_DocumentRetrievalDriver *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_BinLDrivers_DocumentRetrievalDriver DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_BinLDrivers_DocumentRetrievalDriver {
-    BinLDrivers_DocumentRetrievalDriver* _get_reference() {
-    return (BinLDrivers_DocumentRetrievalDriver*)$self->Access();
-    }
-};
-
-%extend Handle_BinLDrivers_DocumentRetrievalDriver {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(BinLDrivers_DocumentRetrievalDriver)
 
 %extend BinLDrivers_DocumentRetrievalDriver {
 	%pythoncode {
@@ -335,51 +283,7 @@ class BinLDrivers_DocumentStorageDriver : public PCDM_StorageDriver {
 };
 
 
-%extend BinLDrivers_DocumentStorageDriver {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_BinLDrivers_DocumentStorageDriver(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_BinLDrivers_DocumentStorageDriver::Handle_BinLDrivers_DocumentStorageDriver %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_BinLDrivers_DocumentStorageDriver;
-class Handle_BinLDrivers_DocumentStorageDriver : public Handle_PCDM_StorageDriver {
-
-    public:
-        // constructors
-        Handle_BinLDrivers_DocumentStorageDriver();
-        Handle_BinLDrivers_DocumentStorageDriver(const Handle_BinLDrivers_DocumentStorageDriver &aHandle);
-        Handle_BinLDrivers_DocumentStorageDriver(const BinLDrivers_DocumentStorageDriver *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_BinLDrivers_DocumentStorageDriver DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_BinLDrivers_DocumentStorageDriver {
-    BinLDrivers_DocumentStorageDriver* _get_reference() {
-    return (BinLDrivers_DocumentStorageDriver*)$self->Access();
-    }
-};
-
-%extend Handle_BinLDrivers_DocumentStorageDriver {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(BinLDrivers_DocumentStorageDriver)
 
 %extend BinLDrivers_DocumentStorageDriver {
 	%pythoncode {

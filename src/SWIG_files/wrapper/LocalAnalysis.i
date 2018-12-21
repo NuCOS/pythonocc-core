@@ -17,7 +17,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") LocalAnalysis
+%define LOCALANALYSISDOCSTRING
+"-Purpose:
+This package gives tools to check the local continuity
+between two points situated on two curves or two surfaces.
+"
+%enddef
+%module (package="OCC.Core", docstring=LOCALANALYSISDOCSTRING) LocalAnalysis
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,24 +37,10 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include LocalAnalysis_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
@@ -63,6 +55,7 @@ enum LocalAnalysis_StatusErrorType {
 };
 
 /* end public enums declaration */
+
 
 %rename(localanalysis) LocalAnalysis;
 class LocalAnalysis {

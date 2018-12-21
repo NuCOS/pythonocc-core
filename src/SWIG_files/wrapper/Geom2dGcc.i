@@ -17,7 +17,24 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") Geom2dGcc
+%define GEOM2DGCCDOCSTRING
+"- Purpose: The Geom2dGcc package describes qualified 2D
+curves used in the construction of constrained geometric
+objects by an algorithm provided by the Geom2dGcc package.
+A qualified 2D curve is a curve with a qualifier which
+specifies whether the solution of a construction
+algorithm using the qualified curve (as an argument):
+-  encloses the curve, or
+-  is enclosed by the curve, or
+-  is built so that both the curve and this solution are external to one another, or
+-  is undefined (all solutions apply).
+These package methods provide simpler functions to construct a qualified curve.
+Note: the interior of a curve is defined as the left-hand
+side of the curve in relation to its orientation.
+
+"
+%enddef
+%module (package="OCC.Core", docstring=GEOM2DGCCDOCSTRING) Geom2dGcc
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,38 +48,15 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include Geom2dGcc_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
 
 /* public enums */
-enum Geom2dGcc_Type1 {
-	Geom2dGcc_CuCuCu = 0,
-	Geom2dGcc_CiCuCu = 1,
-	Geom2dGcc_CiCiCu = 2,
-	Geom2dGcc_CiLiCu = 3,
-	Geom2dGcc_LiLiCu = 4,
-	Geom2dGcc_LiCuCu = 5,
-};
-
 enum Geom2dGcc_Type2 {
 	Geom2dGcc_CuCuOnCu = 0,
 	Geom2dGcc_CiCuOnCu = 1,
@@ -83,7 +77,17 @@ enum Geom2dGcc_Type3 {
 	Geom2dGcc_CiCu = 1,
 };
 
+enum Geom2dGcc_Type1 {
+	Geom2dGcc_CuCuCu = 0,
+	Geom2dGcc_CiCuCu = 1,
+	Geom2dGcc_CiCiCu = 2,
+	Geom2dGcc_CiLiCu = 3,
+	Geom2dGcc_LiLiCu = 4,
+	Geom2dGcc_LiCuCu = 5,
+};
+
 /* end public enums declaration */
+
 
 %rename(geom2dgcc) Geom2dGcc;
 class Geom2dGcc {

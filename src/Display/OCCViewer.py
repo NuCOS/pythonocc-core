@@ -21,42 +21,41 @@ from __future__ import print_function
 
 import os
 import os.path
+import time
 import sys
 import math
 import itertools
 
 import OCC
-from OCC.AIS import AIS_Shape, AIS_Shaded, AIS_TexturedShape, AIS_WireFrame
-from OCC.TopoDS import TopoDS_Shape
-from OCC.gp import gp_Dir, gp_Pnt, gp_Pnt2d, gp_Vec
-from OCC.BRepBuilderAPI import (BRepBuilderAPI_MakeVertex,
-                                BRepBuilderAPI_MakeEdge,
-                                BRepBuilderAPI_MakeEdge2d,
-                                BRepBuilderAPI_MakeFace)
-from OCC.TopAbs import (TopAbs_FACE, TopAbs_EDGE, TopAbs_VERTEX,
-                        TopAbs_SHELL, TopAbs_SOLID)
-from OCC.Geom import Handle_Geom_Curve, Handle_Geom_Surface
-from OCC.Geom2d import Handle_Geom2d_Curve
-from OCC.Visualization import Display3d
-from OCC.V3d import (V3d_ZBUFFER, V3d_PHONG, V3d_Zpos, V3d_Zneg, V3d_Xpos,
-                     V3d_Xneg, V3d_Ypos, V3d_Yneg, V3d_XposYnegZpos, V3d_TEX_ALL,
-                     V3d_TEX_NONE, V3d_TEX_ENVIRONMENT,
-                     V3d_LayerMgr)
-from OCC.TCollection import TCollection_ExtendedString, TCollection_AsciiString
-from OCC.Quantity import (Quantity_Color, Quantity_TOC_RGB, Quantity_NOC_WHITE,
-                          Quantity_NOC_BLACK, Quantity_NOC_BLUE1,
-                          Quantity_NOC_CYAN1, Quantity_NOC_RED,
-                          Quantity_NOC_GREEN,
-                          Quantity_NOC_ORANGE, Quantity_NOC_YELLOW)
-from OCC.Prs3d import (Prs3d_Arrow, Prs3d_Presentation, Prs3d_Text,
-                       Prs3d_TextAspect)
-from OCC.Graphic3d import (Graphic3d_NOM_NEON_GNC, Graphic3d_NOT_ENV_CLOUDS,
-                           Handle_Graphic3d_TextureEnv, Graphic3d_TextureEnv,
-                           Graphic3d_Camera, Graphic3d_RM_RAYTRACING,
-                           Graphic3d_RM_RASTERIZATION,
-                           Graphic3d_StereoMode_QuadBuffer,
-                           Graphic3d_RenderingParams)
-from OCC.Aspect import Aspect_TOTP_RIGHT_LOWER, Aspect_FM_STRETCH, Aspect_FM_NONE
+from OCC.Core.AIS import AIS_Shape, AIS_Shaded, AIS_TexturedShape, AIS_WireFrame
+from OCC.Core.TopoDS import TopoDS_Shape
+from OCC.Core.gp import gp_Dir, gp_Pnt, gp_Pnt2d, gp_Vec
+from OCC.Core.BRepBuilderAPI import (BRepBuilderAPI_MakeVertex,
+                                     BRepBuilderAPI_MakeEdge,
+                                     BRepBuilderAPI_MakeEdge2d,
+                                     BRepBuilderAPI_MakeFace)
+from OCC.Core.TopAbs import (TopAbs_FACE, TopAbs_EDGE, TopAbs_VERTEX,
+                             TopAbs_SHELL, TopAbs_SOLID)
+from OCC.Core.Geom import Geom_Curve, Geom_Surface
+from OCC.Core.Geom2d import Geom2d_Curve
+from OCC.Core.Visualization import Display3d
+from OCC.Core.V3d import (V3d_ZBUFFER, V3d_PHONG, V3d_Zpos, V3d_Zneg, V3d_Xpos,
+                          V3d_Xneg, V3d_Ypos, V3d_Yneg, V3d_XposYnegZpos, V3d_TEX_ALL,
+                          V3d_TEX_NONE, V3d_TEX_ENVIRONMENT,
+                          V3d_LayerMgr)
+from OCC.Core.TCollection import TCollection_ExtendedString, TCollection_AsciiString
+from OCC.Core.Quantity import (Quantity_Color, Quantity_TOC_RGB, Quantity_NOC_WHITE,
+                               Quantity_NOC_BLACK, Quantity_NOC_BLUE1,
+                               Quantity_NOC_CYAN1, Quantity_NOC_RED,
+                               Quantity_NOC_GREEN, Quantity_NOC_ORANGE, Quantity_NOC_YELLOW)
+from OCC.Core.Prs3d import Prs3d_Arrow, Prs3d_Presentation, Prs3d_Text, Prs3d_TextAspect
+from OCC.Core.Graphic3d import (Graphic3d_NOM_NEON_GNC, Graphic3d_NOT_ENV_CLOUDS,
+                                Handle_Graphic3d_TextureEnv, Graphic3d_TextureEnv,
+                                Graphic3d_Camera, Graphic3d_RM_RAYTRACING,
+                                Graphic3d_RM_RASTERIZATION,
+                                Graphic3d_StereoMode_QuadBuffer,
+                                Graphic3d_RenderingParams)
+from OCC.Core.Aspect import Aspect_TOTP_RIGHT_LOWER, Aspect_FM_STRETCH, Aspect_FM_NONE
 
 # Shaders and Units definition must be found by occ
 # the fastest way to get done is to set the CASROOT env variable
@@ -97,7 +96,6 @@ def get_color_from_name(color_name):
     enum_name = 'Quantity_NOC_%s' % color_name.upper()
     if enum_name in globals():
         color_num = globals()[enum_name]
-        return Quantity_Color(color_num)
     elif enum_name+'1' in globals():
         color_num = globals()[enum_name+'1']
         print('Many colors for color name %s, using first.' % color_name)
@@ -122,14 +120,10 @@ class Viewer3d(Display3d):
         self._window_handle = window_handle
         self._inited = False
         self._local_context_opened = False
-        self.Context_handle = None
-        self.Viewer_handle = None
-        self.View_handle = None
         self.Context = None
         self.Viewer = None
         self.View = None
         self.OverLayer = None
-        self.OverLayer_handle = None
         self.selected_shape = None
         self.default_drawer = None
         self._struc_mgr = None
@@ -147,7 +141,7 @@ class Viewer3d(Display3d):
     def GetOverLayer(self):
         """ returns an handle to the current overlayer
         """
-        return self.OverLayer_handle
+        return self.OverLayer
 
     def register_select_callback(self, callback):
         """ Adds a callback that will be called each time a shape s selected
@@ -166,7 +160,7 @@ class Viewer3d(Display3d):
             self._select_callbacks.remove(callback)
 
     def MoveTo(self, X, Y):
-        self.Context.MoveTo(X, Y, self.View_handle)
+        self.Context.MoveTo(X, Y, self.View)
 
     def FitAll(self):
         self.View.ZFitAll()
@@ -174,23 +168,20 @@ class Viewer3d(Display3d):
 
     def Create(self, create_default_lights=True, draw_face_boundaries=True, phong_shading=True):
         if self._window_handle is None:
-            self.InitOffscreen(100, 100)
+            self.InitOffscreen(640, 480)
             self._is_offscreen = True
         else:
             self.Init(self._window_handle)
             self._is_offscreen = False
 
-        self.Context_handle = self.GetContext()
-        self.Viewer_handle = self.GetViewer()
-        self.View_handle = self.GetView()
-        self.Context = self.Context_handle.GetObject()
-        self.Viewer = self.Viewer_handle.GetObject()
+        self.Context = self.GetContext()
+        self.Viewer = self.GetViewer()
+        self.View = self.GetView()
         if create_default_lights:
             self.Viewer.SetDefaultLights()
             self.Viewer.SetLightOn()
-        self.View = self.View_handle.GetObject()
-        self.camera = self.View.Camera().GetObject()
-        self.default_drawer = self.Context.DefaultDrawer().GetObject()
+        self.camera = self.View.Camera()
+        self.default_drawer = self.Context.DefaultDrawer()
 
         # draw black contour edges, like other famous CAD packages
         if draw_face_boundaries:
@@ -208,20 +199,18 @@ class Viewer3d(Display3d):
         # self.Context.SelectionColor(Quantity_NOC_ORANGE)
 
         # necessary for text rendering
-        self._struc_mgr = self.Context.MainPrsMgr().GetObject().StructureManager()
+        self._struc_mgr = self.Context.MainPrsMgr().StructureManager()
 
         # overlayer
-        self.OverLayer_handle = self.Viewer.Viewer().GetObject().OverLayer()
-        if self.OverLayer_handle.IsNull():
-            aMgr = V3d_LayerMgr(self.View_handle)
-            self.OverLayer_handle = aMgr.Overlay()
-            self.View.SetLayerMgr(aMgr.GetHandle())
-        self.OverLayer = self.OverLayer_handle.GetObject()
+        self.OverLayer = self.Viewer.Viewer().OverLayer()
+        if self.OverLayer is None:
+            aMgr = V3d_LayerMgr(self.View)
+            self.OverLayer = aMgr.Overlay()
+            self.View.SetLayerMgr(aMgr)
         print("Layer manager created")
-        height, width = self.View.Window().GetObject().Size()
+        height, width = self.View.Window().Size()
         print("Layer dimensions: %i, %i" % (height, width))
         self.OverLayer.SetViewport(height, width)
-
 
         # turn self._inited flag to True
         self._inited = True
@@ -292,7 +281,7 @@ class Viewer3d(Display3d):
         Graphic3d_NOT_ENV_UNKNOWN
         """
         texture_env = Graphic3d_TextureEnv(name_of_texture)
-        self.View.SetTextureEnv(texture_env.GetHandle())
+        self.View.SetTextureEnv(texture_env)
         self.View.SetSurfaceDetail(V3d_TEX_ENVIRONMENT)
         self.View.Redraw()
 
@@ -389,7 +378,7 @@ class Viewer3d(Display3d):
             pnt_start = gp_Pnt(start.X(), start.Y(), start.Z())
 
             Prs3d_Arrow.Draw(
-                aPresentation.GetHandle(),
+                aPresentation,
                 pnt_start,
                 gp_Dir(vec),
                 math.radians(20),
@@ -417,8 +406,8 @@ class Viewer3d(Display3d):
             text_aspect.SetHeight(height)
         if isinstance(point, gp_Pnt2d):
             point = gp_Pnt(point.X(), point.Y(), 0)
-        Prs3d_Text.Draw(aPresentation.GetHandle(),
-                        text_aspect.GetHandle(),
+        Prs3d_Text.Draw(aPresentation,
+                        text_aspect,
                         to_string(text_to_write),
                         point)
         aPresentation.Display()
@@ -441,26 +430,7 @@ class Viewer3d(Display3d):
             vertex = BRepBuilderAPI_MakeVertex(gp_Pnt(shapes.X(), shapes.Y(), 0))
             shapes = [vertex.Shape()]
             SOLO = True
-        # if a Geom_Curve is passed
-        elif callable(getattr(shapes, "GetHandle", None)):
-            handle = shapes.GetHandle()
-            if issubclass(handle.__class__, Handle_Geom_Curve):
-                edge = BRepBuilderAPI_MakeEdge(handle)
-                shapes = [edge.Shape()]
-                SOLO = True
-            elif issubclass(handle.__class__, Handle_Geom2d_Curve):
-                edge2d = BRepBuilderAPI_MakeEdge2d(handle)
-                shapes = [edge2d.Shape()]
-                SOLO = True
-            elif issubclass(handle.__class__, Handle_Geom_Surface):
-                bounds = True
-                toldegen = 1e-6
-                face = BRepBuilderAPI_MakeFace()
-                face.Init(handle, bounds, toldegen)
-                face.Build()
-                shapes = [face.Shape()]
-                SOLO = True
-        elif isinstance(shapes, Handle_Geom_Surface):
+        elif isinstance(shapes, Geom_Surface):
             bounds = True
             toldegen = 1e-6
             face = BRepBuilderAPI_MakeFace()
@@ -468,11 +438,11 @@ class Viewer3d(Display3d):
             face.Build()
             shapes = [face.Shape()]
             SOLO = True
-        elif isinstance(shapes, Handle_Geom_Curve):
+        elif isinstance(shapes, Geom_Curve):
             edge = BRepBuilderAPI_MakeEdge(shapes)
             shapes = [edge.Shape()]
             SOLO = True
-        elif isinstance(shapes, Handle_Geom2d_Curve):
+        elif isinstance(shapes, Geom2d_Curve):
             edge2d = BRepBuilderAPI_MakeEdge2d(shapes)
             shapes = [edge2d.Shape()]
             SOLO = True
@@ -502,7 +472,7 @@ class Viewer3d(Display3d):
                 # to this AIS_Shape instance?
                 shape_to_display = AIS_Shape(shape)
 
-            ais_shapes.append(shape_to_display.GetHandle())
+            ais_shapes.append(shape_to_display)
 
         if not SOLO:
             # computing graphic properties is expensive
@@ -530,17 +500,14 @@ class Viewer3d(Display3d):
             shape_to_display.SetTransparency(transparency)
         if update:
             # only update when explicitely told to do so
-            self.Context.Display(shape_to_display.GetHandle(), False)
+            self.Context.Display(shape_to_display, False)
             # especially this call takes up a lot of time...
             self.FitAll()
             self.Repaint()
         else:
-            self.Context.Display(shape_to_display.GetHandle(), False)
+            self.Context.Display(shape_to_display, False)
 
-        if SOLO:
-            return ais_shapes[0]
-        else:
-            return shape_to_display
+        return shape_to_display
 
     def DisplayColoredShape(self, shapes, color='YELLOW', update=False, ):
         if isinstance(color, str):
@@ -614,7 +581,7 @@ class Viewer3d(Display3d):
         return self.selected_shape
 
     def SelectArea(self, Xmin, Ymin, Xmax, Ymax):
-        self.Context.Select(Xmin, Ymin, Xmax, Ymax, self.View_handle)
+        self.Context.Select(Xmin, Ymin, Xmax, Ymax, self.View)
         self.Context.InitSelected()
         # reinit the selected_shapes list
         self.selected_shapes = []
@@ -670,3 +637,39 @@ class Viewer3d(Display3d):
 
     def StartRotation(self, X, Y):
         self.View.StartRotation(X, Y)
+
+
+class OffscreenRenderer(Viewer3d):
+    """ The offscreen renderer is inherited from Viewer3d.
+    The DisplayShape method is overriden to export to image
+    each time it is called.
+    """
+    def __init__(self, screen_size=(640, 480)):
+        Viewer3d.__init__(self, None)
+        # create the renderer
+        self.Create()
+        self.SetSize(screen_size[0], screen_size[1])
+        self.SetModeShaded()
+        self.set_bg_gradient_color(206, 215, 222, 128, 128, 128)
+        self.display_trihedron()
+        self.capture_number = 0
+
+    def DisplayShape(self, shapes, material=None, texture=None, color=None, transparency=None, update=True):
+        # call the "original" DisplayShape method
+        r = super(OffscreenRenderer, self).DisplayShape(shapes, material, texture,
+                                                        color, transparency, update)  # always update
+        if os.getenv("PYTHONOCC_OFFSCREEN_RENDERER_DUMP_IMAGE") == "1":  # dump to jpeg file
+            timestamp = ("%f" % time.time()).split(".")[0]
+            self.capture_number += 1
+            image_filename = "capture-%i-%s.jpeg" % (self.capture_number,
+                                                     timestamp.replace(" ", "-"))
+            if os.getenv("PYTHONOCC_OFFSCREEN_RENDERER_DUMP_IMAGE_PATH"):
+                path = os.getenv("PYTHONOCC_OFFSCREEN_RENDERER_DUMP_IMAGE_PATH")
+                assert os.path.isdir(path)
+            else:
+                path = os.getcwd()
+            image_full_name = os.path.join(path, image_filename)
+            self.View.Dump(image_full_name)
+            assert os.path.isfile(image_full_name)
+            print("OffscreenRenderer content dumped to %s" % image_full_name)
+        return r

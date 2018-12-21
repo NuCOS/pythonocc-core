@@ -17,7 +17,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") STEPControl
+%define STEPCONTROLDOCSTRING
+"-Purpose : This package provides external access and control for STEP,
+especially to deal with Shapes
+"
+%enddef
+%module (package="OCC.Core", docstring=STEPCONTROLDOCSTRING) STEPControl
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,24 +36,10 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include STEPControl_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
@@ -66,6 +57,10 @@ enum STEPControl_StepModelType {
 };
 
 /* end public enums declaration */
+
+%wrap_handle(STEPControl_ActorRead)
+%wrap_handle(STEPControl_ActorWrite)
+%wrap_handle(STEPControl_Controller)
 
 %nodefaultctor STEPControl_ActorRead;
 class STEPControl_ActorRead : public Transfer_ActorOfTransientProcess {
@@ -147,51 +142,7 @@ class STEPControl_ActorRead : public Transfer_ActorOfTransientProcess {
 };
 
 
-%extend STEPControl_ActorRead {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_STEPControl_ActorRead(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_STEPControl_ActorRead::Handle_STEPControl_ActorRead %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_STEPControl_ActorRead;
-class Handle_STEPControl_ActorRead : public Handle_Transfer_ActorOfTransientProcess {
-
-    public:
-        // constructors
-        Handle_STEPControl_ActorRead();
-        Handle_STEPControl_ActorRead(const Handle_STEPControl_ActorRead &aHandle);
-        Handle_STEPControl_ActorRead(const STEPControl_ActorRead *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_STEPControl_ActorRead DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_STEPControl_ActorRead {
-    STEPControl_ActorRead* _get_reference() {
-    return (STEPControl_ActorRead*)$self->Access();
-    }
-};
-
-%extend Handle_STEPControl_ActorRead {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(STEPControl_ActorRead)
 
 %extend STEPControl_ActorRead {
 	%pythoncode {
@@ -296,51 +247,7 @@ class STEPControl_ActorWrite : public Transfer_ActorOfFinderProcess {
 };
 
 
-%extend STEPControl_ActorWrite {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_STEPControl_ActorWrite(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_STEPControl_ActorWrite::Handle_STEPControl_ActorWrite %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_STEPControl_ActorWrite;
-class Handle_STEPControl_ActorWrite : public Handle_Transfer_ActorOfFinderProcess {
-
-    public:
-        // constructors
-        Handle_STEPControl_ActorWrite();
-        Handle_STEPControl_ActorWrite(const Handle_STEPControl_ActorWrite &aHandle);
-        Handle_STEPControl_ActorWrite(const STEPControl_ActorWrite *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_STEPControl_ActorWrite DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_STEPControl_ActorWrite {
-    STEPControl_ActorWrite* _get_reference() {
-    return (STEPControl_ActorWrite*)$self->Access();
-    }
-};
-
-%extend Handle_STEPControl_ActorWrite {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(STEPControl_ActorWrite)
 
 %extend STEPControl_ActorWrite {
 	%pythoncode {
@@ -399,51 +306,7 @@ class STEPControl_Controller : public XSControl_Controller {
 };
 
 
-%extend STEPControl_Controller {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_STEPControl_Controller(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_STEPControl_Controller::Handle_STEPControl_Controller %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_STEPControl_Controller;
-class Handle_STEPControl_Controller : public Handle_XSControl_Controller {
-
-    public:
-        // constructors
-        Handle_STEPControl_Controller();
-        Handle_STEPControl_Controller(const Handle_STEPControl_Controller &aHandle);
-        Handle_STEPControl_Controller(const STEPControl_Controller *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_STEPControl_Controller DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_STEPControl_Controller {
-    STEPControl_Controller* _get_reference() {
-    return (STEPControl_Controller*)$self->Access();
-    }
-};
-
-%extend Handle_STEPControl_Controller {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(STEPControl_Controller)
 
 %extend STEPControl_Controller {
 	%pythoncode {

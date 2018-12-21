@@ -5,22 +5,29 @@ language: cpp
 cache:
  apt: true
 
+git:
+  depth: false
+
 # the secure below is the binstar token
 # to genrate this secure
 # first create an anconda cloud token
 # $ anaconda auth -n the_token_name --max-age 22896000 -c --scopes api
 # the token is return as something like "yh-6654-12334_111225"
 # then encrypt the token
+# Note : in order to encrypt using travis
+# You may have to :
+# $ sudo gem install travis
+# (especially if you performed a linux distro upgrade, ruby should not be up to date)
 # You have to be in the directory where you installed the local copy of the repository
 # $ cd [your_dev_dir]/pythonocc-core
-# $ travis encrypt BINSTAR_TOKEN="yh-6654-12334_111225"
+# $ sudo travis encrypt BINSTAR_TOKEN="yh-6654-12334_111225"
 # !!be careful about the typo BINSTAR_TOKEN with the proper case. Otherwise
 # !!the $BINSTAR_TOKEN env var value will be null and the line
 # !!anaconda -t $BINSTAR_TOKEN upload *.bz2 will not be run properly
 # after that, copy/paste the secure on the following line
 env:
   global:
-    - secure: "XObUZlAdB3tRpDtd0z0LaxbOnkpiulNloSevDl5g8+Z3bsBk6jX0GTkVKSryxwe2H7v+YE8crShPykBvi/MlbXOy5S2nO/PjDxJFBQDsGFygrpOnjJ2bZ0IWSLeHADwVoiZZC2yHmkcaq+c5h/fFNyepfai42jhNLFR69adXOSk="
+    - secure: "Bqor4TrYqeJUkjiIHjCq/e3xt/jAoU3Q5kwG/ej+QxaiT6hmkirX3Io3rHxNTbS+mYMAMTbtkkpGqYIYIYtNVx8jGYLdwOzNcuW/wzZf9VuAW/rnjx2lzuYRhHk3GOylSPUU06JHvXDmZvdMxetNBeWaE5hGuJsC9liA+stDepA="
 
 addons:
   apt:
@@ -31,35 +38,46 @@ addons:
       - g++-multilib
       - lib32z1+
       - lsb-core
-      - g++-5
+      - g++-7
 
 matrix:
   include:
     - env: PYTHON="2.7" CONDA_PY=27 ARCH="x86_64"
       os: linux
       dist: trusty
-    - env: PYTHON="2.7" CONDA_PY=27 ARCH="x86_64" MACOSX_DEPLOYMENT_TARGET="10.9"
+    - env: PYTHON="2.7" CONDA_PY=27 ARCH="x86_64"
       os: osx
-      osx_image: xcode8.3
+      osx_image: xcode9.4
     - env: PYTHON="3.5" CONDA_PY=35 ARCH="x86_64"
       os: linux
       dist: trusty
-    - env: PYTHON="3.5" CONDA_PY=35 ARCH="x86_64" MACOSX_DEPLOYMENT_TARGET="10.9"
+    - env: PYTHON="3.5" CONDA_PY=35 ARCH="x86_64"
       os: osx
-      osx_image: xcode8.3
+      osx_image: xcode9.4
     - env: PYTHON="3.6" CONDA_PY=36 ARCH="x86_64"
       os: linux
       dist: trusty
-    - env: PYTHON="3.6" CONDA_PY=36 ARCH="x86_64" MACOSX_DEPLOYMENT_TARGET="10.9"
+    - env: PYTHON="3.6" CONDA_PY=36 ARCH="x86_64"
       os: osx
-      osx_image: xcode8.3
+      osx_image: xcode9.4
+    - env: PYTHON="3.7" CONDA_PY=37 ARCH="x86_64"
+      os: linux
+      dist: trusty
+    - env: PYTHON="3.7" CONDA_PY=37 ARCH="x86_64"
+      os: osx
+      osx_image: xcode9.4
+  allow_failures:
+    - env: PYTHON="3.7" CONDA_PY=37 ARCH="x86_64"
+      os: osx
+      osx_image: xcode9.4
 # Use miniconda to install binary versions of numpy etc. from continuum
 # analytic's repository. Follows an approach described by Dan Blanchard:
 # https://gist.github.com/dan-blanchard/7045057
 before_install:
+  - git submodule update --init --remote --recursive
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-      export CXX=g++-5;
-      export CC=gcc-5;
+      export CXX=g++-7;
+      export CC=gcc-7;
     fi;
   - if [ ${PYTHON:0:1} == "2" ]; then
       if [ "$TRAVIS_OS_NAME" == "linux" ]; then
@@ -83,6 +101,11 @@ before_install:
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
+  # install everything required to build the receipe
+  # conda-build 3.2.0 on osx to prevent using check_overlinking
+  # method which is quite loooong to process
+  - conda install conda-build==3.2.0
+  - conda install anaconda-client
   # Useful for debugging any issues with conda
   - conda info -a
   # download/install OCE from DLR-SC channel
@@ -91,22 +114,24 @@ before_install:
   - conda config --add channels https://conda.anaconda.org/tpaviot
   - conda config --add channels https://conda.anaconda.org/oce
   - conda config --add channels https://conda.anaconda.org/pythonocc
-  # install everything required to build the receipe
-  - conda install conda-build anaconda-client
+  
 
 
 script:
-  - conda build ci/conda --no-remove-work-dir
+  - conda build ci/conda --dirty --no-remove-work-dir
 
 # automative upload to anaconda cloud only
 # if the build was triggered by a cron
-# that was only nightly builds are uploaded
-# in case of a relase, replace the "nightly" label with "main"
+# labelled as "nightly"
+# else labelled as "continuous-delivery"
 after_success:
   - python ci/move-conda-package.py
   - if [ "$TRAVIS_EVENT_TYPE" == "cron" ]; then
-     anaconda -t $BINSTAR_TOKEN upload *.bz2 --force;
+      anaconda -t $BINSTAR_TOKEN upload *.bz2 -l nightly-master --force;
+    else
+      anaconda -t $BINSTAR_TOKEN upload *.bz2 -l cd-$TRAVIS_BRANCH --force;
     fi;
+
 
 branches:
   only:

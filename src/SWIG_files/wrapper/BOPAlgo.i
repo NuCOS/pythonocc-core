@@ -17,7 +17,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") BOPAlgo
+%define BOPALGODOCSTRING
+""
+%enddef
+%module (package="OCC.Core", docstring=BOPALGODOCSTRING) BOPAlgo
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,34 +34,20 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include BOPAlgo_headers.i
 
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
-
 /* typedefs */
 typedef NCollection_List <BOPAlgo_CheckResult> BOPAlgo_ListOfCheckResult;
 typedef BOPAlgo_ListOfCheckResult::Iterator BOPAlgo_ListIteratorOfListOfCheckResult;
-typedef BOPAlgo_ArgumentAnalyzer * BOPAlgo_PArgumentAnalyzer;
 typedef BOPAlgo_WireEdgeSet * BOPAlgo_PWireEdgeSet;
+typedef BOPAlgo_ArgumentAnalyzer * BOPAlgo_PArgumentAnalyzer;
 typedef BOPAlgo_Builder * BOPAlgo_PBuilder;
 typedef BOPAlgo_BOP * BOPAlgo_PBOP;
-typedef BOPAlgo_PaveFiller * BOPAlgo_PPaveFiller;
 typedef BOPAlgo_Section * BOPAlgo_PSection;
+typedef BOPAlgo_PaveFiller * BOPAlgo_PPaveFiller;
 /* end typedefs declaration */
 
 /* public enums */
@@ -87,6 +76,7 @@ enum BOPAlgo_Operation {
 };
 
 /* end public enums declaration */
+
 
 %nodefaultctor BOPAlgo_Algo;
 %ignore BOPAlgo_Algo::~BOPAlgo_Algo();
@@ -539,7 +529,7 @@ class BOPAlgo_ArgumentAnalyzer : public BOPAlgo_Algo {
 
 	:rtype: BOPAlgo_Operation
 ") OperationType;
-		BOPAlgo_Operation & OperationType ();
+		BOPAlgo_Operation  OperationType ();
 
             %feature("autodoc","1");
             %extend {

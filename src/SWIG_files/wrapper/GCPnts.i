@@ -17,7 +17,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") GCPnts
+%define GCPNTSDOCSTRING
+"This package contains the geometric algorithmes used to
+compute characteristic points on parametrized curves.
+
+They are high level algorithms based on the low level
+algorithms in CPnts.
+-Level : Public.
+All methods of all classes will be public.
+"
+%enddef
+%module (package="OCC.Core", docstring=GCPNTSDOCSTRING) GCPnts
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,35 +41,15 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include GCPnts_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
 
 /* public enums */
-enum GCPnts_AbscissaType {
-	GCPnts_LengthParametrized = 0,
-	GCPnts_Parametrized = 1,
-	GCPnts_AbsComposite = 2,
-};
-
 enum GCPnts_DeflectionType {
 	GCPnts_Linear = 0,
 	GCPnts_Circular = 1,
@@ -67,7 +57,14 @@ enum GCPnts_DeflectionType {
 	GCPnts_DefComposite = 3,
 };
 
+enum GCPnts_AbscissaType {
+	GCPnts_LengthParametrized = 0,
+	GCPnts_Parametrized = 1,
+	GCPnts_AbsComposite = 2,
+};
+
 /* end public enums declaration */
+
 
 class GCPnts_AbscissaPoint {
 	public:

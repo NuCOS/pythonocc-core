@@ -17,7 +17,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") Extrema
+%define EXTREMADOCSTRING
+"points, curves and surfaces.
+In general case, the algorithm to find the
+distances is a minimization algorithm of a function
+of variables: F(X). It is stopped when:
+for X1=X+Dx, F(X) and F(X1) are the same.
+The value of Dx can be calculated for all the
+algorithms.
+
+-Level : Public.
+All methods of all classes will be public.
+
+"
+%enddef
+%module (package="OCC.Core", docstring=EXTREMADOCSTRING) Extrema
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,24 +45,10 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include Extrema_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 typedef NCollection_UBTree <Standard_Integer , Bnd_Sphere> Extrema_UBTreeOfSphere;
@@ -57,13 +57,6 @@ typedef NCollection_Handle <Extrema_UBTreeOfSphere> Extrema_HUBTreeOfSphere;
 /* end typedefs declaration */
 
 /* public enums */
-enum Extrema_ElementType {
-	Extrema_Node = 0,
-	Extrema_UIsoEdge = 1,
-	Extrema_VIsoEdge = 2,
-	Extrema_Face = 3,
-};
-
 enum Extrema_ExtAlgo {
 	Extrema_ExtAlgo_Grad = 0,
 	Extrema_ExtAlgo_Tree = 1,
@@ -75,7 +68,35 @@ enum Extrema_ExtFlag {
 	Extrema_ExtFlag_MINMAX = 2,
 };
 
+enum Extrema_ElementType {
+	Extrema_Node = 0,
+	Extrema_UIsoEdge = 1,
+	Extrema_VIsoEdge = 2,
+	Extrema_Face = 3,
+};
+
 /* end public enums declaration */
+
+%wrap_handle(Extrema_ExtPExtS)
+%wrap_handle(Extrema_ExtPRevS)
+%wrap_handle(Extrema_HArray1OfPOnCurv)
+%wrap_handle(Extrema_HArray1OfPOnCurv2d)
+%wrap_handle(Extrema_HArray1OfPOnSurf)
+%wrap_handle(Extrema_HArray2OfPOnCurv)
+%wrap_handle(Extrema_HArray2OfPOnCurv2d)
+%wrap_handle(Extrema_HArray2OfPOnSurf)
+%wrap_handle(Extrema_HArray2OfPOnSurfParams)
+%wrap_handle(Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC)
+%wrap_handle(Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d)
+%wrap_handle(Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC)
+%wrap_handle(Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d)
+%wrap_handle(Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC)
+%wrap_handle(Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d)
+%wrap_handle(Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC)
+%wrap_handle(Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d)
+%wrap_handle(Extrema_SequenceNodeOfSequenceOfPOnCurv)
+%wrap_handle(Extrema_SequenceNodeOfSequenceOfPOnCurv2d)
+%wrap_handle(Extrema_SequenceNodeOfSequenceOfPOnSurf)
 
 %nodefaultctor Extrema_Array1OfPOnCurv;
 class Extrema_Array1OfPOnCurv {
@@ -159,6 +180,41 @@ class Extrema_Array1OfPOnCurv {
 };
 
 
+
+%extend Extrema_Array1OfPOnCurv {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend Extrema_Array1OfPOnCurv {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -246,6 +302,41 @@ class Extrema_Array1OfPOnCurv2d {
 };
 
 
+
+%extend Extrema_Array1OfPOnCurv2d {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend Extrema_Array1OfPOnCurv2d {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -333,6 +424,41 @@ class Extrema_Array1OfPOnSurf {
 };
 
 
+
+%extend Extrema_Array1OfPOnSurf {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend Extrema_Array1OfPOnSurf {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -4440,51 +4566,7 @@ class Extrema_ExtPExtS : public Standard_Transient {
 };
 
 
-%extend Extrema_ExtPExtS {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_ExtPExtS(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_ExtPExtS::Handle_Extrema_ExtPExtS %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_ExtPExtS;
-class Handle_Extrema_ExtPExtS : public Handle_Standard_Transient {
-
-    public:
-        // constructors
-        Handle_Extrema_ExtPExtS();
-        Handle_Extrema_ExtPExtS(const Handle_Extrema_ExtPExtS &aHandle);
-        Handle_Extrema_ExtPExtS(const Extrema_ExtPExtS *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_ExtPExtS DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_ExtPExtS {
-    Extrema_ExtPExtS* _get_reference() {
-    return (Extrema_ExtPExtS*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_ExtPExtS {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_ExtPExtS)
 
 %extend Extrema_ExtPExtS {
 	%pythoncode {
@@ -4589,51 +4671,7 @@ class Extrema_ExtPRevS : public Standard_Transient {
 };
 
 
-%extend Extrema_ExtPRevS {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_ExtPRevS(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_ExtPRevS::Handle_Extrema_ExtPRevS %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_ExtPRevS;
-class Handle_Extrema_ExtPRevS : public Handle_Standard_Transient {
-
-    public:
-        // constructors
-        Handle_Extrema_ExtPRevS();
-        Handle_Extrema_ExtPRevS(const Handle_Extrema_ExtPRevS &aHandle);
-        Handle_Extrema_ExtPRevS(const Extrema_ExtPRevS *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_ExtPRevS DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_ExtPRevS {
-    Extrema_ExtPRevS* _get_reference() {
-    return (Extrema_ExtPRevS*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_ExtPRevS {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_ExtPRevS)
 
 %extend Extrema_ExtPRevS {
 	%pythoncode {
@@ -6231,52 +6269,43 @@ class Extrema_HArray1OfPOnCurv : public MMgt_TShared {
 };
 
 
+%make_alias(Extrema_HArray1OfPOnCurv)
+
+
 %extend Extrema_HArray1OfPOnCurv {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_HArray1OfPOnCurv(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_HArray1OfPOnCurv::Handle_Extrema_HArray1OfPOnCurv %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_HArray1OfPOnCurv;
-class Handle_Extrema_HArray1OfPOnCurv : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_Extrema_HArray1OfPOnCurv();
-        Handle_Extrema_HArray1OfPOnCurv(const Handle_Extrema_HArray1OfPOnCurv &aHandle);
-        Handle_Extrema_HArray1OfPOnCurv(const Extrema_HArray1OfPOnCurv *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_HArray1OfPOnCurv DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_HArray1OfPOnCurv {
-    Extrema_HArray1OfPOnCurv* _get_reference() {
-    return (Extrema_HArray1OfPOnCurv*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_HArray1OfPOnCurv {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend Extrema_HArray1OfPOnCurv {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -6352,52 +6381,43 @@ class Extrema_HArray1OfPOnCurv2d : public MMgt_TShared {
 };
 
 
+%make_alias(Extrema_HArray1OfPOnCurv2d)
+
+
 %extend Extrema_HArray1OfPOnCurv2d {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_HArray1OfPOnCurv2d(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_HArray1OfPOnCurv2d::Handle_Extrema_HArray1OfPOnCurv2d %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_HArray1OfPOnCurv2d;
-class Handle_Extrema_HArray1OfPOnCurv2d : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_Extrema_HArray1OfPOnCurv2d();
-        Handle_Extrema_HArray1OfPOnCurv2d(const Handle_Extrema_HArray1OfPOnCurv2d &aHandle);
-        Handle_Extrema_HArray1OfPOnCurv2d(const Extrema_HArray1OfPOnCurv2d *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_HArray1OfPOnCurv2d DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_HArray1OfPOnCurv2d {
-    Extrema_HArray1OfPOnCurv2d* _get_reference() {
-    return (Extrema_HArray1OfPOnCurv2d*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_HArray1OfPOnCurv2d {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend Extrema_HArray1OfPOnCurv2d {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -6473,52 +6493,43 @@ class Extrema_HArray1OfPOnSurf : public MMgt_TShared {
 };
 
 
+%make_alias(Extrema_HArray1OfPOnSurf)
+
+
 %extend Extrema_HArray1OfPOnSurf {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_HArray1OfPOnSurf(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_HArray1OfPOnSurf::Handle_Extrema_HArray1OfPOnSurf %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_HArray1OfPOnSurf;
-class Handle_Extrema_HArray1OfPOnSurf : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_Extrema_HArray1OfPOnSurf();
-        Handle_Extrema_HArray1OfPOnSurf(const Handle_Extrema_HArray1OfPOnSurf &aHandle);
-        Handle_Extrema_HArray1OfPOnSurf(const Extrema_HArray1OfPOnSurf *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_HArray1OfPOnSurf DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_HArray1OfPOnSurf {
-    Extrema_HArray1OfPOnSurf* _get_reference() {
-    return (Extrema_HArray1OfPOnSurf*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_HArray1OfPOnSurf {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend Extrema_HArray1OfPOnSurf {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -6620,51 +6631,7 @@ class Extrema_HArray2OfPOnCurv : public MMgt_TShared {
 };
 
 
-%extend Extrema_HArray2OfPOnCurv {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_HArray2OfPOnCurv(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_HArray2OfPOnCurv::Handle_Extrema_HArray2OfPOnCurv %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_HArray2OfPOnCurv;
-class Handle_Extrema_HArray2OfPOnCurv : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_Extrema_HArray2OfPOnCurv();
-        Handle_Extrema_HArray2OfPOnCurv(const Handle_Extrema_HArray2OfPOnCurv &aHandle);
-        Handle_Extrema_HArray2OfPOnCurv(const Extrema_HArray2OfPOnCurv *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_HArray2OfPOnCurv DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_HArray2OfPOnCurv {
-    Extrema_HArray2OfPOnCurv* _get_reference() {
-    return (Extrema_HArray2OfPOnCurv*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_HArray2OfPOnCurv {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_HArray2OfPOnCurv)
 
 %extend Extrema_HArray2OfPOnCurv {
 	%pythoncode {
@@ -6767,51 +6734,7 @@ class Extrema_HArray2OfPOnCurv2d : public MMgt_TShared {
 };
 
 
-%extend Extrema_HArray2OfPOnCurv2d {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_HArray2OfPOnCurv2d(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_HArray2OfPOnCurv2d::Handle_Extrema_HArray2OfPOnCurv2d %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_HArray2OfPOnCurv2d;
-class Handle_Extrema_HArray2OfPOnCurv2d : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_Extrema_HArray2OfPOnCurv2d();
-        Handle_Extrema_HArray2OfPOnCurv2d(const Handle_Extrema_HArray2OfPOnCurv2d &aHandle);
-        Handle_Extrema_HArray2OfPOnCurv2d(const Extrema_HArray2OfPOnCurv2d *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_HArray2OfPOnCurv2d DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_HArray2OfPOnCurv2d {
-    Extrema_HArray2OfPOnCurv2d* _get_reference() {
-    return (Extrema_HArray2OfPOnCurv2d*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_HArray2OfPOnCurv2d {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_HArray2OfPOnCurv2d)
 
 %extend Extrema_HArray2OfPOnCurv2d {
 	%pythoncode {
@@ -6914,51 +6837,7 @@ class Extrema_HArray2OfPOnSurf : public MMgt_TShared {
 };
 
 
-%extend Extrema_HArray2OfPOnSurf {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_HArray2OfPOnSurf(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_HArray2OfPOnSurf::Handle_Extrema_HArray2OfPOnSurf %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_HArray2OfPOnSurf;
-class Handle_Extrema_HArray2OfPOnSurf : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_Extrema_HArray2OfPOnSurf();
-        Handle_Extrema_HArray2OfPOnSurf(const Handle_Extrema_HArray2OfPOnSurf &aHandle);
-        Handle_Extrema_HArray2OfPOnSurf(const Extrema_HArray2OfPOnSurf *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_HArray2OfPOnSurf DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_HArray2OfPOnSurf {
-    Extrema_HArray2OfPOnSurf* _get_reference() {
-    return (Extrema_HArray2OfPOnSurf*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_HArray2OfPOnSurf {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_HArray2OfPOnSurf)
 
 %extend Extrema_HArray2OfPOnSurf {
 	%pythoncode {
@@ -7061,51 +6940,7 @@ class Extrema_HArray2OfPOnSurfParams : public MMgt_TShared {
 };
 
 
-%extend Extrema_HArray2OfPOnSurfParams {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_HArray2OfPOnSurfParams(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_HArray2OfPOnSurfParams::Handle_Extrema_HArray2OfPOnSurfParams %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_HArray2OfPOnSurfParams;
-class Handle_Extrema_HArray2OfPOnSurfParams : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_Extrema_HArray2OfPOnSurfParams();
-        Handle_Extrema_HArray2OfPOnSurfParams(const Handle_Extrema_HArray2OfPOnSurfParams &aHandle);
-        Handle_Extrema_HArray2OfPOnSurfParams(const Extrema_HArray2OfPOnSurfParams *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_HArray2OfPOnSurfParams DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_HArray2OfPOnSurfParams {
-    Extrema_HArray2OfPOnSurfParams* _get_reference() {
-    return (Extrema_HArray2OfPOnSurfParams*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_HArray2OfPOnSurfParams {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_HArray2OfPOnSurfParams)
 
 %extend Extrema_HArray2OfPOnSurfParams {
 	%pythoncode {
@@ -9529,51 +9364,7 @@ class Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC : public TCollect
 };
 
 
-%extend Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC::Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC;
-class Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC();
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC(const Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC &aHandle);
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC(const Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC {
-    Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC* _get_reference() {
-    return (Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC)
 
 %extend Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC {
 	%pythoncode {
@@ -9600,51 +9391,7 @@ class Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d : public TColle
 };
 
 
-%extend Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d::Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d;
-class Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d();
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d(const Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d &aHandle);
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d(const Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d {
-    Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d* _get_reference() {
-    return (Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d)
 
 %extend Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfELPCOfLocateExtPC2d {
 	%pythoncode {
@@ -9671,51 +9418,7 @@ class Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC : public TCollection_SeqNode 
 };
 
 
-%extend Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC::Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC;
-class Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC();
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC(const Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC &aHandle);
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC(const Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC {
-    Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC* _get_reference() {
-    return (Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC)
 
 %extend Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC {
 	%pythoncode {
@@ -9742,51 +9445,7 @@ class Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d : public TCollection_SeqNod
 };
 
 
-%extend Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d::Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d;
-class Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d();
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d(const Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d &aHandle);
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d(const Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d {
-    Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d* _get_reference() {
-    return (Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d)
 
 %extend Extrema_SequenceNodeOfSeqPCOfPCFOfEPCOfExtPC2d {
 	%pythoncode {
@@ -9813,51 +9472,7 @@ class Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC : public TCollect
 };
 
 
-%extend Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC::Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC;
-class Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC();
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC(const Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC &aHandle);
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC(const Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC {
-    Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC* _get_reference() {
-    return (Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC)
 
 %extend Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC {
 	%pythoncode {
@@ -9884,51 +9499,7 @@ class Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d : public TColle
 };
 
 
-%extend Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d::Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d;
-class Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d();
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d(const Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d &aHandle);
-        Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d(const Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d {
-    Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d* _get_reference() {
-    return (Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d)
 
 %extend Extrema_SequenceNodeOfSeqPCOfPCLocFOfLocEPCOfLocateExtPC2d {
 	%pythoncode {
@@ -9955,51 +9526,7 @@ class Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC : public TCollection_SeqNode
 };
 
 
-%extend Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC::Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC;
-class Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC();
-        Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC(const Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC &aHandle);
-        Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC(const Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC {
-    Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC* _get_reference() {
-    return (Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC)
 
 %extend Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC {
 	%pythoncode {
@@ -10026,51 +9553,7 @@ class Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d : public TCollection_SeqNo
 };
 
 
-%extend Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d::Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d;
-class Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d();
-        Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d(const Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d &aHandle);
-        Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d(const Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d {
-    Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d* _get_reference() {
-    return (Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d)
 
 %extend Extrema_SequenceNodeOfSeqPOnCOfCCLocFOfLocECC2d {
 	%pythoncode {
@@ -10097,51 +9580,7 @@ class Extrema_SequenceNodeOfSequenceOfPOnCurv : public TCollection_SeqNode {
 };
 
 
-%extend Extrema_SequenceNodeOfSequenceOfPOnCurv {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv::Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv;
-class Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv();
-        Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv(const Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv &aHandle);
-        Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv(const Extrema_SequenceNodeOfSequenceOfPOnCurv *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv {
-    Extrema_SequenceNodeOfSequenceOfPOnCurv* _get_reference() {
-    return (Extrema_SequenceNodeOfSequenceOfPOnCurv*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_SequenceNodeOfSequenceOfPOnCurv)
 
 %extend Extrema_SequenceNodeOfSequenceOfPOnCurv {
 	%pythoncode {
@@ -10168,51 +9607,7 @@ class Extrema_SequenceNodeOfSequenceOfPOnCurv2d : public TCollection_SeqNode {
 };
 
 
-%extend Extrema_SequenceNodeOfSequenceOfPOnCurv2d {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv2d(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv2d::Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv2d %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv2d;
-class Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv2d : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv2d();
-        Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv2d(const Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv2d &aHandle);
-        Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv2d(const Extrema_SequenceNodeOfSequenceOfPOnCurv2d *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv2d DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv2d {
-    Extrema_SequenceNodeOfSequenceOfPOnCurv2d* _get_reference() {
-    return (Extrema_SequenceNodeOfSequenceOfPOnCurv2d*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_SequenceNodeOfSequenceOfPOnCurv2d {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_SequenceNodeOfSequenceOfPOnCurv2d)
 
 %extend Extrema_SequenceNodeOfSequenceOfPOnCurv2d {
 	%pythoncode {
@@ -10239,51 +9634,7 @@ class Extrema_SequenceNodeOfSequenceOfPOnSurf : public TCollection_SeqNode {
 };
 
 
-%extend Extrema_SequenceNodeOfSequenceOfPOnSurf {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Extrema_SequenceNodeOfSequenceOfPOnSurf(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Extrema_SequenceNodeOfSequenceOfPOnSurf::Handle_Extrema_SequenceNodeOfSequenceOfPOnSurf %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Extrema_SequenceNodeOfSequenceOfPOnSurf;
-class Handle_Extrema_SequenceNodeOfSequenceOfPOnSurf : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_Extrema_SequenceNodeOfSequenceOfPOnSurf();
-        Handle_Extrema_SequenceNodeOfSequenceOfPOnSurf(const Handle_Extrema_SequenceNodeOfSequenceOfPOnSurf &aHandle);
-        Handle_Extrema_SequenceNodeOfSequenceOfPOnSurf(const Extrema_SequenceNodeOfSequenceOfPOnSurf *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Extrema_SequenceNodeOfSequenceOfPOnSurf DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Extrema_SequenceNodeOfSequenceOfPOnSurf {
-    Extrema_SequenceNodeOfSequenceOfPOnSurf* _get_reference() {
-    return (Extrema_SequenceNodeOfSequenceOfPOnSurf*)$self->Access();
-    }
-};
-
-%extend Handle_Extrema_SequenceNodeOfSequenceOfPOnSurf {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Extrema_SequenceNodeOfSequenceOfPOnSurf)
 
 %extend Extrema_SequenceNodeOfSequenceOfPOnSurf {
 	%pythoncode {

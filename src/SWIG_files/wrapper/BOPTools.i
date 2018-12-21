@@ -17,7 +17,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") BOPTools
+%define BOPTOOLSDOCSTRING
+"
+"
+%enddef
+%module (package="OCC.Core", docstring=BOPTOOLSDOCSTRING) BOPTools
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,30 +35,16 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include BOPTools_headers.i
 
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
-
 /* typedefs */
-typedef BOPTools_ListOfCoupleOfShape::Iterator BOPTools_ListIteratorOfListOfCoupleOfShape;
+typedef BOPTools_MapOfSet::Iterator BOPTools_MapIteratorOfMapOfSet;
 typedef NCollection_List <BOPTools_CoupleOfShape> BOPTools_ListOfCoupleOfShape;
 typedef NCollection_List <BOPTools_EdgeSet> BOPTools_ListOfEdgeSet;
-typedef BOPTools_MapOfSet::Iterator BOPTools_MapIteratorOfMapOfSet;
+typedef BOPTools_ListOfCoupleOfShape::Iterator BOPTools_ListIteratorOfListOfCoupleOfShape;
 typedef BOPTools_ListOfConnexityBlock::Iterator BOPTools_ListIteratorOfListOfConnexityBlock;
 typedef BOPTools_ListOfEdgeSet::Iterator BOPTools_ListIteratorOfListOfEdgeSet;
 typedef NCollection_List <BOPTools_ConnexityBlock> BOPTools_ListOfConnexityBlock;
@@ -65,6 +55,7 @@ typedef NCollection_Map <BOPTools_Set , BOPTools_SetMapHasher> BOPTools_MapOfSet
 
 /* public enums */
 /* end public enums declaration */
+
 
 %rename(boptools) BOPTools;
 class BOPTools {

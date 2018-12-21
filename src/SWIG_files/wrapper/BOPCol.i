@@ -17,7 +17,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") BOPCol
+%define BOPCOLDOCSTRING
+"
+The package contains collection classes
+that are used by
+partition and boolean operation algorithms"
+%enddef
+%module (package="OCC.Core", docstring=BOPCOLDOCSTRING) BOPCol
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,31 +37,18 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include BOPCol_headers.i
 
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
-
 /* typedefs */
-typedef NCollection_DataMap <TopoDS_Shape , BOPCol_ListOfShape , TopTools_ShapeMapHasher> BOPCol_DataMapOfShapeListOfShape;
 typedef NCollection_Map <Standard_Integer , TColStd_MapIntegerHasher> BOPCol_MapOfInteger;
+typedef NCollection_DataMap <TopoDS_Shape , BOPCol_ListOfShape , TopTools_ShapeMapHasher> BOPCol_DataMapOfShapeListOfShape;
 typedef BOPCol_MapOfOrientedShape::Iterator BOPCol_MapIteratorOfMapOfOrientedShape;
+typedef NCollection_IndexedDataMap <TopoDS_Shape , BOPCol_ListOfShape , TopTools_ShapeMapHasher> BOPCol_IndexedDataMapOfShapeListOfShape;
 typedef BOPCol_DataMapOfShapeShape::Iterator BOPCol_DataMapIteratorOfDataMapOfShapeShape;
-typedef BOPCol_DataMapOfIntegerShape::Iterator BOPCol_DataMapIteratorOfDataMapOfIntegerShape;
+typedef NCollection_UBTree <Standard_Integer , Bnd_Box> BOPCol_BoxBndTree;
 typedef NCollection_IndexedDataMap <Standard_Integer , BOPCol_ListOfInteger , TColStd_MapIntegerHasher> BOPCol_IndexedDataMapOfIntegerListOfInteger;
 typedef NCollection_DataMap <Standard_Integer , BOPCol_ListOfInteger , TColStd_MapIntegerHasher> BOPCol_DataMapOfIntegerListOfInteger;
 typedef NCollection_DataMap <Standard_Integer , BOPCol_MapOfInteger , TColStd_MapIntegerHasher> BOPCol_DataMapOfIntegerMapOfInteger;
@@ -66,28 +59,27 @@ typedef BOPCol_ListOfShape::Iterator BOPCol_ListIteratorOfListOfShape;
 typedef BOPCol_DataMapOfIntegerReal::Iterator BOPCol_DataMapIteratorOfDataMapOfIntegerReal;
 typedef BOPCol_DataMapOfShapeListOfShape::Iterator BOPCol_DataMapIteratorOfDataMapOfShapeListOfShape;
 typedef Standard_Integer * BOPCol_PInteger;
-typedef BOPCol_DataMapOfShapeAddress::Iterator BOPCol_DataMapIteratorOfDataMapOfShapeAddress;
+typedef BOPCol_DataMapOfIntegerListOfInteger::Iterator BOPCol_DataMapIteratorOfDataMapOfIntegerListOfInteger;
 typedef NCollection_DataMap <Standard_Integer , Standard_Real , TColStd_MapIntegerHasher> BOPCol_DataMapOfIntegerReal;
 typedef BOPCol_DataMapOfIntegerMapOfInteger::Iterator BOPCol_DataMapIteratorOfDataMapOfIntegerMapOfInteger;
 typedef BOPCol_DataMapOfShapeInteger::Iterator BOPCol_DataMapIteratorOfDataMapOfShapeInteger;
-typedef NCollection_DataMap <TopoDS_Shape , Standard_Real , TopTools_ShapeMapHasher> BOPCol_DataMapOfShapeReal;
+typedef BOPCol_DataMapOfShapeReal::Iterator BOPCol_DataMapIteratorOfDataMapOfShapeReal;
 typedef BOPCol_ListOfInteger::Iterator BOPCol_ListIteratorOfListOfInteger;
 typedef NCollection_DataMap <Standard_Integer , Standard_Integer , TColStd_MapIntegerHasher> BOPCol_DataMapOfIntegerInteger;
 typedef NCollection_List <TopoDS_Shape> BOPCol_ListOfShape;
 typedef Handle_NCollection_BaseAllocator BOPCol_BaseAllocator;
-typedef NCollection_UBTree <Standard_Integer , Bnd_Box> BOPCol_BoxBndTree;
+typedef BOPCol_DataMapOfIntegerShape::Iterator BOPCol_DataMapIteratorOfDataMapOfIntegerShape;
 typedef NCollection_Sequence <TopoDS_Shape> BOPCol_SequenceOfShape;
 typedef NCollection_DataMap <Handle_Standard_Transient , Standard_Address , TColStd_MapTransientHasher> BOPCol_DataMapOfTransientAddress;
 typedef NCollection_IndexedMap <TopoDS_Shape , TopTools_ShapeMapHasher> BOPCol_IndexedMapOfShape;
 typedef NCollection_IndexedMap <Standard_Integer , TColStd_MapIntegerHasher> BOPCol_IndexedMapOfInteger;
-typedef BOPCol_DataMapOfShapeReal::Iterator BOPCol_DataMapIteratorOfDataMapOfShapeReal;
-typedef BOPCol_DataMapOfIntegerInteger::Iterator BOPCol_DataMapIteratorOfDataMapOfIntegerInteger;
+typedef NCollection_DataMap <TopoDS_Shape , Standard_Real , TopTools_ShapeMapHasher> BOPCol_DataMapOfShapeReal;
 typedef NCollection_List <Standard_Integer> BOPCol_ListOfInteger;
 typedef NCollection_DataMap <TopoDS_Shape , Standard_Integer , TopTools_ShapeMapHasher> BOPCol_DataMapOfShapeInteger;
 typedef NCollection_DataMap <Standard_Integer , TopoDS_Shape , TColStd_MapIntegerHasher> BOPCol_DataMapOfIntegerShape;
 typedef NCollection_Sequence <Standard_Real> BOPCol_SequenceOfReal;
 typedef BOPCol_DataMapOfIntegerListOfShape::Iterator BOPCol_DataMapIteratorOfDataMapOfIntegerListOfShape;
-typedef NCollection_IndexedDataMap <TopoDS_Shape , BOPCol_ListOfShape , TopTools_ShapeMapHasher> BOPCol_IndexedDataMapOfShapeListOfShape;
+typedef BOPCol_DataMapOfIntegerInteger::Iterator BOPCol_DataMapIteratorOfDataMapOfIntegerInteger;
 typedef BOPCol_ListOfInteger * BOPCol_PListOfInteger;
 typedef NCollection_List <BOPCol_ListOfShape> BOPCol_ListOfListOfShape;
 typedef NCollection_UBTree <Standard_Integer , Bnd_Box2d> BOPCol_Box2DBndTree;
@@ -99,7 +91,7 @@ typedef NCollection_DataMap <TopoDS_Shape , Standard_Address , TopTools_ShapeMap
 typedef NCollection_IndexedDataMap <TopoDS_Shape , Standard_Integer , TopTools_ShapeMapHasher> BOPCol_IndexedDataMapOfShapeInteger;
 typedef NCollection_Map <TopoDS_Shape , TopTools_ShapeMapHasher> BOPCol_MapOfShape;
 typedef NCollection_Sequence <gp_Pnt2d> BOPCol_SequenceOfPnt2d;
-typedef BOPCol_DataMapOfIntegerListOfInteger::Iterator BOPCol_DataMapIteratorOfDataMapOfIntegerListOfInteger;
+typedef BOPCol_DataMapOfShapeAddress::Iterator BOPCol_DataMapIteratorOfDataMapOfShapeAddress;
 typedef NCollection_Map <TopoDS_Shape , TopTools_OrientedShapeMapHasher> BOPCol_MapOfOrientedShape;
 typedef NCollection_IndexedDataMap <TopoDS_Shape , TopoDS_Shape , TopTools_ShapeMapHasher> BOPCol_IndexedDataMapOfShapeShape;
 typedef NCollection_IndexedMap <TopoDS_Shape , TopTools_OrientedShapeMapHasher> BOPCol_IndexedMapOfOrientedShape;
@@ -107,6 +99,7 @@ typedef NCollection_IndexedMap <TopoDS_Shape , TopTools_OrientedShapeMapHasher> 
 
 /* public enums */
 /* end public enums declaration */
+
 
 %nodefaultctor BOPCol_Box2DBndTreeSelector;
 class BOPCol_Box2DBndTreeSelector : public BOPCol_Box2DBndTree::Selector {

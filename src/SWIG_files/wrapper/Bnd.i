@@ -17,7 +17,33 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") Bnd
+%define BNDDOCSTRING
+"Supports the Boundings Volumes. A Bounding Volume
+is used to bound a shape to optimising algorithms.
+If a point is outside the Bounding  Volume of a
+shape it is also outside the shape. The contrary
+is not necessarily true.
+
+Various classes are then implemented to describe
+the usual Bounding volumes. Not all classes are
+implemented.
+
+in 3D :
+Box         Implemented
+BoundSortBox    Implemented
+
+in 2D :
+Box2d        Implemented
+BoundSortBox2d   Implemented
+
+
+
+-Level : Public.
+All methods of all classes will be public.
+
+"
+%enddef
+%module (package="OCC.Core", docstring=BNDDOCSTRING) Bnd
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,30 +57,21 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include Bnd_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
 
 /* public enums */
 /* end public enums declaration */
+
+%wrap_handle(Bnd_HArray1OfBox)
+%wrap_handle(Bnd_HArray1OfBox2d)
+%wrap_handle(Bnd_HArray1OfSphere)
+%wrap_handle(Bnd_SequenceNodeOfSeqOfBox)
 
 %nodefaultctor Bnd_Array1OfBox;
 class Bnd_Array1OfBox {
@@ -138,6 +155,41 @@ class Bnd_Array1OfBox {
 };
 
 
+
+%extend Bnd_Array1OfBox {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend Bnd_Array1OfBox {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -225,6 +277,41 @@ class Bnd_Array1OfBox2d {
 };
 
 
+
+%extend Bnd_Array1OfBox2d {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend Bnd_Array1OfBox2d {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -312,6 +399,41 @@ class Bnd_Array1OfSphere {
 };
 
 
+
+%extend Bnd_Array1OfSphere {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend Bnd_Array1OfSphere {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -1761,52 +1883,43 @@ class Bnd_HArray1OfBox : public MMgt_TShared {
 };
 
 
+%make_alias(Bnd_HArray1OfBox)
+
+
 %extend Bnd_HArray1OfBox {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Bnd_HArray1OfBox(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Bnd_HArray1OfBox::Handle_Bnd_HArray1OfBox %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Bnd_HArray1OfBox;
-class Handle_Bnd_HArray1OfBox : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_Bnd_HArray1OfBox();
-        Handle_Bnd_HArray1OfBox(const Handle_Bnd_HArray1OfBox &aHandle);
-        Handle_Bnd_HArray1OfBox(const Bnd_HArray1OfBox *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Bnd_HArray1OfBox DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Bnd_HArray1OfBox {
-    Bnd_HArray1OfBox* _get_reference() {
-    return (Bnd_HArray1OfBox*)$self->Access();
-    }
-};
-
-%extend Handle_Bnd_HArray1OfBox {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend Bnd_HArray1OfBox {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -1882,52 +1995,43 @@ class Bnd_HArray1OfBox2d : public MMgt_TShared {
 };
 
 
+%make_alias(Bnd_HArray1OfBox2d)
+
+
 %extend Bnd_HArray1OfBox2d {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Bnd_HArray1OfBox2d(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Bnd_HArray1OfBox2d::Handle_Bnd_HArray1OfBox2d %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Bnd_HArray1OfBox2d;
-class Handle_Bnd_HArray1OfBox2d : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_Bnd_HArray1OfBox2d();
-        Handle_Bnd_HArray1OfBox2d(const Handle_Bnd_HArray1OfBox2d &aHandle);
-        Handle_Bnd_HArray1OfBox2d(const Bnd_HArray1OfBox2d *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Bnd_HArray1OfBox2d DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Bnd_HArray1OfBox2d {
-    Bnd_HArray1OfBox2d* _get_reference() {
-    return (Bnd_HArray1OfBox2d*)$self->Access();
-    }
-};
-
-%extend Handle_Bnd_HArray1OfBox2d {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend Bnd_HArray1OfBox2d {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -2003,52 +2107,43 @@ class Bnd_HArray1OfSphere : public MMgt_TShared {
 };
 
 
+%make_alias(Bnd_HArray1OfSphere)
+
+
 %extend Bnd_HArray1OfSphere {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Bnd_HArray1OfSphere(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Bnd_HArray1OfSphere::Handle_Bnd_HArray1OfSphere %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Bnd_HArray1OfSphere;
-class Handle_Bnd_HArray1OfSphere : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_Bnd_HArray1OfSphere();
-        Handle_Bnd_HArray1OfSphere(const Handle_Bnd_HArray1OfSphere &aHandle);
-        Handle_Bnd_HArray1OfSphere(const Bnd_HArray1OfSphere *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Bnd_HArray1OfSphere DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Bnd_HArray1OfSphere {
-    Bnd_HArray1OfSphere* _get_reference() {
-    return (Bnd_HArray1OfSphere*)$self->Access();
-    }
-};
-
-%extend Handle_Bnd_HArray1OfSphere {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend Bnd_HArray1OfSphere {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -2217,51 +2312,7 @@ class Bnd_SequenceNodeOfSeqOfBox : public TCollection_SeqNode {
 };
 
 
-%extend Bnd_SequenceNodeOfSeqOfBox {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_Bnd_SequenceNodeOfSeqOfBox(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_Bnd_SequenceNodeOfSeqOfBox::Handle_Bnd_SequenceNodeOfSeqOfBox %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_Bnd_SequenceNodeOfSeqOfBox;
-class Handle_Bnd_SequenceNodeOfSeqOfBox : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_Bnd_SequenceNodeOfSeqOfBox();
-        Handle_Bnd_SequenceNodeOfSeqOfBox(const Handle_Bnd_SequenceNodeOfSeqOfBox &aHandle);
-        Handle_Bnd_SequenceNodeOfSeqOfBox(const Bnd_SequenceNodeOfSeqOfBox *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_Bnd_SequenceNodeOfSeqOfBox DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_Bnd_SequenceNodeOfSeqOfBox {
-    Bnd_SequenceNodeOfSeqOfBox* _get_reference() {
-    return (Bnd_SequenceNodeOfSeqOfBox*)$self->Access();
-    }
-};
-
-%extend Handle_Bnd_SequenceNodeOfSeqOfBox {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(Bnd_SequenceNodeOfSeqOfBox)
 
 %extend Bnd_SequenceNodeOfSeqOfBox {
 	%pythoncode {

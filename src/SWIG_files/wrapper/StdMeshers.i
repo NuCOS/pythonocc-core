@@ -17,7 +17,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") StdMeshers
+%define STDMESHERSDOCSTRING
+"No docstring provided."
+%enddef
+%module (package="OCC.Core", docstring=STDMESHERSDOCSTRING) StdMeshers
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,34 +34,20 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include StdMeshers_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 typedef std::map<TNode , TNodeColumn> TNode2ColumnMap;
 typedef std::map<double , TNodeColumn> TParam2ColumnMap;
 typedef TopTools_IndexedMapOfOrientedShape TBlockShapes;
 typedef uvPtStruct UVPtStruct;
-typedef double Pt3[3];
+typedef boost::shared_ptr<SMESH_ComputeError> TError;
 typedef boost::shared_ptr<uvPtStruct> UVPtStructPtr;
 typedef std::vector<StdMeshers_FaceSidePtr> TSideVector;
-typedef boost::shared_ptr<SMESH_ComputeError> TError;
+typedef double Pt3[3];
 typedef std::map<double , TNodeColumn>::const_iterator TParam2ColumnIt;
 typedef boost::shared_ptr<StdMeshers_FaceSide> StdMeshers_FaceSidePtr;
 typedef std::vector <const SMDS_MeshNode *> TNodeColumn;
@@ -74,6 +63,7 @@ enum TSideID {
 };
 
 /* end public enums declaration */
+
 
 %nodefaultctor StdMeshers_Arithmetic1D;
 class StdMeshers_Arithmetic1D : public SMESH_Hypothesis {

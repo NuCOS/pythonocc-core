@@ -17,7 +17,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") SMDS
+%define SMDSDOCSTRING
+"No docstring provided."
+%enddef
+%module (package="OCC.Core", docstring=SMDSDOCSTRING) SMDS
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,6 +34,7 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include <boost_shared_ptr.i>
@@ -43,21 +47,6 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %shared_ptr(SMDS_IteratorOfElements)
 
 %include SMDS_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 typedef SMDS_Iterator <const SMDS_MeshFace *> SMDS_FaceIterator;
@@ -86,6 +75,7 @@ enum SMDS_TypeOfPosition {
 };
 
 /* end public enums declaration */
+
 
 %nodefaultctor SMDS_Iterator;
 template<typename VALUE> class SMDS_Iterator {

@@ -17,7 +17,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") BinObjMgt
+%define BINOBJMGTDOCSTRING
+"This package defines services to manage the storage
+grain of data produced by applications.
+"
+%enddef
+%module (package="OCC.Core", docstring=BINOBJMGTDOCSTRING) BinObjMgt
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,24 +36,10 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include BinObjMgt_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 typedef Standard_Byte * BinObjMgt_PByte;
@@ -63,6 +54,7 @@ typedef Standard_Character * BinObjMgt_PChar;
 
 /* public enums */
 /* end public enums declaration */
+
 
 %nodefaultctor BinObjMgt_Persistent;
 class BinObjMgt_Persistent {

@@ -23,7 +23,7 @@ import sys
 
 from OCC import VERSION
 from OCC.Display.backend import load_backend, get_qt_modules
-from OCC.Display.OCCViewer import Viewer3d
+from OCC.Display.OCCViewer import OffscreenRenderer
 
 log = logging.getLogger(__name__)
 
@@ -50,9 +50,7 @@ def init_display(backend_str=None, size=(1024, 768)):
     """
     if os.getenv("PYTHONOCC_OFFSCREEN_RENDERER") == "1":
         # create the offscreen renderer
-        offscreen_renderer = Viewer3d(None)
-        offscreen_renderer.Create()
-        offscreen_renderer.SetSize(size[0], size[1])
+        offscreen_renderer = OffscreenRenderer()
 
         def do_nothing(*kargs, **kwargs):
             """ takes as many parameters as you want,
@@ -112,6 +110,11 @@ def init_display(backend_str=None, size=(1024, 768)):
         win.canva.InitDriver()
         app.SetTopWindow(win)
         display = win.canva._display
+        # background gradient
+        display.set_bg_gradient_color(206, 215, 222, 128, 128, 128)
+        # display black trihedron
+        display.display_trihedron()
+
 
         def add_menu(*args, **kwargs):
             win.add_menu(*args, **kwargs)
@@ -153,9 +156,10 @@ def init_display(backend_str=None, size=(1024, 768)):
 
             def centerOnScreen(self):
                 '''Centers the window on the screen.'''
-                resolution = QtWidgets.QDesktopWidget().screenGeometry()
-                self.move((resolution.width() / 2) - (self.frameSize().width() / 2),
-                          (resolution.height() / 2) - (self.frameSize().height() / 2))
+                resolution = QtWidgets.QApplication.desktop().screenGeometry()
+                x = (resolution.width() - self.frameSize().width()) / 2
+                y = (resolution.height() - self.frameSize().height()) / 2
+                self.move(x, y)
 
             def add_menu(self, menu_name):
                 _menu = self.menu_bar.addMenu("&" + menu_name)
@@ -180,6 +184,7 @@ def init_display(backend_str=None, size=(1024, 768)):
         win = MainWindow()
         win.show()
         win.resize(size[0], size[1])
+        win.centerOnScreen()
         win.canva.InitDriver()
         win.canva.qApp = app
         display = win.canva._display
@@ -202,7 +207,7 @@ def init_display(backend_str=None, size=(1024, 768)):
 
 if __name__ == '__main__':
     display, start_display, add_menu, add_function_to_menu = init_display("qt-pyside")
-    from OCC.BRepPrimAPI import BRepPrimAPI_MakeSphere, BRepPrimAPI_MakeBox
+    from OCC.Core.BRepPrimAPI import BRepPrimAPI_MakeSphere, BRepPrimAPI_MakeBox
 
     def sphere(event=None):
         display.DisplayShape(BRepPrimAPI_MakeSphere(100).Shape(), update=True)

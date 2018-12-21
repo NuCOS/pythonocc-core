@@ -35,18 +35,6 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 
-class point(object):
-    def __init__(self, obj=None):
-        self.x = 0
-        self.y = 0
-        if obj is not None:
-            self.set(obj)
-
-    def set(self, obj):
-        self.x = obj.x()
-        self.y = obj.y()
-
-
 class qtBaseViewer(QtOpenGL.QGLWidget):
     ''' The base Qt Widget for an OCC viewer
     '''
@@ -80,8 +68,7 @@ class qtBaseViewer(QtOpenGL.QGLWidget):
                 ## since the PyCObject api was changed
                 import ctypes
                 ctypes.pythonapi.PyCObject_AsVoidPtr.restype = ctypes.c_void_p
-                ctypes.pythonapi.PyCObject_AsVoidPtr.argtypes = [
-                    ctypes.py_object]
+                ctypes.pythonapi.PyCObject_AsVoidPtr.argtypes = [ctypes.py_object]
                 win_id = ctypes.pythonapi.PyCObject_AsVoidPtr(win_id)
         elif not isinstance(win_id, int):  # PyQt4 or 5
             ## below integer cast may be required because self.winId() can
@@ -92,7 +79,7 @@ class qtBaseViewer(QtOpenGL.QGLWidget):
 
     def resizeEvent(self, event):
         if self._inited:
-            super(qtBaseViewer,self).resizeEvent(event)
+            super(qtBaseViewer, self).resizeEvent(event)
             self._display.OnResize()
 
 
@@ -201,13 +188,10 @@ class qtViewer3d(qtBaseViewer):
             self.swapBuffers()
 
         if self._drawbox:
-            self.makeCurrent()
             painter = QtGui.QPainter(self)
             painter.setPen(QtGui.QPen(QtGui.QColor(0, 0, 0), 1))
             rect = QtCore.QRect(*self._drawbox)
             painter.drawRect(rect)
-            painter.end()
-            self.doneCurrent()
 
     def ZoomAll(self, evt):
         self._display.FitAll()
@@ -245,11 +229,13 @@ class qtViewer3d(qtBaseViewer):
 
     def mousePressEvent(self, event):
         self.setFocus()
-        self.dragStartPos = point(event.pos())
-        self._display.StartRotation(self.dragStartPos.x, self.dragStartPos.y)
+        ev = event.pos()
+        self.dragStartPosX = ev.x()
+        self.dragStartPosY = ev.y()
+        self._display.StartRotation(self.dragStartPosX, self.dragStartPosY)
 
     def mouseReleaseEvent(self, event):
-        pt = point(event.pos())
+        pt = event.pos()
         modifiers = event.modifiers()
 
         if event.button() == QtCore.Qt.LeftButton:
@@ -260,10 +246,10 @@ class qtViewer3d(qtBaseViewer):
             else:
                 # multiple select if shift is pressed
                 if modifiers == QtCore.Qt.ShiftModifier:
-                    self._display.ShiftSelect(pt.x, pt.y)
+                    self._display.ShiftSelect(pt.x(), pt.y())
                 else:
                     # single select otherwise
-                    self._display.Select(pt.x, pt.y)
+                    self._display.Select(pt.x(), pt.y())
 
                     if (self._display.selected_shapes is not None) and HAVE_PYQT_SIGNAL:
                         self.sig_topods_selected.emit(self._display.selected_shapes)
@@ -279,43 +265,41 @@ class qtViewer3d(qtBaseViewer):
 
     def DrawBox(self, event):
         tolerance = 2
-        pt = point(event.pos())
-        dx = pt.x - self.dragStartPos.x
-        dy = pt.y - self.dragStartPos.y
+        pt = event.pos()
+        dx = pt.x() - self.dragStartPosX
+        dy = pt.y() - self.dragStartPosY
         if abs(dx) <= tolerance and abs(dy) <= tolerance:
             return
-        self._drawbox = [self.dragStartPos.x, self.dragStartPos.y, dx, dy]
+        self._drawbox = [self.dragStartPosX, self.dragStartPosY, dx, dy]
         self.update()
 
     def mouseMoveEvent(self, evt):
-        pt = point(evt.pos())
+        pt = evt.pos()
         buttons = int(evt.buttons())
         modifiers = evt.modifiers()
         # ROTATE
         if (buttons == QtCore.Qt.LeftButton and
                 not modifiers == QtCore.Qt.ShiftModifier):
-            dx = pt.x - self.dragStartPos.x
-            dy = pt.y - self.dragStartPos.y
             self.cursor = "rotate"
-            self._display.Rotation(pt.x, pt.y)
+            self._display.Rotation(pt.x(), pt.y())
             self._drawbox = False
         # DYNAMIC ZOOM
         elif (buttons == QtCore.Qt.RightButton and
               not modifiers == QtCore.Qt.ShiftModifier):
             self.cursor = "zoom"
             self._display.Repaint()
-            self._display.DynamicZoom(abs(self.dragStartPos.x),
-                                      abs(self.dragStartPos.y), abs(pt.x),
-                                      abs(pt.y))
-            self.dragStartPos.x = pt.x
-            self.dragStartPos.y = pt.y
+            self._display.DynamicZoom(abs(self.dragStartPosX),
+                                      abs(self.dragStartPosY), abs(pt.x()),
+                                      abs(pt.y()))
+            self.dragStartPosX = pt.x()
+            self.dragStartPosY = pt.y()
             self._drawbox = False
         # PAN
         elif buttons == QtCore.Qt.MidButton:
-            dx = pt.x - self.dragStartPos.x
-            dy = pt.y - self.dragStartPos.y
-            self.dragStartPos.x = pt.x
-            self.dragStartPos.y = pt.y
+            dx = pt.x() - self.dragStartPosX
+            dy = pt.y() - self.dragStartPosY
+            self.dragStartPosX = pt.x()
+            self.dragStartPosY = pt.y()
             self.cursor = "pan"
             self._display.Pan(dx, -dy)
             self._drawbox = False
@@ -333,5 +317,5 @@ class qtViewer3d(qtBaseViewer):
             self.DrawBox(evt)
         else:
             self._drawbox = False
-            self._display.MoveTo(pt.x, pt.y)
+            self._display.MoveTo(pt.x(), pt.y())
             self.cursor = "arrow"

@@ -17,7 +17,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") GeomFill
+%define GEOMFILLDOCSTRING
+""
+%enddef
+%module (package="OCC.Core", docstring=GEOMFILLDOCSTRING) GeomFill
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,24 +34,10 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include GeomFill_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
@@ -57,19 +46,6 @@ def register_handle(handle, base_object):
 enum GeomFill_ApproxStyle {
 	GeomFill_Section = 0,
 	GeomFill_Location = 1,
-};
-
-enum GeomFill_FillingStyle {
-	GeomFill_StretchStyle = 0,
-	GeomFill_CoonsStyle = 1,
-	GeomFill_CurvedStyle = 2,
-};
-
-enum GeomFill_PipeError {
-	GeomFill_PipeOk = 0,
-	GeomFill_PipeNotOk = 1,
-	GeomFill_PlaneNotIntersectGuide = 2,
-	GeomFill_ImpossibleContact = 3,
 };
 
 enum GeomFill_Trihedron {
@@ -85,7 +61,54 @@ enum GeomFill_Trihedron {
 	GeomFill_IsDiscreteTrihedron = 9,
 };
 
+enum GeomFill_FillingStyle {
+	GeomFill_StretchStyle = 0,
+	GeomFill_CoonsStyle = 1,
+	GeomFill_CurvedStyle = 2,
+};
+
+enum GeomFill_PipeError {
+	GeomFill_PipeOk = 0,
+	GeomFill_PipeNotOk = 1,
+	GeomFill_PlaneNotIntersectGuide = 2,
+	GeomFill_ImpossibleContact = 3,
+};
+
 /* end public enums declaration */
+
+%wrap_handle(GeomFill_Boundary)
+%wrap_handle(GeomFill_CircularBlendFunc)
+%wrap_handle(GeomFill_CoonsAlgPatch)
+%wrap_handle(GeomFill_HArray1OfLocationLaw)
+%wrap_handle(GeomFill_HArray1OfSectionLaw)
+%wrap_handle(GeomFill_HSequenceOfAx2)
+%wrap_handle(GeomFill_Line)
+%wrap_handle(GeomFill_LocationLaw)
+%wrap_handle(GeomFill_SectionLaw)
+%wrap_handle(GeomFill_SequenceNodeOfSequenceOfAx2)
+%wrap_handle(GeomFill_SequenceNodeOfSequenceOfTrsf)
+%wrap_handle(GeomFill_SweepFunction)
+%wrap_handle(GeomFill_TgtField)
+%wrap_handle(GeomFill_TrihedronLaw)
+%wrap_handle(GeomFill_BoundWithSurf)
+%wrap_handle(GeomFill_ConstantBiNormal)
+%wrap_handle(GeomFill_CorrectedFrenet)
+%wrap_handle(GeomFill_CurveAndTrihedron)
+%wrap_handle(GeomFill_Darboux)
+%wrap_handle(GeomFill_DegeneratedBound)
+%wrap_handle(GeomFill_DiscreteTrihedron)
+%wrap_handle(GeomFill_DraftTrihedron)
+%wrap_handle(GeomFill_EvolvedSection)
+%wrap_handle(GeomFill_Fixed)
+%wrap_handle(GeomFill_Frenet)
+%wrap_handle(GeomFill_LocationDraft)
+%wrap_handle(GeomFill_LocationGuide)
+%wrap_handle(GeomFill_SimpleBound)
+%wrap_handle(GeomFill_TgtOnCoons)
+%wrap_handle(GeomFill_TrihedronWithGuide)
+%wrap_handle(GeomFill_UniformSection)
+%wrap_handle(GeomFill_GuideTrihedronAC)
+%wrap_handle(GeomFill_GuideTrihedronPlan)
 
 %rename(geomfill) GeomFill;
 class GeomFill {
@@ -856,6 +879,41 @@ class GeomFill_Array1OfLocationLaw {
 };
 
 
+
+%extend GeomFill_Array1OfLocationLaw {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend GeomFill_Array1OfLocationLaw {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -943,6 +1001,41 @@ class GeomFill_Array1OfSectionLaw {
 };
 
 
+
+%extend GeomFill_Array1OfSectionLaw {
+    %pythoncode {
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
+    }
+};
 %extend GeomFill_Array1OfSectionLaw {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -1258,51 +1351,7 @@ class GeomFill_Boundary : public MMgt_TShared {
 };
 
 
-%extend GeomFill_Boundary {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_Boundary(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_Boundary::Handle_GeomFill_Boundary %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_Boundary;
-class Handle_GeomFill_Boundary : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_GeomFill_Boundary();
-        Handle_GeomFill_Boundary(const Handle_GeomFill_Boundary &aHandle);
-        Handle_GeomFill_Boundary(const GeomFill_Boundary *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_Boundary DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_Boundary {
-    GeomFill_Boundary* _get_reference() {
-    return (GeomFill_Boundary*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_Boundary {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_Boundary)
 
 %extend GeomFill_Boundary {
 	%pythoncode {
@@ -1515,51 +1564,7 @@ class GeomFill_CircularBlendFunc : public Approx_SweepFunction {
 };
 
 
-%extend GeomFill_CircularBlendFunc {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_CircularBlendFunc(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_CircularBlendFunc::Handle_GeomFill_CircularBlendFunc %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_CircularBlendFunc;
-class Handle_GeomFill_CircularBlendFunc : public Handle_Approx_SweepFunction {
-
-    public:
-        // constructors
-        Handle_GeomFill_CircularBlendFunc();
-        Handle_GeomFill_CircularBlendFunc(const Handle_GeomFill_CircularBlendFunc &aHandle);
-        Handle_GeomFill_CircularBlendFunc(const GeomFill_CircularBlendFunc *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_CircularBlendFunc DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_CircularBlendFunc {
-    GeomFill_CircularBlendFunc* _get_reference() {
-    return (GeomFill_CircularBlendFunc*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_CircularBlendFunc {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_CircularBlendFunc)
 
 %extend GeomFill_CircularBlendFunc {
 	%pythoncode {
@@ -1787,51 +1792,7 @@ class GeomFill_CoonsAlgPatch : public MMgt_TShared {
 };
 
 
-%extend GeomFill_CoonsAlgPatch {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_CoonsAlgPatch(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_CoonsAlgPatch::Handle_GeomFill_CoonsAlgPatch %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_CoonsAlgPatch;
-class Handle_GeomFill_CoonsAlgPatch : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_GeomFill_CoonsAlgPatch();
-        Handle_GeomFill_CoonsAlgPatch(const Handle_GeomFill_CoonsAlgPatch &aHandle);
-        Handle_GeomFill_CoonsAlgPatch(const GeomFill_CoonsAlgPatch *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_CoonsAlgPatch DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_CoonsAlgPatch {
-    GeomFill_CoonsAlgPatch* _get_reference() {
-    return (GeomFill_CoonsAlgPatch*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_CoonsAlgPatch {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_CoonsAlgPatch)
 
 %extend GeomFill_CoonsAlgPatch {
 	%pythoncode {
@@ -2224,52 +2185,43 @@ class GeomFill_HArray1OfLocationLaw : public MMgt_TShared {
 };
 
 
+%make_alias(GeomFill_HArray1OfLocationLaw)
+
+
 %extend GeomFill_HArray1OfLocationLaw {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_HArray1OfLocationLaw(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_HArray1OfLocationLaw::Handle_GeomFill_HArray1OfLocationLaw %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_HArray1OfLocationLaw;
-class Handle_GeomFill_HArray1OfLocationLaw : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_GeomFill_HArray1OfLocationLaw();
-        Handle_GeomFill_HArray1OfLocationLaw(const Handle_GeomFill_HArray1OfLocationLaw &aHandle);
-        Handle_GeomFill_HArray1OfLocationLaw(const GeomFill_HArray1OfLocationLaw *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_HArray1OfLocationLaw DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_HArray1OfLocationLaw {
-    GeomFill_HArray1OfLocationLaw* _get_reference() {
-    return (GeomFill_HArray1OfLocationLaw*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_HArray1OfLocationLaw {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend GeomFill_HArray1OfLocationLaw {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -2345,52 +2297,43 @@ class GeomFill_HArray1OfSectionLaw : public MMgt_TShared {
 };
 
 
+%make_alias(GeomFill_HArray1OfSectionLaw)
+
+
 %extend GeomFill_HArray1OfSectionLaw {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_HArray1OfSectionLaw(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_HArray1OfSectionLaw::Handle_GeomFill_HArray1OfSectionLaw %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_HArray1OfSectionLaw;
-class Handle_GeomFill_HArray1OfSectionLaw : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_GeomFill_HArray1OfSectionLaw();
-        Handle_GeomFill_HArray1OfSectionLaw(const Handle_GeomFill_HArray1OfSectionLaw &aHandle);
-        Handle_GeomFill_HArray1OfSectionLaw(const GeomFill_HArray1OfSectionLaw *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_HArray1OfSectionLaw DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_HArray1OfSectionLaw {
-    GeomFill_HArray1OfSectionLaw* _get_reference() {
-    return (GeomFill_HArray1OfSectionLaw*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_HArray1OfSectionLaw {
     %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
+    def __getitem__(self, index):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            return self.Value(index + self.Lower())
+
+    def __setitem__(self, index, value):
+        if index + self.Lower() > self.Upper():
+            raise IndexError("index out of range")
+        else:
+            self.SetValue(index + self.Lower(), value)
+
+    def __len__(self):
+        return self.Length()
+
+    def __iter__(self):
+        self.low = self.Lower()
+        self.up = self.Upper()
+        self.current = self.Lower() - 1
+        return self
+
+    def next(self):
+        if self.current >= self.Upper():
+            raise StopIteration
+        else:
+            self.current +=1
+        return self.Value(self.current)
+
+    __next__ = next
+
     }
 };
-
 %extend GeomFill_HArray1OfSectionLaw {
 	%pythoncode {
 	__repr__ = _dumps_object
@@ -2534,51 +2477,7 @@ class GeomFill_HSequenceOfAx2 : public MMgt_TShared {
 };
 
 
-%extend GeomFill_HSequenceOfAx2 {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_HSequenceOfAx2(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_HSequenceOfAx2::Handle_GeomFill_HSequenceOfAx2 %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_HSequenceOfAx2;
-class Handle_GeomFill_HSequenceOfAx2 : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_GeomFill_HSequenceOfAx2();
-        Handle_GeomFill_HSequenceOfAx2(const Handle_GeomFill_HSequenceOfAx2 &aHandle);
-        Handle_GeomFill_HSequenceOfAx2(const GeomFill_HSequenceOfAx2 *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_HSequenceOfAx2 DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_HSequenceOfAx2 {
-    GeomFill_HSequenceOfAx2* _get_reference() {
-    return (GeomFill_HSequenceOfAx2*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_HSequenceOfAx2 {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_HSequenceOfAx2)
 
 %extend GeomFill_HSequenceOfAx2 {
 	%pythoncode {
@@ -2611,51 +2510,7 @@ class GeomFill_Line : public MMgt_TShared {
 };
 
 
-%extend GeomFill_Line {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_Line(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_Line::Handle_GeomFill_Line %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_Line;
-class Handle_GeomFill_Line : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_GeomFill_Line();
-        Handle_GeomFill_Line(const Handle_GeomFill_Line &aHandle);
-        Handle_GeomFill_Line(const GeomFill_Line *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_Line DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_Line {
-    GeomFill_Line* _get_reference() {
-    return (GeomFill_Line*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_Line {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_Line)
 
 %extend GeomFill_Line {
 	%pythoncode {
@@ -2971,51 +2826,7 @@ class GeomFill_LocationLaw : public MMgt_TShared {
 };
 
 
-%extend GeomFill_LocationLaw {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_LocationLaw(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_LocationLaw::Handle_GeomFill_LocationLaw %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_LocationLaw;
-class Handle_GeomFill_LocationLaw : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_GeomFill_LocationLaw();
-        Handle_GeomFill_LocationLaw(const Handle_GeomFill_LocationLaw &aHandle);
-        Handle_GeomFill_LocationLaw(const GeomFill_LocationLaw *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_LocationLaw DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_LocationLaw {
-    GeomFill_LocationLaw* _get_reference() {
-    return (GeomFill_LocationLaw*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_LocationLaw {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_LocationLaw)
 
 %extend GeomFill_LocationLaw {
 	%pythoncode {
@@ -3911,51 +3722,7 @@ class GeomFill_SectionLaw : public MMgt_TShared {
 };
 
 
-%extend GeomFill_SectionLaw {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_SectionLaw(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_SectionLaw::Handle_GeomFill_SectionLaw %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_SectionLaw;
-class Handle_GeomFill_SectionLaw : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_GeomFill_SectionLaw();
-        Handle_GeomFill_SectionLaw(const Handle_GeomFill_SectionLaw &aHandle);
-        Handle_GeomFill_SectionLaw(const GeomFill_SectionLaw *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_SectionLaw DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_SectionLaw {
-    GeomFill_SectionLaw* _get_reference() {
-    return (GeomFill_SectionLaw*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_SectionLaw {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_SectionLaw)
 
 %extend GeomFill_SectionLaw {
 	%pythoncode {
@@ -4075,51 +3842,7 @@ class GeomFill_SequenceNodeOfSequenceOfAx2 : public TCollection_SeqNode {
 };
 
 
-%extend GeomFill_SequenceNodeOfSequenceOfAx2 {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_SequenceNodeOfSequenceOfAx2(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_SequenceNodeOfSequenceOfAx2::Handle_GeomFill_SequenceNodeOfSequenceOfAx2 %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_SequenceNodeOfSequenceOfAx2;
-class Handle_GeomFill_SequenceNodeOfSequenceOfAx2 : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_GeomFill_SequenceNodeOfSequenceOfAx2();
-        Handle_GeomFill_SequenceNodeOfSequenceOfAx2(const Handle_GeomFill_SequenceNodeOfSequenceOfAx2 &aHandle);
-        Handle_GeomFill_SequenceNodeOfSequenceOfAx2(const GeomFill_SequenceNodeOfSequenceOfAx2 *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_SequenceNodeOfSequenceOfAx2 DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_SequenceNodeOfSequenceOfAx2 {
-    GeomFill_SequenceNodeOfSequenceOfAx2* _get_reference() {
-    return (GeomFill_SequenceNodeOfSequenceOfAx2*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_SequenceNodeOfSequenceOfAx2 {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_SequenceNodeOfSequenceOfAx2)
 
 %extend GeomFill_SequenceNodeOfSequenceOfAx2 {
 	%pythoncode {
@@ -4146,51 +3869,7 @@ class GeomFill_SequenceNodeOfSequenceOfTrsf : public TCollection_SeqNode {
 };
 
 
-%extend GeomFill_SequenceNodeOfSequenceOfTrsf {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_SequenceNodeOfSequenceOfTrsf(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_SequenceNodeOfSequenceOfTrsf::Handle_GeomFill_SequenceNodeOfSequenceOfTrsf %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_SequenceNodeOfSequenceOfTrsf;
-class Handle_GeomFill_SequenceNodeOfSequenceOfTrsf : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_GeomFill_SequenceNodeOfSequenceOfTrsf();
-        Handle_GeomFill_SequenceNodeOfSequenceOfTrsf(const Handle_GeomFill_SequenceNodeOfSequenceOfTrsf &aHandle);
-        Handle_GeomFill_SequenceNodeOfSequenceOfTrsf(const GeomFill_SequenceNodeOfSequenceOfTrsf *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_SequenceNodeOfSequenceOfTrsf DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_SequenceNodeOfSequenceOfTrsf {
-    GeomFill_SequenceNodeOfSequenceOfTrsf* _get_reference() {
-    return (GeomFill_SequenceNodeOfSequenceOfTrsf*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_SequenceNodeOfSequenceOfTrsf {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_SequenceNodeOfSequenceOfTrsf)
 
 %extend GeomFill_SequenceNodeOfSequenceOfTrsf {
 	%pythoncode {
@@ -4987,51 +4666,7 @@ class GeomFill_SweepFunction : public Approx_SweepFunction {
 };
 
 
-%extend GeomFill_SweepFunction {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_SweepFunction(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_SweepFunction::Handle_GeomFill_SweepFunction %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_SweepFunction;
-class Handle_GeomFill_SweepFunction : public Handle_Approx_SweepFunction {
-
-    public:
-        // constructors
-        Handle_GeomFill_SweepFunction();
-        Handle_GeomFill_SweepFunction(const Handle_GeomFill_SweepFunction &aHandle);
-        Handle_GeomFill_SweepFunction(const GeomFill_SweepFunction *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_SweepFunction DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_SweepFunction {
-    GeomFill_SweepFunction* _get_reference() {
-    return (GeomFill_SweepFunction*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_SweepFunction {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_SweepFunction)
 
 %extend GeomFill_SweepFunction {
 	%pythoncode {
@@ -5143,51 +4778,7 @@ class GeomFill_TgtField : public MMgt_TShared {
 };
 
 
-%extend GeomFill_TgtField {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_TgtField(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_TgtField::Handle_GeomFill_TgtField %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_TgtField;
-class Handle_GeomFill_TgtField : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_GeomFill_TgtField();
-        Handle_GeomFill_TgtField(const Handle_GeomFill_TgtField &aHandle);
-        Handle_GeomFill_TgtField(const GeomFill_TgtField *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_TgtField DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_TgtField {
-    GeomFill_TgtField* _get_reference() {
-    return (GeomFill_TgtField*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_TgtField {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_TgtField)
 
 %extend GeomFill_TgtField {
 	%pythoncode {
@@ -5338,51 +4929,7 @@ class GeomFill_TrihedronLaw : public MMgt_TShared {
 };
 
 
-%extend GeomFill_TrihedronLaw {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_TrihedronLaw(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_TrihedronLaw::Handle_GeomFill_TrihedronLaw %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_TrihedronLaw;
-class Handle_GeomFill_TrihedronLaw : public Handle_MMgt_TShared {
-
-    public:
-        // constructors
-        Handle_GeomFill_TrihedronLaw();
-        Handle_GeomFill_TrihedronLaw(const Handle_GeomFill_TrihedronLaw &aHandle);
-        Handle_GeomFill_TrihedronLaw(const GeomFill_TrihedronLaw *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_TrihedronLaw DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_TrihedronLaw {
-    GeomFill_TrihedronLaw* _get_reference() {
-    return (GeomFill_TrihedronLaw*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_TrihedronLaw {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_TrihedronLaw)
 
 %extend GeomFill_TrihedronLaw {
 	%pythoncode {
@@ -5473,51 +5020,7 @@ class GeomFill_BoundWithSurf : public GeomFill_Boundary {
 };
 
 
-%extend GeomFill_BoundWithSurf {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_BoundWithSurf(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_BoundWithSurf::Handle_GeomFill_BoundWithSurf %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_BoundWithSurf;
-class Handle_GeomFill_BoundWithSurf : public Handle_GeomFill_Boundary {
-
-    public:
-        // constructors
-        Handle_GeomFill_BoundWithSurf();
-        Handle_GeomFill_BoundWithSurf(const Handle_GeomFill_BoundWithSurf &aHandle);
-        Handle_GeomFill_BoundWithSurf(const GeomFill_BoundWithSurf *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_BoundWithSurf DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_BoundWithSurf {
-    GeomFill_BoundWithSurf* _get_reference() {
-    return (GeomFill_BoundWithSurf*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_BoundWithSurf {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_BoundWithSurf)
 
 %extend GeomFill_BoundWithSurf {
 	%pythoncode {
@@ -5648,51 +5151,7 @@ class GeomFill_ConstantBiNormal : public GeomFill_TrihedronLaw {
 };
 
 
-%extend GeomFill_ConstantBiNormal {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_ConstantBiNormal(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_ConstantBiNormal::Handle_GeomFill_ConstantBiNormal %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_ConstantBiNormal;
-class Handle_GeomFill_ConstantBiNormal : public Handle_GeomFill_TrihedronLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_ConstantBiNormal();
-        Handle_GeomFill_ConstantBiNormal(const Handle_GeomFill_ConstantBiNormal &aHandle);
-        Handle_GeomFill_ConstantBiNormal(const GeomFill_ConstantBiNormal *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_ConstantBiNormal DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_ConstantBiNormal {
-    GeomFill_ConstantBiNormal* _get_reference() {
-    return (GeomFill_ConstantBiNormal*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_ConstantBiNormal {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_ConstantBiNormal)
 
 %extend GeomFill_ConstantBiNormal {
 	%pythoncode {
@@ -5920,51 +5379,7 @@ class GeomFill_CorrectedFrenet : public GeomFill_TrihedronLaw {
 };
 
 
-%extend GeomFill_CorrectedFrenet {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_CorrectedFrenet(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_CorrectedFrenet::Handle_GeomFill_CorrectedFrenet %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_CorrectedFrenet;
-class Handle_GeomFill_CorrectedFrenet : public Handle_GeomFill_TrihedronLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_CorrectedFrenet();
-        Handle_GeomFill_CorrectedFrenet(const Handle_GeomFill_CorrectedFrenet &aHandle);
-        Handle_GeomFill_CorrectedFrenet(const GeomFill_CorrectedFrenet *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_CorrectedFrenet DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_CorrectedFrenet {
-    GeomFill_CorrectedFrenet* _get_reference() {
-    return (GeomFill_CorrectedFrenet*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_CorrectedFrenet {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_CorrectedFrenet)
 
 %extend GeomFill_CorrectedFrenet {
 	%pythoncode {
@@ -6163,51 +5578,7 @@ class GeomFill_CurveAndTrihedron : public GeomFill_LocationLaw {
 };
 
 
-%extend GeomFill_CurveAndTrihedron {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_CurveAndTrihedron(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_CurveAndTrihedron::Handle_GeomFill_CurveAndTrihedron %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_CurveAndTrihedron;
-class Handle_GeomFill_CurveAndTrihedron : public Handle_GeomFill_LocationLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_CurveAndTrihedron();
-        Handle_GeomFill_CurveAndTrihedron(const Handle_GeomFill_CurveAndTrihedron &aHandle);
-        Handle_GeomFill_CurveAndTrihedron(const GeomFill_CurveAndTrihedron *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_CurveAndTrihedron DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_CurveAndTrihedron {
-    GeomFill_CurveAndTrihedron* _get_reference() {
-    return (GeomFill_CurveAndTrihedron*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_CurveAndTrihedron {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_CurveAndTrihedron)
 
 %extend GeomFill_CurveAndTrihedron {
 	%pythoncode {
@@ -6501,51 +5872,7 @@ class GeomFill_Darboux : public GeomFill_TrihedronLaw {
 };
 
 
-%extend GeomFill_Darboux {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_Darboux(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_Darboux::Handle_GeomFill_Darboux %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_Darboux;
-class Handle_GeomFill_Darboux : public Handle_GeomFill_TrihedronLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_Darboux();
-        Handle_GeomFill_Darboux(const Handle_GeomFill_Darboux &aHandle);
-        Handle_GeomFill_Darboux(const GeomFill_Darboux *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_Darboux DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_Darboux {
-    GeomFill_Darboux* _get_reference() {
-    return (GeomFill_Darboux*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_Darboux {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_Darboux)
 
 %extend GeomFill_Darboux {
 	%pythoncode {
@@ -6618,51 +5945,7 @@ class GeomFill_DegeneratedBound : public GeomFill_Boundary {
 };
 
 
-%extend GeomFill_DegeneratedBound {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_DegeneratedBound(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_DegeneratedBound::Handle_GeomFill_DegeneratedBound %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_DegeneratedBound;
-class Handle_GeomFill_DegeneratedBound : public Handle_GeomFill_Boundary {
-
-    public:
-        // constructors
-        Handle_GeomFill_DegeneratedBound();
-        Handle_GeomFill_DegeneratedBound(const Handle_GeomFill_DegeneratedBound &aHandle);
-        Handle_GeomFill_DegeneratedBound(const GeomFill_DegeneratedBound *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_DegeneratedBound DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_DegeneratedBound {
-    GeomFill_DegeneratedBound* _get_reference() {
-    return (GeomFill_DegeneratedBound*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_DegeneratedBound {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_DegeneratedBound)
 
 %extend GeomFill_DegeneratedBound {
 	%pythoncode {
@@ -6795,51 +6078,7 @@ class GeomFill_DiscreteTrihedron : public GeomFill_TrihedronLaw {
 };
 
 
-%extend GeomFill_DiscreteTrihedron {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_DiscreteTrihedron(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_DiscreteTrihedron::Handle_GeomFill_DiscreteTrihedron %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_DiscreteTrihedron;
-class Handle_GeomFill_DiscreteTrihedron : public Handle_GeomFill_TrihedronLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_DiscreteTrihedron();
-        Handle_GeomFill_DiscreteTrihedron(const Handle_GeomFill_DiscreteTrihedron &aHandle);
-        Handle_GeomFill_DiscreteTrihedron(const GeomFill_DiscreteTrihedron *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_DiscreteTrihedron DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_DiscreteTrihedron {
-    GeomFill_DiscreteTrihedron* _get_reference() {
-    return (GeomFill_DiscreteTrihedron*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_DiscreteTrihedron {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_DiscreteTrihedron)
 
 %extend GeomFill_DiscreteTrihedron {
 	%pythoncode {
@@ -6970,51 +6209,7 @@ class GeomFill_DraftTrihedron : public GeomFill_TrihedronLaw {
 };
 
 
-%extend GeomFill_DraftTrihedron {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_DraftTrihedron(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_DraftTrihedron::Handle_GeomFill_DraftTrihedron %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_DraftTrihedron;
-class Handle_GeomFill_DraftTrihedron : public Handle_GeomFill_TrihedronLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_DraftTrihedron();
-        Handle_GeomFill_DraftTrihedron(const Handle_GeomFill_DraftTrihedron &aHandle);
-        Handle_GeomFill_DraftTrihedron(const GeomFill_DraftTrihedron *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_DraftTrihedron DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_DraftTrihedron {
-    GeomFill_DraftTrihedron* _get_reference() {
-    return (GeomFill_DraftTrihedron*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_DraftTrihedron {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_DraftTrihedron)
 
 %extend GeomFill_DraftTrihedron {
 	%pythoncode {
@@ -7233,51 +6428,7 @@ class GeomFill_EvolvedSection : public GeomFill_SectionLaw {
 };
 
 
-%extend GeomFill_EvolvedSection {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_EvolvedSection(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_EvolvedSection::Handle_GeomFill_EvolvedSection %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_EvolvedSection;
-class Handle_GeomFill_EvolvedSection : public Handle_GeomFill_SectionLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_EvolvedSection();
-        Handle_GeomFill_EvolvedSection(const Handle_GeomFill_EvolvedSection &aHandle);
-        Handle_GeomFill_EvolvedSection(const GeomFill_EvolvedSection *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_EvolvedSection DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_EvolvedSection {
-    GeomFill_EvolvedSection* _get_reference() {
-    return (GeomFill_EvolvedSection*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_EvolvedSection {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_EvolvedSection)
 
 %extend GeomFill_EvolvedSection {
 	%pythoncode {
@@ -7398,51 +6549,7 @@ class GeomFill_Fixed : public GeomFill_TrihedronLaw {
 };
 
 
-%extend GeomFill_Fixed {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_Fixed(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_Fixed::Handle_GeomFill_Fixed %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_Fixed;
-class Handle_GeomFill_Fixed : public Handle_GeomFill_TrihedronLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_Fixed();
-        Handle_GeomFill_Fixed(const Handle_GeomFill_Fixed &aHandle);
-        Handle_GeomFill_Fixed(const GeomFill_Fixed *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_Fixed DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_Fixed {
-    GeomFill_Fixed* _get_reference() {
-    return (GeomFill_Fixed*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_Fixed {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_Fixed)
 
 %extend GeomFill_Fixed {
 	%pythoncode {
@@ -7575,51 +6682,7 @@ class GeomFill_Frenet : public GeomFill_TrihedronLaw {
 };
 
 
-%extend GeomFill_Frenet {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_Frenet(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_Frenet::Handle_GeomFill_Frenet %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_Frenet;
-class Handle_GeomFill_Frenet : public Handle_GeomFill_TrihedronLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_Frenet();
-        Handle_GeomFill_Frenet(const Handle_GeomFill_Frenet &aHandle);
-        Handle_GeomFill_Frenet(const GeomFill_Frenet *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_Frenet DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_Frenet {
-    GeomFill_Frenet* _get_reference() {
-    return (GeomFill_Frenet*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_Frenet {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_Frenet)
 
 %extend GeomFill_Frenet {
 	%pythoncode {
@@ -7899,51 +6962,7 @@ class GeomFill_LocationDraft : public GeomFill_LocationLaw {
 };
 
 
-%extend GeomFill_LocationDraft {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_LocationDraft(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_LocationDraft::Handle_GeomFill_LocationDraft %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_LocationDraft;
-class Handle_GeomFill_LocationDraft : public Handle_GeomFill_LocationLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_LocationDraft();
-        Handle_GeomFill_LocationDraft(const Handle_GeomFill_LocationDraft &aHandle);
-        Handle_GeomFill_LocationDraft(const GeomFill_LocationDraft *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_LocationDraft DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_LocationDraft {
-    GeomFill_LocationDraft* _get_reference() {
-    return (GeomFill_LocationDraft*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_LocationDraft {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_LocationDraft)
 
 %extend GeomFill_LocationDraft {
 	%pythoncode {
@@ -8230,51 +7249,7 @@ class GeomFill_LocationGuide : public GeomFill_LocationLaw {
 };
 
 
-%extend GeomFill_LocationGuide {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_LocationGuide(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_LocationGuide::Handle_GeomFill_LocationGuide %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_LocationGuide;
-class Handle_GeomFill_LocationGuide : public Handle_GeomFill_LocationLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_LocationGuide();
-        Handle_GeomFill_LocationGuide(const Handle_GeomFill_LocationGuide &aHandle);
-        Handle_GeomFill_LocationGuide(const GeomFill_LocationGuide *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_LocationGuide DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_LocationGuide {
-    GeomFill_LocationGuide* _get_reference() {
-    return (GeomFill_LocationGuide*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_LocationGuide {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_LocationGuide)
 
 %extend GeomFill_LocationGuide {
 	%pythoncode {
@@ -8430,51 +7405,7 @@ class GeomFill_SimpleBound : public GeomFill_Boundary {
 };
 
 
-%extend GeomFill_SimpleBound {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_SimpleBound(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_SimpleBound::Handle_GeomFill_SimpleBound %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_SimpleBound;
-class Handle_GeomFill_SimpleBound : public Handle_GeomFill_Boundary {
-
-    public:
-        // constructors
-        Handle_GeomFill_SimpleBound();
-        Handle_GeomFill_SimpleBound(const Handle_GeomFill_SimpleBound &aHandle);
-        Handle_GeomFill_SimpleBound(const GeomFill_SimpleBound *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_SimpleBound DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_SimpleBound {
-    GeomFill_SimpleBound* _get_reference() {
-    return (GeomFill_SimpleBound*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_SimpleBound {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_SimpleBound)
 
 %extend GeomFill_SimpleBound {
 	%pythoncode {
@@ -8602,51 +7533,7 @@ class GeomFill_TgtOnCoons : public GeomFill_TgtField {
 };
 
 
-%extend GeomFill_TgtOnCoons {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_TgtOnCoons(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_TgtOnCoons::Handle_GeomFill_TgtOnCoons %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_TgtOnCoons;
-class Handle_GeomFill_TgtOnCoons : public Handle_GeomFill_TgtField {
-
-    public:
-        // constructors
-        Handle_GeomFill_TgtOnCoons();
-        Handle_GeomFill_TgtOnCoons(const Handle_GeomFill_TgtOnCoons &aHandle);
-        Handle_GeomFill_TgtOnCoons(const GeomFill_TgtOnCoons *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_TgtOnCoons DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_TgtOnCoons {
-    GeomFill_TgtOnCoons* _get_reference() {
-    return (GeomFill_TgtOnCoons*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_TgtOnCoons {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_TgtOnCoons)
 
 %extend GeomFill_TgtOnCoons {
 	%pythoncode {
@@ -8677,51 +7564,7 @@ class GeomFill_TrihedronWithGuide : public GeomFill_TrihedronLaw {
 };
 
 
-%extend GeomFill_TrihedronWithGuide {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_TrihedronWithGuide(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_TrihedronWithGuide::Handle_GeomFill_TrihedronWithGuide %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_TrihedronWithGuide;
-class Handle_GeomFill_TrihedronWithGuide : public Handle_GeomFill_TrihedronLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_TrihedronWithGuide();
-        Handle_GeomFill_TrihedronWithGuide(const Handle_GeomFill_TrihedronWithGuide &aHandle);
-        Handle_GeomFill_TrihedronWithGuide(const GeomFill_TrihedronWithGuide *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_TrihedronWithGuide DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_TrihedronWithGuide {
-    GeomFill_TrihedronWithGuide* _get_reference() {
-    return (GeomFill_TrihedronWithGuide*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_TrihedronWithGuide {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_TrihedronWithGuide)
 
 %extend GeomFill_TrihedronWithGuide {
 	%pythoncode {
@@ -8942,51 +7785,7 @@ class GeomFill_UniformSection : public GeomFill_SectionLaw {
 };
 
 
-%extend GeomFill_UniformSection {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_UniformSection(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_UniformSection::Handle_GeomFill_UniformSection %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_UniformSection;
-class Handle_GeomFill_UniformSection : public Handle_GeomFill_SectionLaw {
-
-    public:
-        // constructors
-        Handle_GeomFill_UniformSection();
-        Handle_GeomFill_UniformSection(const Handle_GeomFill_UniformSection &aHandle);
-        Handle_GeomFill_UniformSection(const GeomFill_UniformSection *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_UniformSection DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_UniformSection {
-    GeomFill_UniformSection* _get_reference() {
-    return (GeomFill_UniformSection*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_UniformSection {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_UniformSection)
 
 %extend GeomFill_UniformSection {
 	%pythoncode {
@@ -9133,51 +7932,7 @@ class GeomFill_GuideTrihedronAC : public GeomFill_TrihedronWithGuide {
 };
 
 
-%extend GeomFill_GuideTrihedronAC {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_GuideTrihedronAC(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_GuideTrihedronAC::Handle_GeomFill_GuideTrihedronAC %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_GuideTrihedronAC;
-class Handle_GeomFill_GuideTrihedronAC : public Handle_GeomFill_TrihedronWithGuide {
-
-    public:
-        // constructors
-        Handle_GeomFill_GuideTrihedronAC();
-        Handle_GeomFill_GuideTrihedronAC(const Handle_GeomFill_GuideTrihedronAC &aHandle);
-        Handle_GeomFill_GuideTrihedronAC(const GeomFill_GuideTrihedronAC *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_GuideTrihedronAC DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_GuideTrihedronAC {
-    GeomFill_GuideTrihedronAC* _get_reference() {
-    return (GeomFill_GuideTrihedronAC*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_GuideTrihedronAC {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_GuideTrihedronAC)
 
 %extend GeomFill_GuideTrihedronAC {
 	%pythoncode {
@@ -9330,51 +8085,7 @@ class GeomFill_GuideTrihedronPlan : public GeomFill_TrihedronWithGuide {
 };
 
 
-%extend GeomFill_GuideTrihedronPlan {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_GeomFill_GuideTrihedronPlan(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_GeomFill_GuideTrihedronPlan::Handle_GeomFill_GuideTrihedronPlan %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_GeomFill_GuideTrihedronPlan;
-class Handle_GeomFill_GuideTrihedronPlan : public Handle_GeomFill_TrihedronWithGuide {
-
-    public:
-        // constructors
-        Handle_GeomFill_GuideTrihedronPlan();
-        Handle_GeomFill_GuideTrihedronPlan(const Handle_GeomFill_GuideTrihedronPlan &aHandle);
-        Handle_GeomFill_GuideTrihedronPlan(const GeomFill_GuideTrihedronPlan *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_GeomFill_GuideTrihedronPlan DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_GeomFill_GuideTrihedronPlan {
-    GeomFill_GuideTrihedronPlan* _get_reference() {
-    return (GeomFill_GuideTrihedronPlan*)$self->Access();
-    }
-};
-
-%extend Handle_GeomFill_GuideTrihedronPlan {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(GeomFill_GuideTrihedronPlan)
 
 %extend GeomFill_GuideTrihedronPlan {
 	%pythoncode {

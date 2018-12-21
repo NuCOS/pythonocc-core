@@ -17,7 +17,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") InterfaceGraphic
+%define INTERFACEGRAPHICDOCSTRING
+"No docstring provided."
+%enddef
+%module (package="OCC.Core", docstring=INTERFACEGRAPHICDOCSTRING) InterfaceGraphic
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,38 +34,24 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include InterfaceGraphic_headers.i
 
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
-
 /* typedefs */
-typedef TEL_TRANSFORM_PERSISTENCE * tel_transform_persistence;
+typedef int Tint;
 typedef TEL_TEXTURE_COORD * tel_texture_coord;
-typedef double Tdouble;
+typedef TEL_POFFSET_PARAM * tel_poffset_param;
 typedef unsigned short Techar;
-typedef TEL_POINT * tel_point;
+typedef float CALL_DEF_MATRIX4X4 [ 4 ][4];
 typedef TEL_COLOUR * tel_colour;
 typedef signed char Tchar;
-typedef int Tint;
+typedef TEL_TRANSFORM_PERSISTENCE * tel_transform_persistence;
+typedef TEL_POINT * tel_point;
 typedef float Tfloat;
 typedef unsigned int Tuint;
-typedef TEL_POFFSET_PARAM * tel_poffset_param;
-typedef float CALL_DEF_MATRIX4X4 [ 4 ][4];
+typedef double Tdouble;
 typedef char Tbool;
 /* end typedefs declaration */
 
@@ -75,4 +64,5 @@ enum TelCullMode {
 };
 
 /* end public enums declaration */
+
 

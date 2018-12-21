@@ -17,7 +17,37 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") LProp
+%define LPROPDOCSTRING
+"Handles local properties of curves and surfaces.
+Given a curve and a parameter value the following computations
+are available :
+- point,
+- derivatives,
+- tangent,
+- normal,
+- curvature,
+- centre of curvature,
+- Locals curvature's extremas,
+- Points of inflection,
+Given a surface and 2 parameters the following computations
+are available :
+- for each parameter:
+- derivatives,
+- tangent line,
+- centre of curvature,
+- point,
+- normal line,
+- maximum and minimum curvatures,
+- principal directions of curvature,
+- mean curvature,
+- Gaussian curvature.
+
+
+-Level : Public.
+All methods of all classes will be public.
+"
+%enddef
+%module (package="OCC.Core", docstring=LPROPDOCSTRING) LProp
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,35 +61,15 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include LProp_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 /* end typedefs declaration */
 
 /* public enums */
-enum LProp_CIType {
-	LProp_Inflection = 0,
-	LProp_MinCur = 1,
-	LProp_MaxCur = 2,
-};
-
 enum LProp_Status {
 	LProp_Undecided = 0,
 	LProp_Undefined = 1,
@@ -67,7 +77,15 @@ enum LProp_Status {
 	LProp_Computed = 3,
 };
 
+enum LProp_CIType {
+	LProp_Inflection = 0,
+	LProp_MinCur = 1,
+	LProp_MaxCur = 2,
+};
+
 /* end public enums declaration */
+
+%wrap_handle(LProp_SequenceNodeOfSequenceOfCIType)
 
 %nodefaultctor LProp_AnalyticCurInf;
 class LProp_AnalyticCurInf {
@@ -171,55 +189,11 @@ class LProp_SequenceNodeOfSequenceOfCIType : public TCollection_SeqNode {
 		%feature("compactdefaultargs") Value;
 		%feature("autodoc", "	:rtype: LProp_CIType
 ") Value;
-		LProp_CIType & Value ();
+		LProp_CIType  Value ();
 };
 
 
-%extend LProp_SequenceNodeOfSequenceOfCIType {
-	%pythoncode {
-		def GetHandle(self):
-		    try:
-		        return self.thisHandle
-		    except:
-		        self.thisHandle = Handle_LProp_SequenceNodeOfSequenceOfCIType(self)
-		        self.thisown = False
-		        return self.thisHandle
-	}
-};
-
-%pythonappend Handle_LProp_SequenceNodeOfSequenceOfCIType::Handle_LProp_SequenceNodeOfSequenceOfCIType %{
-    # register the handle in the base object
-    if len(args) > 0:
-        register_handle(self, args[0])
-%}
-
-%nodefaultctor Handle_LProp_SequenceNodeOfSequenceOfCIType;
-class Handle_LProp_SequenceNodeOfSequenceOfCIType : public Handle_TCollection_SeqNode {
-
-    public:
-        // constructors
-        Handle_LProp_SequenceNodeOfSequenceOfCIType();
-        Handle_LProp_SequenceNodeOfSequenceOfCIType(const Handle_LProp_SequenceNodeOfSequenceOfCIType &aHandle);
-        Handle_LProp_SequenceNodeOfSequenceOfCIType(const LProp_SequenceNodeOfSequenceOfCIType *anItem);
-        void Nullify();
-        Standard_Boolean IsNull() const;
-        static const Handle_LProp_SequenceNodeOfSequenceOfCIType DownCast(const Handle_Standard_Transient &AnObject);
-
-};
-%extend Handle_LProp_SequenceNodeOfSequenceOfCIType {
-    LProp_SequenceNodeOfSequenceOfCIType* _get_reference() {
-    return (LProp_SequenceNodeOfSequenceOfCIType*)$self->Access();
-    }
-};
-
-%extend Handle_LProp_SequenceNodeOfSequenceOfCIType {
-    %pythoncode {
-        def GetObject(self):
-            obj = self._get_reference()
-            register_handle(self, obj)
-            return obj
-    }
-};
+%make_alias(LProp_SequenceNodeOfSequenceOfCIType)
 
 %extend LProp_SequenceNodeOfSequenceOfCIType {
 	%pythoncode {
@@ -314,11 +288,11 @@ class LProp_SequenceOfCIType : public TCollection_BaseSequence {
 		%feature("compactdefaultargs") First;
 		%feature("autodoc", "	:rtype: LProp_CIType
 ") First;
-		const LProp_CIType & First ();
+		const LProp_CIType  First ();
 		%feature("compactdefaultargs") Last;
 		%feature("autodoc", "	:rtype: LProp_CIType
 ") Last;
-		const LProp_CIType & Last ();
+		const LProp_CIType  Last ();
 		%feature("compactdefaultargs") Split;
 		%feature("autodoc", "	:param Index:
 	:type Index: int
@@ -332,7 +306,7 @@ class LProp_SequenceOfCIType : public TCollection_BaseSequence {
 	:type Index: int
 	:rtype: LProp_CIType
 ") Value;
-		const LProp_CIType & Value (const Standard_Integer Index);
+		const LProp_CIType  Value (const Standard_Integer Index);
 		%feature("compactdefaultargs") SetValue;
 		%feature("autodoc", "	:param Index:
 	:type Index: int
@@ -346,7 +320,7 @@ class LProp_SequenceOfCIType : public TCollection_BaseSequence {
 	:type Index: int
 	:rtype: LProp_CIType
 ") ChangeValue;
-		LProp_CIType & ChangeValue (const Standard_Integer Index);
+		LProp_CIType  ChangeValue (const Standard_Integer Index);
 		%feature("compactdefaultargs") Remove;
 		%feature("autodoc", "	:param Index:
 	:type Index: int

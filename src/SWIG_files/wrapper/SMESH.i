@@ -17,7 +17,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-%module (package="OCC") SMESH
+%define SMESHDOCSTRING
+"No docstring provided."
+%enddef
+%module (package="OCC.Core", docstring=SMESHDOCSTRING) SMESH
 
 #pragma SWIG nowarn=504,325,503
 
@@ -31,24 +34,10 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/ExceptionCatcher.i
 %include ../common/FunctionTransformers.i
 %include ../common/Operators.i
+%include ../common/OccHandle.i
 
 
 %include SMESH_headers.i
-
-
-%pythoncode {
-def register_handle(handle, base_object):
-    """
-    Inserts the handle into the base object to
-    prevent memory corruption in certain cases
-    """
-    try:
-        if base_object.IsKind("Standard_Transient"):
-            base_object.thisHandle = handle
-            base_object.thisown = False
-    except:
-        pass
-};
 
 /* typedefs */
 typedef std::map <const SMDS_MeshElement * , std::list <const SMDS_MeshElement *>> TElemOfElemListMap;
@@ -79,6 +68,13 @@ typedef std::vector <const SMDS_MeshNode *> TNodeColumn;
 /* end typedefs declaration */
 
 /* public enums */
+enum MeshDimension {
+	MeshDim_0D = 0,
+	MeshDim_1D = 1,
+	MeshDim_2D = 2,
+	MeshDim_3D = 3,
+};
+
 enum SMESH_ComputeErrorName {
 	COMPERR_OK = - 1,
 	COMPERR_BAD_INPUT_MESH = - 2,
@@ -91,14 +87,9 @@ enum SMESH_ComputeErrorName {
 	COMPERR_BAD_SHAPE = - 9,
 };
 
-enum MeshDimension {
-	MeshDim_0D = 0,
-	MeshDim_1D = 1,
-	MeshDim_2D = 2,
-	MeshDim_3D = 3,
-};
-
 /* end public enums declaration */
+
+%wrap_handle(SMESH_MeshVSLink)
 
 %nodefaultctor SMESH_ElementSearcher;
 class SMESH_ElementSearcher {
@@ -1464,7 +1455,7 @@ class SMESH_MeshVSLink : public MeshVS_DataSource3D {
 ") SMESH_MeshVSLink;
 		 SMESH_MeshVSLink (const SMESH_Mesh * aMesh);
 		%feature("compactdefaultargs") GetGeom;
-		%feature("autodoc", "	* Returns geometry information about node ( if IsElement is False ) or element ( IsElement is True ) by co-ordinates. For element this method must return all its nodes co-ordinates in the strict order: X, Y, Z and with nodes order is the same as in wire bounding the face or link. NbNodes is number of nodes of element. It is recommended to return 1 for node. Type is an element type.
+		%feature("autodoc", "	* Returns geometry information about node ( if IsElement is False ) or element ( IsElement is True )  by co-ordinates. For element this method must return all its nodes co-ordinates in the strict order: X, Y, Z and  with nodes order is the same as in wire bounding the face or link. NbNodes is number of nodes of element.  It is recommended to return 1 for node. Type is an element type.
 
 	:param ID:
 	:type ID: int
@@ -1490,7 +1481,7 @@ class SMESH_MeshVSLink : public MeshVS_DataSource3D {
 ") Get3DGeom;
 		Standard_Boolean Get3DGeom (const Standard_Integer ID,Standard_Integer &OutValue,Handle_MeshVS_HArray1OfSequenceOfInteger & Data);
 		%feature("compactdefaultargs") GetGeomType;
-		%feature("autodoc", "	* This method is similar to GetGeom, but returns only element or node type. This method is provided for a fine performance.
+		%feature("autodoc", "	* This method is similar to GetGeom, but returns only element or node type. This method is provided for  a fine performance.
 
 	:param ID:
 	:type ID: int
@@ -1536,7 +1527,7 @@ class SMESH_MeshVSLink : public MeshVS_DataSource3D {
 ") GetAllElements;
 		const TColStd_PackedMapOfInteger & GetAllElements ();
 		%feature("compactdefaultargs") GetNormal;
-		%feature("autodoc", "	* This method calculates normal of face, which is using for correct reflection presentation. There is default method, for advance reflection this method can be redefined.
+		%feature("autodoc", "	* This method calculates normal of face, which is using for correct reflection presentation.  There is default method, for advance reflection this method can be redefined.
 
 	:param Id:
 	:type Id: int
@@ -1565,6 +1556,8 @@ class SMESH_MeshVSLink : public MeshVS_DataSource3D {
 		Handle_Standard_Type DynamicType ();
 };
 
+
+%make_alias(SMESH_MeshVSLink)
 
 %extend SMESH_MeshVSLink {
 	%pythoncode {
