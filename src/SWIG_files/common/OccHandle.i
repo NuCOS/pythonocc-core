@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
 /**
  * This file defined the macro wrap_handle() and make_alias()
  *
@@ -263,5 +262,8 @@ void IncRef(Standard_Transient& a) {
                 warnings.simplefilter('default', DeprecationWarning)
                 return Handle_## TYPE(Handle_ ## TYPE ## _DownCast(o))
       }
+%enddef
+
+%define Handle(Class) opencascade::handle<Class>
 %enddef
 
