@@ -1,5 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
+Copyright 2008-2019 Thomas Paviot (tpaviot@gmail.com)
 
 
 This file is part of pythonOCC.
@@ -18,11 +18,11 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 %define XMLMFUNCTIONDOCSTRING
-""
+"No docstring provided."
 %enddef
 %module (package="OCC.Core", docstring=XMLMFUNCTIONDOCSTRING) XmlMFunction
 
-#pragma SWIG nowarn=504,325,503
+#pragma SWIG nowarn=504,325,503,520,350,351,383,389,394,395, 404
 
 %{
 #ifdef WNT
@@ -38,6 +38,13 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 
 %include XmlMFunction_headers.i
+
+/* rttiext only ojects wrapped as handles */
+/* end rttiext only declaration */
+
+/* templates */
+/* end templates declaration */
+
 
 /* typedefs */
 /* end typedefs declaration */
@@ -73,12 +80,6 @@ class XmlMFunction {
 %nodefaultctor XmlMFunction_FunctionDriver;
 class XmlMFunction_FunctionDriver : public XmlMDF_ADriver {
 	public:
-		%feature("compactdefaultargs") XmlMFunction_FunctionDriver;
-		%feature("autodoc", "	:param theMessageDriver:
-	:type theMessageDriver: Handle_CDM_MessageDriver &
-	:rtype: None
-") XmlMFunction_FunctionDriver;
-		 XmlMFunction_FunctionDriver (const Handle_CDM_MessageDriver & theMessageDriver);
 		%feature("compactdefaultargs") NewEmpty;
 		%feature("autodoc", "	:rtype: Handle_TDF_Attribute
 ") NewEmpty;
@@ -103,6 +104,12 @@ class XmlMFunction_FunctionDriver : public XmlMDF_ADriver {
 	:rtype: None
 ") Paste;
 		void Paste (const Handle_TDF_Attribute & Source,XmlObjMgt_Persistent & Target,XmlObjMgt_SRelocationTable & RelocTable);
+		%feature("compactdefaultargs") XmlMFunction_FunctionDriver;
+		%feature("autodoc", "	:param theMessageDriver:
+	:type theMessageDriver: Handle_CDM_MessageDriver &
+	:rtype: None
+") XmlMFunction_FunctionDriver;
+		 XmlMFunction_FunctionDriver (const Handle_CDM_MessageDriver & theMessageDriver);
 };
 
 
@@ -116,12 +123,6 @@ class XmlMFunction_FunctionDriver : public XmlMDF_ADriver {
 %nodefaultctor XmlMFunction_GraphNodeDriver;
 class XmlMFunction_GraphNodeDriver : public XmlMDF_ADriver {
 	public:
-		%feature("compactdefaultargs") XmlMFunction_GraphNodeDriver;
-		%feature("autodoc", "	:param theMessageDriver:
-	:type theMessageDriver: Handle_CDM_MessageDriver &
-	:rtype: None
-") XmlMFunction_GraphNodeDriver;
-		 XmlMFunction_GraphNodeDriver (const Handle_CDM_MessageDriver & theMessageDriver);
 		%feature("compactdefaultargs") NewEmpty;
 		%feature("autodoc", "	:rtype: Handle_TDF_Attribute
 ") NewEmpty;
@@ -146,6 +147,12 @@ class XmlMFunction_GraphNodeDriver : public XmlMDF_ADriver {
 	:rtype: None
 ") Paste;
 		void Paste (const Handle_TDF_Attribute & Source,XmlObjMgt_Persistent & Target,XmlObjMgt_SRelocationTable & RelocTable);
+		%feature("compactdefaultargs") XmlMFunction_GraphNodeDriver;
+		%feature("autodoc", "	:param theMessageDriver:
+	:type theMessageDriver: Handle_CDM_MessageDriver &
+	:rtype: None
+") XmlMFunction_GraphNodeDriver;
+		 XmlMFunction_GraphNodeDriver (const Handle_CDM_MessageDriver & theMessageDriver);
 };
 
 
@@ -159,12 +166,6 @@ class XmlMFunction_GraphNodeDriver : public XmlMDF_ADriver {
 %nodefaultctor XmlMFunction_ScopeDriver;
 class XmlMFunction_ScopeDriver : public XmlMDF_ADriver {
 	public:
-		%feature("compactdefaultargs") XmlMFunction_ScopeDriver;
-		%feature("autodoc", "	:param theMessageDriver:
-	:type theMessageDriver: Handle_CDM_MessageDriver &
-	:rtype: None
-") XmlMFunction_ScopeDriver;
-		 XmlMFunction_ScopeDriver (const Handle_CDM_MessageDriver & theMessageDriver);
 		%feature("compactdefaultargs") NewEmpty;
 		%feature("autodoc", "	:rtype: Handle_TDF_Attribute
 ") NewEmpty;
@@ -189,6 +190,12 @@ class XmlMFunction_ScopeDriver : public XmlMDF_ADriver {
 	:rtype: None
 ") Paste;
 		void Paste (const Handle_TDF_Attribute & Source,XmlObjMgt_Persistent & Target,XmlObjMgt_SRelocationTable & RelocTable);
+		%feature("compactdefaultargs") XmlMFunction_ScopeDriver;
+		%feature("autodoc", "	:param theMessageDriver:
+	:type theMessageDriver: Handle_CDM_MessageDriver &
+	:rtype: None
+") XmlMFunction_ScopeDriver;
+		 XmlMFunction_ScopeDriver (const Handle_CDM_MessageDriver & theMessageDriver);
 };
 
 
@@ -199,3 +206,6 @@ class XmlMFunction_ScopeDriver : public XmlMDF_ADriver {
 	__repr__ = _dumps_object
 	}
 };
+/* harray1 class */
+/* harray2 class */
+/* harray2 class */

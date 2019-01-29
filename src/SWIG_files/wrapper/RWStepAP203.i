@@ -1,5 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
+Copyright 2008-2019 Thomas Paviot (tpaviot@gmail.com)
 
 
 This file is part of pythonOCC.
@@ -18,12 +18,11 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 %define RWSTEPAP203DOCSTRING
-"Reading & Writing tools for classes from StepAP203
-"
+"No docstring provided."
 %enddef
 %module (package="OCC.Core", docstring=RWSTEPAP203DOCSTRING) RWStepAP203
 
-#pragma SWIG nowarn=504,325,503
+#pragma SWIG nowarn=504,325,503,520,350,351,383,389,394,395, 404
 
 %{
 #ifdef WNT
@@ -39,6 +38,13 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 
 %include RWStepAP203_headers.i
+
+/* rttiext only ojects wrapped as handles */
+/* end rttiext only declaration */
+
+/* templates */
+/* end templates declaration */
+
 
 /* typedefs */
 /* end typedefs declaration */
@@ -70,16 +76,6 @@ class RWStepAP203_RWCcDesignApproval {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP203_CcDesignApproval & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CcDesignApproval
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP203_CcDesignApproval &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignApproval & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -90,6 +86,16 @@ class RWStepAP203_RWCcDesignApproval {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP203_CcDesignApproval & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CcDesignApproval
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP203_CcDesignApproval &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignApproval & ent);
 };
 
 
@@ -121,16 +127,6 @@ class RWStepAP203_RWCcDesignCertification {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP203_CcDesignCertification & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CcDesignCertification
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP203_CcDesignCertification &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignCertification & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -141,6 +137,16 @@ class RWStepAP203_RWCcDesignCertification {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP203_CcDesignCertification & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CcDesignCertification
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP203_CcDesignCertification &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignCertification & ent);
 };
 
 
@@ -172,16 +178,6 @@ class RWStepAP203_RWCcDesignContract {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP203_CcDesignContract & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CcDesignContract
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP203_CcDesignContract &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignContract & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -192,6 +188,16 @@ class RWStepAP203_RWCcDesignContract {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP203_CcDesignContract & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CcDesignContract
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP203_CcDesignContract &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignContract & ent);
 };
 
 
@@ -223,16 +229,6 @@ class RWStepAP203_RWCcDesignDateAndTimeAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP203_CcDesignDateAndTimeAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CcDesignDateAndTimeAssignment
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP203_CcDesignDateAndTimeAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignDateAndTimeAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -243,6 +239,16 @@ class RWStepAP203_RWCcDesignDateAndTimeAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP203_CcDesignDateAndTimeAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CcDesignDateAndTimeAssignment
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP203_CcDesignDateAndTimeAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignDateAndTimeAssignment & ent);
 };
 
 
@@ -274,16 +280,6 @@ class RWStepAP203_RWCcDesignPersonAndOrganizationAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP203_CcDesignPersonAndOrganizationAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CcDesignPersonAndOrganizationAssignment
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP203_CcDesignPersonAndOrganizationAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignPersonAndOrganizationAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -294,6 +290,16 @@ class RWStepAP203_RWCcDesignPersonAndOrganizationAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP203_CcDesignPersonAndOrganizationAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CcDesignPersonAndOrganizationAssignment
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP203_CcDesignPersonAndOrganizationAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignPersonAndOrganizationAssignment & ent);
 };
 
 
@@ -325,16 +331,6 @@ class RWStepAP203_RWCcDesignSecurityClassification {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP203_CcDesignSecurityClassification & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CcDesignSecurityClassification
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP203_CcDesignSecurityClassification &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignSecurityClassification & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -345,6 +341,16 @@ class RWStepAP203_RWCcDesignSecurityClassification {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP203_CcDesignSecurityClassification & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CcDesignSecurityClassification
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP203_CcDesignSecurityClassification &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignSecurityClassification & ent);
 };
 
 
@@ -376,16 +382,6 @@ class RWStepAP203_RWCcDesignSpecificationReference {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP203_CcDesignSpecificationReference & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CcDesignSpecificationReference
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP203_CcDesignSpecificationReference &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignSpecificationReference & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -396,6 +392,16 @@ class RWStepAP203_RWCcDesignSpecificationReference {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP203_CcDesignSpecificationReference & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CcDesignSpecificationReference
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP203_CcDesignSpecificationReference &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_CcDesignSpecificationReference & ent);
 };
 
 
@@ -427,16 +433,6 @@ class RWStepAP203_RWChange {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP203_Change & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes Change
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP203_Change &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_Change & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -447,6 +443,16 @@ class RWStepAP203_RWChange {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP203_Change & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes Change
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP203_Change &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_Change & ent);
 };
 
 
@@ -478,16 +484,6 @@ class RWStepAP203_RWChangeRequest {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP203_ChangeRequest & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes ChangeRequest
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP203_ChangeRequest &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_ChangeRequest & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -498,6 +494,16 @@ class RWStepAP203_RWChangeRequest {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP203_ChangeRequest & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes ChangeRequest
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP203_ChangeRequest &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_ChangeRequest & ent);
 };
 
 
@@ -529,16 +535,6 @@ class RWStepAP203_RWStartRequest {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP203_StartRequest & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes StartRequest
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP203_StartRequest &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_StartRequest & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -549,6 +545,16 @@ class RWStepAP203_RWStartRequest {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP203_StartRequest & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes StartRequest
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP203_StartRequest &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_StartRequest & ent);
 };
 
 
@@ -580,16 +586,6 @@ class RWStepAP203_RWStartWork {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP203_StartWork & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes StartWork
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP203_StartWork &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_StartWork & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -600,6 +596,16 @@ class RWStepAP203_RWStartWork {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP203_StartWork & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes StartWork
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP203_StartWork &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP203_StartWork & ent);
 };
 
 
@@ -608,3 +614,6 @@ class RWStepAP203_RWStartWork {
 	__repr__ = _dumps_object
 	}
 };
+/* harray1 class */
+/* harray2 class */
+/* harray2 class */

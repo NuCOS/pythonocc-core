@@ -1,5 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
+Copyright 2008-2019 Thomas Paviot (tpaviot@gmail.com)
 
 
 This file is part of pythonOCC.
@@ -22,7 +22,7 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %enddef
 %module (package="OCC.Core", docstring=IVTKDOCSTRING) IVtk
 
-#pragma SWIG nowarn=504,325,503
+#pragma SWIG nowarn=504,325,503,520,350,351,383,389,394,395, 404
 
 %{
 #ifdef WNT
@@ -39,6 +39,13 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 %include IVtk_headers.i
 
+/* rttiext only ojects wrapped as handles */
+/* end rttiext only declaration */
+
+/* templates */
+/* end templates declaration */
+
+
 /* typedefs */
 /* end typedefs declaration */
 
@@ -46,3 +53,6 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 /* end public enums declaration */
 
 
+/* harray1 class */
+/* harray2 class */
+/* harray2 class */

@@ -1,5 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
+Copyright 2008-2019 Thomas Paviot (tpaviot@gmail.com)
 
 
 This file is part of pythonOCC.
@@ -18,11 +18,11 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 %define RWSTEPFEADOCSTRING
-""
+"No docstring provided."
 %enddef
 %module (package="OCC.Core", docstring=RWSTEPFEADOCSTRING) RWStepFEA
 
-#pragma SWIG nowarn=504,325,503
+#pragma SWIG nowarn=504,325,503,520,350,351,383,389,394,395, 404
 
 %{
 #ifdef WNT
@@ -38,6 +38,13 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 
 %include RWStepFEA_headers.i
+
+/* rttiext only ojects wrapped as handles */
+/* end rttiext only declaration */
+
+/* templates */
+/* end templates declaration */
+
 
 /* typedefs */
 /* end typedefs declaration */
@@ -69,16 +76,6 @@ class RWStepFEA_RWAlignedCurve3dElementCoordinateSystem {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_AlignedCurve3dElementCoordinateSystem & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes AlignedCurve3dElementCoordinateSystem
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_AlignedCurve3dElementCoordinateSystem &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_AlignedCurve3dElementCoordinateSystem & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -89,6 +86,16 @@ class RWStepFEA_RWAlignedCurve3dElementCoordinateSystem {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_AlignedCurve3dElementCoordinateSystem & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes AlignedCurve3dElementCoordinateSystem
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_AlignedCurve3dElementCoordinateSystem &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_AlignedCurve3dElementCoordinateSystem & ent);
 };
 
 
@@ -120,16 +127,6 @@ class RWStepFEA_RWAlignedSurface3dElementCoordinateSystem {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_AlignedSurface3dElementCoordinateSystem & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes AlignedSurface3dElementCoordinateSystem
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_AlignedSurface3dElementCoordinateSystem &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_AlignedSurface3dElementCoordinateSystem & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -140,6 +137,16 @@ class RWStepFEA_RWAlignedSurface3dElementCoordinateSystem {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_AlignedSurface3dElementCoordinateSystem & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes AlignedSurface3dElementCoordinateSystem
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_AlignedSurface3dElementCoordinateSystem &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_AlignedSurface3dElementCoordinateSystem & ent);
 };
 
 
@@ -171,16 +178,6 @@ class RWStepFEA_RWArbitraryVolume3dElementCoordinateSystem {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_ArbitraryVolume3dElementCoordinateSystem & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes ArbitraryVolume3dElementCoordinateSystem
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_ArbitraryVolume3dElementCoordinateSystem &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ArbitraryVolume3dElementCoordinateSystem & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -191,6 +188,16 @@ class RWStepFEA_RWArbitraryVolume3dElementCoordinateSystem {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_ArbitraryVolume3dElementCoordinateSystem & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes ArbitraryVolume3dElementCoordinateSystem
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_ArbitraryVolume3dElementCoordinateSystem &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ArbitraryVolume3dElementCoordinateSystem & ent);
 };
 
 
@@ -222,16 +229,6 @@ class RWStepFEA_RWConstantSurface3dElementCoordinateSystem {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_ConstantSurface3dElementCoordinateSystem & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes ConstantSurface3dElementCoordinateSystem
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_ConstantSurface3dElementCoordinateSystem &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ConstantSurface3dElementCoordinateSystem & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -242,6 +239,16 @@ class RWStepFEA_RWConstantSurface3dElementCoordinateSystem {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_ConstantSurface3dElementCoordinateSystem & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes ConstantSurface3dElementCoordinateSystem
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_ConstantSurface3dElementCoordinateSystem &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ConstantSurface3dElementCoordinateSystem & ent);
 };
 
 
@@ -273,16 +280,6 @@ class RWStepFEA_RWCurve3dElementProperty {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_Curve3dElementProperty & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes Curve3dElementProperty
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_Curve3dElementProperty &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_Curve3dElementProperty & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -293,6 +290,16 @@ class RWStepFEA_RWCurve3dElementProperty {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_Curve3dElementProperty & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes Curve3dElementProperty
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_Curve3dElementProperty &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_Curve3dElementProperty & ent);
 };
 
 
@@ -324,16 +331,6 @@ class RWStepFEA_RWCurve3dElementRepresentation {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_Curve3dElementRepresentation & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes Curve3dElementRepresentation
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_Curve3dElementRepresentation &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_Curve3dElementRepresentation & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -344,6 +341,16 @@ class RWStepFEA_RWCurve3dElementRepresentation {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_Curve3dElementRepresentation & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes Curve3dElementRepresentation
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_Curve3dElementRepresentation &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_Curve3dElementRepresentation & ent);
 };
 
 
@@ -375,16 +382,6 @@ class RWStepFEA_RWCurveElementEndOffset {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_CurveElementEndOffset & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CurveElementEndOffset
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_CurveElementEndOffset &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_CurveElementEndOffset & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -395,6 +392,16 @@ class RWStepFEA_RWCurveElementEndOffset {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_CurveElementEndOffset & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CurveElementEndOffset
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_CurveElementEndOffset &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_CurveElementEndOffset & ent);
 };
 
 
@@ -426,16 +433,6 @@ class RWStepFEA_RWCurveElementEndRelease {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_CurveElementEndRelease & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CurveElementEndRelease
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_CurveElementEndRelease &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_CurveElementEndRelease & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -446,6 +443,16 @@ class RWStepFEA_RWCurveElementEndRelease {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_CurveElementEndRelease & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CurveElementEndRelease
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_CurveElementEndRelease &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_CurveElementEndRelease & ent);
 };
 
 
@@ -477,16 +484,6 @@ class RWStepFEA_RWCurveElementInterval {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_CurveElementInterval & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CurveElementInterval
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_CurveElementInterval &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_CurveElementInterval & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -497,6 +494,16 @@ class RWStepFEA_RWCurveElementInterval {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_CurveElementInterval & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CurveElementInterval
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_CurveElementInterval &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_CurveElementInterval & ent);
 };
 
 
@@ -528,16 +535,6 @@ class RWStepFEA_RWCurveElementIntervalConstant {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_CurveElementIntervalConstant & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CurveElementIntervalConstant
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_CurveElementIntervalConstant &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_CurveElementIntervalConstant & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -548,6 +545,16 @@ class RWStepFEA_RWCurveElementIntervalConstant {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_CurveElementIntervalConstant & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CurveElementIntervalConstant
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_CurveElementIntervalConstant &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_CurveElementIntervalConstant & ent);
 };
 
 
@@ -579,16 +586,6 @@ class RWStepFEA_RWCurveElementIntervalLinearlyVarying {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_CurveElementIntervalLinearlyVarying & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CurveElementIntervalLinearlyVarying
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_CurveElementIntervalLinearlyVarying &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_CurveElementIntervalLinearlyVarying & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -599,6 +596,16 @@ class RWStepFEA_RWCurveElementIntervalLinearlyVarying {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_CurveElementIntervalLinearlyVarying & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CurveElementIntervalLinearlyVarying
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_CurveElementIntervalLinearlyVarying &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_CurveElementIntervalLinearlyVarying & ent);
 };
 
 
@@ -630,16 +637,6 @@ class RWStepFEA_RWCurveElementLocation {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_CurveElementLocation & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes CurveElementLocation
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_CurveElementLocation &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_CurveElementLocation & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -650,6 +647,16 @@ class RWStepFEA_RWCurveElementLocation {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_CurveElementLocation & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes CurveElementLocation
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_CurveElementLocation &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_CurveElementLocation & ent);
 };
 
 
@@ -681,16 +688,6 @@ class RWStepFEA_RWDummyNode {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_DummyNode & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes DummyNode
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_DummyNode &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_DummyNode & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -701,6 +698,16 @@ class RWStepFEA_RWDummyNode {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_DummyNode & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes DummyNode
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_DummyNode &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_DummyNode & ent);
 };
 
 
@@ -732,16 +739,6 @@ class RWStepFEA_RWElementGeometricRelationship {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_ElementGeometricRelationship & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes ElementGeometricRelationship
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_ElementGeometricRelationship &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ElementGeometricRelationship & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -752,6 +749,16 @@ class RWStepFEA_RWElementGeometricRelationship {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_ElementGeometricRelationship & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes ElementGeometricRelationship
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_ElementGeometricRelationship &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ElementGeometricRelationship & ent);
 };
 
 
@@ -783,16 +790,6 @@ class RWStepFEA_RWElementGroup {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_ElementGroup & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes ElementGroup
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_ElementGroup &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ElementGroup & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -803,6 +800,16 @@ class RWStepFEA_RWElementGroup {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_ElementGroup & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes ElementGroup
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_ElementGroup &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ElementGroup & ent);
 };
 
 
@@ -834,16 +841,6 @@ class RWStepFEA_RWElementRepresentation {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_ElementRepresentation & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes ElementRepresentation
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_ElementRepresentation &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ElementRepresentation & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -854,6 +851,16 @@ class RWStepFEA_RWElementRepresentation {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_ElementRepresentation & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes ElementRepresentation
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_ElementRepresentation &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ElementRepresentation & ent);
 };
 
 
@@ -885,16 +892,6 @@ class RWStepFEA_RWFeaAreaDensity {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaAreaDensity & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaAreaDensity
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaAreaDensity &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaAreaDensity & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -905,6 +902,16 @@ class RWStepFEA_RWFeaAreaDensity {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaAreaDensity & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaAreaDensity
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaAreaDensity &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaAreaDensity & ent);
 };
 
 
@@ -936,16 +943,6 @@ class RWStepFEA_RWFeaAxis2Placement3d {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaAxis2Placement3d & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaAxis2Placement3d
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaAxis2Placement3d &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaAxis2Placement3d & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -956,6 +953,16 @@ class RWStepFEA_RWFeaAxis2Placement3d {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaAxis2Placement3d & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaAxis2Placement3d
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaAxis2Placement3d &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaAxis2Placement3d & ent);
 };
 
 
@@ -987,16 +994,6 @@ class RWStepFEA_RWFeaCurveSectionGeometricRelationship {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaCurveSectionGeometricRelationship & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaCurveSectionGeometricRelationship
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaCurveSectionGeometricRelationship &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaCurveSectionGeometricRelationship & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1007,6 +1004,16 @@ class RWStepFEA_RWFeaCurveSectionGeometricRelationship {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaCurveSectionGeometricRelationship & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaCurveSectionGeometricRelationship
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaCurveSectionGeometricRelationship &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaCurveSectionGeometricRelationship & ent);
 };
 
 
@@ -1038,16 +1045,6 @@ class RWStepFEA_RWFeaGroup {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaGroup & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaGroup
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaGroup &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaGroup & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1058,6 +1055,16 @@ class RWStepFEA_RWFeaGroup {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaGroup & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaGroup
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaGroup &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaGroup & ent);
 };
 
 
@@ -1089,16 +1096,6 @@ class RWStepFEA_RWFeaLinearElasticity {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaLinearElasticity & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaLinearElasticity
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaLinearElasticity &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaLinearElasticity & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1109,6 +1106,16 @@ class RWStepFEA_RWFeaLinearElasticity {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaLinearElasticity & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaLinearElasticity
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaLinearElasticity &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaLinearElasticity & ent);
 };
 
 
@@ -1140,16 +1147,6 @@ class RWStepFEA_RWFeaMassDensity {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaMassDensity & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaMassDensity
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaMassDensity &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaMassDensity & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1160,6 +1157,16 @@ class RWStepFEA_RWFeaMassDensity {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaMassDensity & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaMassDensity
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaMassDensity &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaMassDensity & ent);
 };
 
 
@@ -1191,16 +1198,6 @@ class RWStepFEA_RWFeaMaterialPropertyRepresentation {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaMaterialPropertyRepresentation & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaMaterialPropertyRepresentation
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaMaterialPropertyRepresentation &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaMaterialPropertyRepresentation & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1211,6 +1208,16 @@ class RWStepFEA_RWFeaMaterialPropertyRepresentation {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaMaterialPropertyRepresentation & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaMaterialPropertyRepresentation
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaMaterialPropertyRepresentation &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaMaterialPropertyRepresentation & ent);
 };
 
 
@@ -1242,16 +1249,6 @@ class RWStepFEA_RWFeaMaterialPropertyRepresentationItem {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaMaterialPropertyRepresentationItem & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaMaterialPropertyRepresentationItem
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaMaterialPropertyRepresentationItem &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaMaterialPropertyRepresentationItem & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1262,6 +1259,16 @@ class RWStepFEA_RWFeaMaterialPropertyRepresentationItem {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaMaterialPropertyRepresentationItem & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaMaterialPropertyRepresentationItem
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaMaterialPropertyRepresentationItem &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaMaterialPropertyRepresentationItem & ent);
 };
 
 
@@ -1293,16 +1300,6 @@ class RWStepFEA_RWFeaModel {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaModel & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaModel
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaModel &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaModel & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1313,6 +1310,16 @@ class RWStepFEA_RWFeaModel {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaModel & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaModel
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaModel &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaModel & ent);
 };
 
 
@@ -1344,16 +1351,6 @@ class RWStepFEA_RWFeaModel3d {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaModel3d & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaModel3d
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaModel3d &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaModel3d & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1364,6 +1361,16 @@ class RWStepFEA_RWFeaModel3d {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaModel3d & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaModel3d
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaModel3d &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaModel3d & ent);
 };
 
 
@@ -1395,16 +1402,6 @@ class RWStepFEA_RWFeaModelDefinition {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaModelDefinition & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaModelDefinition
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaModelDefinition &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaModelDefinition & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1415,6 +1412,16 @@ class RWStepFEA_RWFeaModelDefinition {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaModelDefinition & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaModelDefinition
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaModelDefinition &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaModelDefinition & ent);
 };
 
 
@@ -1446,16 +1453,6 @@ class RWStepFEA_RWFeaMoistureAbsorption {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaMoistureAbsorption & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaMoistureAbsorption
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaMoistureAbsorption &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaMoistureAbsorption & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1466,6 +1463,16 @@ class RWStepFEA_RWFeaMoistureAbsorption {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaMoistureAbsorption & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaMoistureAbsorption
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaMoistureAbsorption &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaMoistureAbsorption & ent);
 };
 
 
@@ -1497,16 +1504,6 @@ class RWStepFEA_RWFeaParametricPoint {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaParametricPoint & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaParametricPoint
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaParametricPoint &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaParametricPoint & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1517,6 +1514,16 @@ class RWStepFEA_RWFeaParametricPoint {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaParametricPoint & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaParametricPoint
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaParametricPoint &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaParametricPoint & ent);
 };
 
 
@@ -1548,16 +1555,6 @@ class RWStepFEA_RWFeaRepresentationItem {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaRepresentationItem & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaRepresentationItem
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaRepresentationItem &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaRepresentationItem & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1568,6 +1565,16 @@ class RWStepFEA_RWFeaRepresentationItem {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaRepresentationItem & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaRepresentationItem
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaRepresentationItem &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaRepresentationItem & ent);
 };
 
 
@@ -1599,16 +1606,6 @@ class RWStepFEA_RWFeaSecantCoefficientOfLinearThermalExpansion {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaSecantCoefficientOfLinearThermalExpansion & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaSecantCoefficientOfLinearThermalExpansion
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaSecantCoefficientOfLinearThermalExpansion &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaSecantCoefficientOfLinearThermalExpansion & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1619,6 +1616,16 @@ class RWStepFEA_RWFeaSecantCoefficientOfLinearThermalExpansion {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaSecantCoefficientOfLinearThermalExpansion & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaSecantCoefficientOfLinearThermalExpansion
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaSecantCoefficientOfLinearThermalExpansion &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaSecantCoefficientOfLinearThermalExpansion & ent);
 };
 
 
@@ -1650,16 +1657,6 @@ class RWStepFEA_RWFeaShellBendingStiffness {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaShellBendingStiffness & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaShellBendingStiffness
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaShellBendingStiffness &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaShellBendingStiffness & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1670,6 +1667,16 @@ class RWStepFEA_RWFeaShellBendingStiffness {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaShellBendingStiffness & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaShellBendingStiffness
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaShellBendingStiffness &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaShellBendingStiffness & ent);
 };
 
 
@@ -1701,16 +1708,6 @@ class RWStepFEA_RWFeaShellMembraneBendingCouplingStiffness {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaShellMembraneBendingCouplingStiffness & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaShellMembraneBendingCouplingStiffness
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaShellMembraneBendingCouplingStiffness &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaShellMembraneBendingCouplingStiffness & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1721,6 +1718,16 @@ class RWStepFEA_RWFeaShellMembraneBendingCouplingStiffness {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaShellMembraneBendingCouplingStiffness & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaShellMembraneBendingCouplingStiffness
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaShellMembraneBendingCouplingStiffness &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaShellMembraneBendingCouplingStiffness & ent);
 };
 
 
@@ -1752,16 +1759,6 @@ class RWStepFEA_RWFeaShellMembraneStiffness {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaShellMembraneStiffness & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaShellMembraneStiffness
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaShellMembraneStiffness &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaShellMembraneStiffness & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1772,6 +1769,16 @@ class RWStepFEA_RWFeaShellMembraneStiffness {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaShellMembraneStiffness & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaShellMembraneStiffness
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaShellMembraneStiffness &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaShellMembraneStiffness & ent);
 };
 
 
@@ -1803,16 +1810,6 @@ class RWStepFEA_RWFeaShellShearStiffness {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaShellShearStiffness & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaShellShearStiffness
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaShellShearStiffness &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaShellShearStiffness & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1823,6 +1820,16 @@ class RWStepFEA_RWFeaShellShearStiffness {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaShellShearStiffness & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaShellShearStiffness
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaShellShearStiffness &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaShellShearStiffness & ent);
 };
 
 
@@ -1854,16 +1861,6 @@ class RWStepFEA_RWFeaSurfaceSectionGeometricRelationship {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaSurfaceSectionGeometricRelationship & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaSurfaceSectionGeometricRelationship
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaSurfaceSectionGeometricRelationship &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaSurfaceSectionGeometricRelationship & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1874,6 +1871,16 @@ class RWStepFEA_RWFeaSurfaceSectionGeometricRelationship {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaSurfaceSectionGeometricRelationship & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaSurfaceSectionGeometricRelationship
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaSurfaceSectionGeometricRelationship &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaSurfaceSectionGeometricRelationship & ent);
 };
 
 
@@ -1905,16 +1912,6 @@ class RWStepFEA_RWFeaTangentialCoefficientOfLinearThermalExpansion {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FeaTangentialCoefficientOfLinearThermalExpansion & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FeaTangentialCoefficientOfLinearThermalExpansion
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FeaTangentialCoefficientOfLinearThermalExpansion &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaTangentialCoefficientOfLinearThermalExpansion & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1925,6 +1922,16 @@ class RWStepFEA_RWFeaTangentialCoefficientOfLinearThermalExpansion {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FeaTangentialCoefficientOfLinearThermalExpansion & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FeaTangentialCoefficientOfLinearThermalExpansion
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FeaTangentialCoefficientOfLinearThermalExpansion &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FeaTangentialCoefficientOfLinearThermalExpansion & ent);
 };
 
 
@@ -1956,16 +1963,6 @@ class RWStepFEA_RWFreedomAndCoefficient {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FreedomAndCoefficient & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FreedomAndCoefficient
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FreedomAndCoefficient &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FreedomAndCoefficient & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1976,6 +1973,16 @@ class RWStepFEA_RWFreedomAndCoefficient {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FreedomAndCoefficient & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FreedomAndCoefficient
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FreedomAndCoefficient &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FreedomAndCoefficient & ent);
 };
 
 
@@ -2007,16 +2014,6 @@ class RWStepFEA_RWFreedomsList {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_FreedomsList & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes FreedomsList
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_FreedomsList &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FreedomsList & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2027,6 +2024,16 @@ class RWStepFEA_RWFreedomsList {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_FreedomsList & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes FreedomsList
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_FreedomsList &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_FreedomsList & ent);
 };
 
 
@@ -2058,16 +2065,6 @@ class RWStepFEA_RWGeometricNode {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_GeometricNode & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes GeometricNode
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_GeometricNode &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_GeometricNode & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2078,6 +2075,16 @@ class RWStepFEA_RWGeometricNode {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_GeometricNode & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes GeometricNode
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_GeometricNode &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_GeometricNode & ent);
 };
 
 
@@ -2109,16 +2116,6 @@ class RWStepFEA_RWNode {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_Node & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes Node
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_Node &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_Node & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2129,6 +2126,16 @@ class RWStepFEA_RWNode {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_Node & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes Node
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_Node &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_Node & ent);
 };
 
 
@@ -2160,16 +2167,6 @@ class RWStepFEA_RWNodeDefinition {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_NodeDefinition & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes NodeDefinition
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_NodeDefinition &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_NodeDefinition & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2180,6 +2177,16 @@ class RWStepFEA_RWNodeDefinition {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_NodeDefinition & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes NodeDefinition
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_NodeDefinition &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_NodeDefinition & ent);
 };
 
 
@@ -2211,16 +2218,6 @@ class RWStepFEA_RWNodeGroup {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_NodeGroup & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes NodeGroup
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_NodeGroup &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_NodeGroup & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2231,6 +2228,16 @@ class RWStepFEA_RWNodeGroup {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_NodeGroup & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes NodeGroup
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_NodeGroup &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_NodeGroup & ent);
 };
 
 
@@ -2262,16 +2269,6 @@ class RWStepFEA_RWNodeRepresentation {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_NodeRepresentation & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes NodeRepresentation
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_NodeRepresentation &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_NodeRepresentation & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2282,6 +2279,16 @@ class RWStepFEA_RWNodeRepresentation {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_NodeRepresentation & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes NodeRepresentation
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_NodeRepresentation &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_NodeRepresentation & ent);
 };
 
 
@@ -2313,16 +2320,6 @@ class RWStepFEA_RWNodeSet {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_NodeSet & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes NodeSet
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_NodeSet &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_NodeSet & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2333,6 +2330,16 @@ class RWStepFEA_RWNodeSet {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_NodeSet & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes NodeSet
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_NodeSet &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_NodeSet & ent);
 };
 
 
@@ -2364,16 +2371,6 @@ class RWStepFEA_RWNodeWithSolutionCoordinateSystem {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_NodeWithSolutionCoordinateSystem & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes NodeWithSolutionCoordinateSystem
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_NodeWithSolutionCoordinateSystem &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_NodeWithSolutionCoordinateSystem & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2384,6 +2381,16 @@ class RWStepFEA_RWNodeWithSolutionCoordinateSystem {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_NodeWithSolutionCoordinateSystem & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes NodeWithSolutionCoordinateSystem
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_NodeWithSolutionCoordinateSystem &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_NodeWithSolutionCoordinateSystem & ent);
 };
 
 
@@ -2415,16 +2422,6 @@ class RWStepFEA_RWNodeWithVector {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_NodeWithVector & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes NodeWithVector
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_NodeWithVector &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_NodeWithVector & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2435,6 +2432,16 @@ class RWStepFEA_RWNodeWithVector {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_NodeWithVector & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes NodeWithVector
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_NodeWithVector &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_NodeWithVector & ent);
 };
 
 
@@ -2466,16 +2473,6 @@ class RWStepFEA_RWParametricCurve3dElementCoordinateDirection {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_ParametricCurve3dElementCoordinateDirection & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes ParametricCurve3dElementCoordinateDirection
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_ParametricCurve3dElementCoordinateDirection &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ParametricCurve3dElementCoordinateDirection & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2486,6 +2483,16 @@ class RWStepFEA_RWParametricCurve3dElementCoordinateDirection {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_ParametricCurve3dElementCoordinateDirection & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes ParametricCurve3dElementCoordinateDirection
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_ParametricCurve3dElementCoordinateDirection &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ParametricCurve3dElementCoordinateDirection & ent);
 };
 
 
@@ -2517,16 +2524,6 @@ class RWStepFEA_RWParametricCurve3dElementCoordinateSystem {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_ParametricCurve3dElementCoordinateSystem & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes ParametricCurve3dElementCoordinateSystem
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_ParametricCurve3dElementCoordinateSystem &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ParametricCurve3dElementCoordinateSystem & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2537,6 +2534,16 @@ class RWStepFEA_RWParametricCurve3dElementCoordinateSystem {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_ParametricCurve3dElementCoordinateSystem & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes ParametricCurve3dElementCoordinateSystem
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_ParametricCurve3dElementCoordinateSystem &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ParametricCurve3dElementCoordinateSystem & ent);
 };
 
 
@@ -2568,16 +2575,6 @@ class RWStepFEA_RWParametricSurface3dElementCoordinateSystem {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_ParametricSurface3dElementCoordinateSystem & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes ParametricSurface3dElementCoordinateSystem
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_ParametricSurface3dElementCoordinateSystem &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ParametricSurface3dElementCoordinateSystem & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2588,6 +2585,16 @@ class RWStepFEA_RWParametricSurface3dElementCoordinateSystem {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_ParametricSurface3dElementCoordinateSystem & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes ParametricSurface3dElementCoordinateSystem
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_ParametricSurface3dElementCoordinateSystem &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_ParametricSurface3dElementCoordinateSystem & ent);
 };
 
 
@@ -2619,16 +2626,6 @@ class RWStepFEA_RWSurface3dElementRepresentation {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_Surface3dElementRepresentation & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes Surface3dElementRepresentation
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_Surface3dElementRepresentation &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_Surface3dElementRepresentation & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2639,6 +2636,16 @@ class RWStepFEA_RWSurface3dElementRepresentation {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_Surface3dElementRepresentation & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes Surface3dElementRepresentation
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_Surface3dElementRepresentation &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_Surface3dElementRepresentation & ent);
 };
 
 
@@ -2670,16 +2677,6 @@ class RWStepFEA_RWVolume3dElementRepresentation {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepFEA_Volume3dElementRepresentation & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes Volume3dElementRepresentation
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepFEA_Volume3dElementRepresentation &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_Volume3dElementRepresentation & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -2690,6 +2687,16 @@ class RWStepFEA_RWVolume3dElementRepresentation {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepFEA_Volume3dElementRepresentation & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes Volume3dElementRepresentation
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepFEA_Volume3dElementRepresentation &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepFEA_Volume3dElementRepresentation & ent);
 };
 
 
@@ -2698,3 +2705,6 @@ class RWStepFEA_RWVolume3dElementRepresentation {
 	__repr__ = _dumps_object
 	}
 };
+/* harray1 class */
+/* harray2 class */
+/* harray2 class */

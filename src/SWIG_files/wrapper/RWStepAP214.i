@@ -1,5 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
+Copyright 2008-2019 Thomas Paviot (tpaviot@gmail.com)
 
 
 This file is part of pythonOCC.
@@ -18,11 +18,11 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 %define RWSTEPAP214DOCSTRING
-""
+"No docstring provided."
 %enddef
 %module (package="OCC.Core", docstring=RWSTEPAP214DOCSTRING) RWStepAP214
 
-#pragma SWIG nowarn=504,325,503
+#pragma SWIG nowarn=504,325,503,520,350,351,383,389,394,395, 404
 
 %{
 #ifdef WNT
@@ -38,6 +38,13 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 
 %include RWStepAP214_headers.i
+
+/* rttiext only ojects wrapped as handles */
+/* end rttiext only declaration */
+
+/* templates */
+/* end templates declaration */
+
 
 /* typedefs */
 /* end typedefs declaration */
@@ -68,24 +75,16 @@ class RWStepAP214 {
 %nodefaultctor RWStepAP214_GeneralModule;
 class RWStepAP214_GeneralModule : public StepData_GeneralModule {
 	public:
-		%feature("compactdefaultargs") RWStepAP214_GeneralModule;
-		%feature("autodoc", "	* Creates a GeneralModule
-
-	:rtype: None
-") RWStepAP214_GeneralModule;
-		 RWStepAP214_GeneralModule ();
-		%feature("compactdefaultargs") FillSharedCase;
-		%feature("autodoc", "	* Specific filling of the list of Entities shared by an Entity <ent>, according to a Case Number <CN> (provided by StepAP214 Protocol).
-
-	:param CN:
+		%feature("compactdefaultargs") CategoryNumber;
+		%feature("autodoc", "	:param CN:
 	:type CN: int
 	:param ent:
 	:type ent: Handle_Standard_Transient &
-	:param iter:
-	:type iter: Interface_EntityIterator &
-	:rtype: None
-") FillSharedCase;
-		void FillSharedCase (const Standard_Integer CN,const Handle_Standard_Transient & ent,Interface_EntityIterator & iter);
+	:param shares:
+	:type shares: Interface_ShareTool &
+	:rtype: int
+") CategoryNumber;
+		virtual Standard_Integer CategoryNumber (const Standard_Integer CN,const Handle_Standard_Transient & ent,const Interface_ShareTool & shares);
 		%feature("compactdefaultargs") CheckCase;
 		%feature("autodoc", "	* Specific Checking of an Entity <ent>
 
@@ -114,24 +113,18 @@ class RWStepAP214_GeneralModule : public StepData_GeneralModule {
 	:rtype: None
 ") CopyCase;
 		void CopyCase (const Standard_Integer CN,const Handle_Standard_Transient & entfrom,const Handle_Standard_Transient & entto,Interface_CopyTool & TC);
-		%feature("compactdefaultargs") NewVoid;
-		%feature("autodoc", "	:param CN:
+		%feature("compactdefaultargs") FillSharedCase;
+		%feature("autodoc", "	* Specific filling of the list of Entities shared by an Entity <ent>, according to a Case Number <CN> (provided by StepAP214 Protocol).
+
+	:param CN:
 	:type CN: int
 	:param ent:
 	:type ent: Handle_Standard_Transient &
-	:rtype: bool
-") NewVoid;
-		Standard_Boolean NewVoid (const Standard_Integer CN,Handle_Standard_Transient & ent);
-		%feature("compactdefaultargs") CategoryNumber;
-		%feature("autodoc", "	:param CN:
-	:type CN: int
-	:param ent:
-	:type ent: Handle_Standard_Transient &
-	:param shares:
-	:type shares: Interface_ShareTool &
-	:rtype: int
-") CategoryNumber;
-		virtual Standard_Integer CategoryNumber (const Standard_Integer CN,const Handle_Standard_Transient & ent,const Interface_ShareTool & shares);
+	:param iter:
+	:type iter: Interface_EntityIterator &
+	:rtype: None
+") FillSharedCase;
+		void FillSharedCase (const Standard_Integer CN,const Handle_Standard_Transient & ent,Interface_EntityIterator & iter);
 		%feature("compactdefaultargs") Name;
 		%feature("autodoc", "	* Returns the name of a STEP Entity according to its type
 
@@ -144,6 +137,20 @@ class RWStepAP214_GeneralModule : public StepData_GeneralModule {
 	:rtype: Handle_TCollection_HAsciiString
 ") Name;
 		virtual Handle_TCollection_HAsciiString Name (const Standard_Integer CN,const Handle_Standard_Transient & ent,const Interface_ShareTool & shares);
+		%feature("compactdefaultargs") NewVoid;
+		%feature("autodoc", "	:param CN:
+	:type CN: int
+	:param ent:
+	:type ent: Handle_Standard_Transient &
+	:rtype: bool
+") NewVoid;
+		Standard_Boolean NewVoid (const Standard_Integer CN,Handle_Standard_Transient & ent);
+		%feature("compactdefaultargs") RWStepAP214_GeneralModule;
+		%feature("autodoc", "	* Creates a GeneralModule
+
+	:rtype: None
+") RWStepAP214_GeneralModule;
+		 RWStepAP214_GeneralModule ();
 };
 
 
@@ -173,14 +180,6 @@ class RWStepAP214_RWAppliedApprovalAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AppliedApprovalAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AppliedApprovalAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedApprovalAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AppliedApprovalAssignment &
@@ -189,6 +188,14 @@ class RWStepAP214_RWAppliedApprovalAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AppliedApprovalAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AppliedApprovalAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedApprovalAssignment & ent);
 };
 
 
@@ -216,14 +223,6 @@ class RWStepAP214_RWAppliedDateAndTimeAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AppliedDateAndTimeAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AppliedDateAndTimeAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedDateAndTimeAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AppliedDateAndTimeAssignment &
@@ -232,6 +231,14 @@ class RWStepAP214_RWAppliedDateAndTimeAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AppliedDateAndTimeAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AppliedDateAndTimeAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedDateAndTimeAssignment & ent);
 };
 
 
@@ -259,14 +266,6 @@ class RWStepAP214_RWAppliedDateAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AppliedDateAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AppliedDateAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedDateAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AppliedDateAssignment &
@@ -275,6 +274,14 @@ class RWStepAP214_RWAppliedDateAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AppliedDateAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AppliedDateAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedDateAssignment & ent);
 };
 
 
@@ -302,14 +309,6 @@ class RWStepAP214_RWAppliedDocumentReference {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AppliedDocumentReference & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AppliedDocumentReference &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedDocumentReference & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AppliedDocumentReference &
@@ -318,6 +317,14 @@ class RWStepAP214_RWAppliedDocumentReference {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AppliedDocumentReference & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AppliedDocumentReference &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedDocumentReference & ent);
 };
 
 
@@ -349,16 +356,6 @@ class RWStepAP214_RWAppliedExternalIdentificationAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AppliedExternalIdentificationAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes AppliedExternalIdentificationAssignment
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AppliedExternalIdentificationAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedExternalIdentificationAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -369,6 +366,16 @@ class RWStepAP214_RWAppliedExternalIdentificationAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AppliedExternalIdentificationAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes AppliedExternalIdentificationAssignment
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AppliedExternalIdentificationAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedExternalIdentificationAssignment & ent);
 };
 
 
@@ -400,16 +407,6 @@ class RWStepAP214_RWAppliedGroupAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AppliedGroupAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes AppliedGroupAssignment
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AppliedGroupAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedGroupAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -420,6 +417,16 @@ class RWStepAP214_RWAppliedGroupAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AppliedGroupAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes AppliedGroupAssignment
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AppliedGroupAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedGroupAssignment & ent);
 };
 
 
@@ -447,14 +454,6 @@ class RWStepAP214_RWAppliedOrganizationAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AppliedOrganizationAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AppliedOrganizationAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedOrganizationAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AppliedOrganizationAssignment &
@@ -463,6 +462,14 @@ class RWStepAP214_RWAppliedOrganizationAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AppliedOrganizationAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AppliedOrganizationAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedOrganizationAssignment & ent);
 };
 
 
@@ -490,14 +497,6 @@ class RWStepAP214_RWAppliedPersonAndOrganizationAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AppliedPersonAndOrganizationAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AppliedPersonAndOrganizationAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedPersonAndOrganizationAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AppliedPersonAndOrganizationAssignment &
@@ -506,6 +505,14 @@ class RWStepAP214_RWAppliedPersonAndOrganizationAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AppliedPersonAndOrganizationAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AppliedPersonAndOrganizationAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedPersonAndOrganizationAssignment & ent);
 };
 
 
@@ -533,14 +540,6 @@ class RWStepAP214_RWAppliedPresentedItem {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AppliedPresentedItem & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AppliedPresentedItem &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedPresentedItem & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AppliedPresentedItem &
@@ -549,6 +548,14 @@ class RWStepAP214_RWAppliedPresentedItem {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AppliedPresentedItem & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AppliedPresentedItem &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedPresentedItem & ent);
 };
 
 
@@ -576,14 +583,6 @@ class RWStepAP214_RWAppliedSecurityClassificationAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AppliedSecurityClassificationAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AppliedSecurityClassificationAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedSecurityClassificationAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AppliedSecurityClassificationAssignment &
@@ -592,6 +591,14 @@ class RWStepAP214_RWAppliedSecurityClassificationAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AppliedSecurityClassificationAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AppliedSecurityClassificationAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AppliedSecurityClassificationAssignment & ent);
 };
 
 
@@ -619,14 +626,6 @@ class RWStepAP214_RWAutoDesignActualDateAndTimeAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AutoDesignActualDateAndTimeAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AutoDesignActualDateAndTimeAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignActualDateAndTimeAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AutoDesignActualDateAndTimeAssignment &
@@ -635,6 +634,14 @@ class RWStepAP214_RWAutoDesignActualDateAndTimeAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AutoDesignActualDateAndTimeAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AutoDesignActualDateAndTimeAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignActualDateAndTimeAssignment & ent);
 };
 
 
@@ -662,14 +669,6 @@ class RWStepAP214_RWAutoDesignActualDateAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AutoDesignActualDateAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AutoDesignActualDateAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignActualDateAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AutoDesignActualDateAssignment &
@@ -678,6 +677,14 @@ class RWStepAP214_RWAutoDesignActualDateAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AutoDesignActualDateAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AutoDesignActualDateAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignActualDateAssignment & ent);
 };
 
 
@@ -705,14 +712,6 @@ class RWStepAP214_RWAutoDesignApprovalAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AutoDesignApprovalAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AutoDesignApprovalAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignApprovalAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AutoDesignApprovalAssignment &
@@ -721,6 +720,14 @@ class RWStepAP214_RWAutoDesignApprovalAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AutoDesignApprovalAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AutoDesignApprovalAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignApprovalAssignment & ent);
 };
 
 
@@ -748,14 +755,6 @@ class RWStepAP214_RWAutoDesignDateAndPersonAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AutoDesignDateAndPersonAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AutoDesignDateAndPersonAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignDateAndPersonAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AutoDesignDateAndPersonAssignment &
@@ -764,6 +763,14 @@ class RWStepAP214_RWAutoDesignDateAndPersonAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AutoDesignDateAndPersonAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AutoDesignDateAndPersonAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignDateAndPersonAssignment & ent);
 };
 
 
@@ -791,14 +798,6 @@ class RWStepAP214_RWAutoDesignDocumentReference {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AutoDesignDocumentReference & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AutoDesignDocumentReference &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignDocumentReference & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AutoDesignDocumentReference &
@@ -807,6 +806,14 @@ class RWStepAP214_RWAutoDesignDocumentReference {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AutoDesignDocumentReference & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AutoDesignDocumentReference &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignDocumentReference & ent);
 };
 
 
@@ -834,14 +841,6 @@ class RWStepAP214_RWAutoDesignGroupAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AutoDesignGroupAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AutoDesignGroupAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignGroupAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AutoDesignGroupAssignment &
@@ -850,6 +849,14 @@ class RWStepAP214_RWAutoDesignGroupAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AutoDesignGroupAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AutoDesignGroupAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignGroupAssignment & ent);
 };
 
 
@@ -877,14 +884,6 @@ class RWStepAP214_RWAutoDesignNominalDateAndTimeAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AutoDesignNominalDateAndTimeAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AutoDesignNominalDateAndTimeAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignNominalDateAndTimeAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AutoDesignNominalDateAndTimeAssignment &
@@ -893,6 +892,14 @@ class RWStepAP214_RWAutoDesignNominalDateAndTimeAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AutoDesignNominalDateAndTimeAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AutoDesignNominalDateAndTimeAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignNominalDateAndTimeAssignment & ent);
 };
 
 
@@ -920,14 +927,6 @@ class RWStepAP214_RWAutoDesignNominalDateAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AutoDesignNominalDateAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AutoDesignNominalDateAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignNominalDateAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AutoDesignNominalDateAssignment &
@@ -936,6 +935,14 @@ class RWStepAP214_RWAutoDesignNominalDateAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AutoDesignNominalDateAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AutoDesignNominalDateAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignNominalDateAssignment & ent);
 };
 
 
@@ -963,14 +970,6 @@ class RWStepAP214_RWAutoDesignOrganizationAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AutoDesignOrganizationAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AutoDesignOrganizationAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignOrganizationAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AutoDesignOrganizationAssignment &
@@ -979,6 +978,14 @@ class RWStepAP214_RWAutoDesignOrganizationAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AutoDesignOrganizationAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AutoDesignOrganizationAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignOrganizationAssignment & ent);
 };
 
 
@@ -1006,14 +1013,6 @@ class RWStepAP214_RWAutoDesignPersonAndOrganizationAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AutoDesignPersonAndOrganizationAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AutoDesignPersonAndOrganizationAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignPersonAndOrganizationAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AutoDesignPersonAndOrganizationAssignment &
@@ -1022,6 +1021,14 @@ class RWStepAP214_RWAutoDesignPersonAndOrganizationAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AutoDesignPersonAndOrganizationAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AutoDesignPersonAndOrganizationAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignPersonAndOrganizationAssignment & ent);
 };
 
 
@@ -1049,14 +1056,6 @@ class RWStepAP214_RWAutoDesignPresentedItem {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AutoDesignPresentedItem & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AutoDesignPresentedItem &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignPresentedItem & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AutoDesignPresentedItem &
@@ -1065,6 +1064,14 @@ class RWStepAP214_RWAutoDesignPresentedItem {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AutoDesignPresentedItem & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AutoDesignPresentedItem &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignPresentedItem & ent);
 };
 
 
@@ -1092,14 +1099,6 @@ class RWStepAP214_RWAutoDesignSecurityClassificationAssignment {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_AutoDesignSecurityClassificationAssignment & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_AutoDesignSecurityClassificationAssignment &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignSecurityClassificationAssignment & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	:param ent:
 	:type ent: Handle_StepAP214_AutoDesignSecurityClassificationAssignment &
@@ -1108,6 +1107,14 @@ class RWStepAP214_RWAutoDesignSecurityClassificationAssignment {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_AutoDesignSecurityClassificationAssignment & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_AutoDesignSecurityClassificationAssignment &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_AutoDesignSecurityClassificationAssignment & ent);
 };
 
 
@@ -1139,16 +1146,6 @@ class RWStepAP214_RWClass {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_Class & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes Class
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_Class &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_Class & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1159,6 +1156,16 @@ class RWStepAP214_RWClass {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_Class & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes Class
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_Class &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_Class & ent);
 };
 
 
@@ -1190,16 +1197,6 @@ class RWStepAP214_RWExternallyDefinedClass {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_ExternallyDefinedClass & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes ExternallyDefinedClass
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_ExternallyDefinedClass &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_ExternallyDefinedClass & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1210,6 +1207,16 @@ class RWStepAP214_RWExternallyDefinedClass {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_ExternallyDefinedClass & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes ExternallyDefinedClass
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_ExternallyDefinedClass &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_ExternallyDefinedClass & ent);
 };
 
 
@@ -1241,16 +1248,6 @@ class RWStepAP214_RWExternallyDefinedGeneralProperty {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_ExternallyDefinedGeneralProperty & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes ExternallyDefinedGeneralProperty
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_ExternallyDefinedGeneralProperty &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_ExternallyDefinedGeneralProperty & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1261,6 +1258,16 @@ class RWStepAP214_RWExternallyDefinedGeneralProperty {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_ExternallyDefinedGeneralProperty & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes ExternallyDefinedGeneralProperty
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_ExternallyDefinedGeneralProperty &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_ExternallyDefinedGeneralProperty & ent);
 };
 
 
@@ -1292,16 +1299,6 @@ class RWStepAP214_RWRepItemGroup {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_StepAP214_RepItemGroup & ent);
-		%feature("compactdefaultargs") WriteStep;
-		%feature("autodoc", "	* Writes RepItemGroup
-
-	:param SW:
-	:type SW: StepData_StepWriter &
-	:param ent:
-	:type ent: Handle_StepAP214_RepItemGroup &
-	:rtype: None
-") WriteStep;
-		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_RepItemGroup & ent);
 		%feature("compactdefaultargs") Share;
 		%feature("autodoc", "	* Fills data for graph (shared items)
 
@@ -1312,6 +1309,16 @@ class RWStepAP214_RWRepItemGroup {
 	:rtype: None
 ") Share;
 		void Share (const Handle_StepAP214_RepItemGroup & ent,Interface_EntityIterator & iter);
+		%feature("compactdefaultargs") WriteStep;
+		%feature("autodoc", "	* Writes RepItemGroup
+
+	:param SW:
+	:type SW: StepData_StepWriter &
+	:param ent:
+	:type ent: Handle_StepAP214_RepItemGroup &
+	:rtype: None
+") WriteStep;
+		void WriteStep (StepData_StepWriter & SW,const Handle_StepAP214_RepItemGroup & ent);
 };
 
 
@@ -1323,10 +1330,6 @@ class RWStepAP214_RWRepItemGroup {
 %nodefaultctor RWStepAP214_ReadWriteModule;
 class RWStepAP214_ReadWriteModule : public StepData_ReadWriteModule {
 	public:
-		%feature("compactdefaultargs") RWStepAP214_ReadWriteModule;
-		%feature("autodoc", "	:rtype: None
-") RWStepAP214_ReadWriteModule;
-		 RWStepAP214_ReadWriteModule ();
 		%feature("compactdefaultargs") CaseStep;
 		%feature("autodoc", "	* associates a positive Case Number to each type of StepAP214 entity, given as a String defined in the EXPRESS form
 
@@ -1343,22 +1346,6 @@ class RWStepAP214_ReadWriteModule : public StepData_ReadWriteModule {
 	:rtype: int
 ") CaseStep;
 		virtual Standard_Integer CaseStep (const TColStd_SequenceOfAsciiString & types);
-		%feature("compactdefaultargs") IsComplex;
-		%feature("autodoc", "	* returns True if the Case Number corresponds to a Complex Type
-
-	:param CN:
-	:type CN: int
-	:rtype: bool
-") IsComplex;
-		virtual Standard_Boolean IsComplex (const Standard_Integer CN);
-		%feature("compactdefaultargs") StepType;
-		%feature("autodoc", "	* returns a StepType (defined in EXPRESS form which belongs to a Type of Entity, identified by its CaseNumber determined by Protocol
-
-	:param CN:
-	:type CN: int
-	:rtype: TCollection_AsciiString
-") StepType;
-		const TCollection_AsciiString & StepType (const Standard_Integer CN);
 		%feature("compactdefaultargs") ComplexType;
 		%feature("autodoc", "	:param CN:
 	:type CN: int
@@ -1367,6 +1354,18 @@ class RWStepAP214_ReadWriteModule : public StepData_ReadWriteModule {
 	:rtype: bool
 ") ComplexType;
 		virtual Standard_Boolean ComplexType (const Standard_Integer CN,TColStd_SequenceOfAsciiString & types);
+		%feature("compactdefaultargs") IsComplex;
+		%feature("autodoc", "	* returns True if the Case Number corresponds to a Complex Type
+
+	:param CN:
+	:type CN: int
+	:rtype: bool
+") IsComplex;
+		virtual Standard_Boolean IsComplex (const Standard_Integer CN);
+		%feature("compactdefaultargs") RWStepAP214_ReadWriteModule;
+		%feature("autodoc", "	:rtype: None
+") RWStepAP214_ReadWriteModule;
+		 RWStepAP214_ReadWriteModule ();
 		%feature("compactdefaultargs") ReadStep;
 		%feature("autodoc", "	:param CN:
 	:type CN: int
@@ -1381,6 +1380,14 @@ class RWStepAP214_ReadWriteModule : public StepData_ReadWriteModule {
 	:rtype: None
 ") ReadStep;
 		void ReadStep (const Standard_Integer CN,const Handle_StepData_StepReaderData & data,const Standard_Integer num,Handle_Interface_Check & ach,const Handle_Standard_Transient & ent);
+		%feature("compactdefaultargs") StepType;
+		%feature("autodoc", "	* returns a StepType (defined in EXPRESS form which belongs to a Type of Entity, identified by its CaseNumber determined by Protocol
+
+	:param CN:
+	:type CN: int
+	:rtype: TCollection_AsciiString
+") StepType;
+		const TCollection_AsciiString & StepType (const Standard_Integer CN);
 		%feature("compactdefaultargs") WriteStep;
 		%feature("autodoc", "	:param CN:
 	:type CN: int
@@ -1401,3 +1408,6 @@ class RWStepAP214_ReadWriteModule : public StepData_ReadWriteModule {
 	__repr__ = _dumps_object
 	}
 };
+/* harray1 class */
+/* harray2 class */
+/* harray2 class */

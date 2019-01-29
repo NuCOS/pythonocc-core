@@ -1,5 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
+Copyright 2008-2019 Thomas Paviot (tpaviot@gmail.com)
 
 
 This file is part of pythonOCC.
@@ -18,19 +18,11 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 %define INTIMPPARGENDOCSTRING
-"
-Gives a generic algorithm to intersect Implicit Curves
-and Bounded Parametric Curves.
-
-Level: Internal
-
-All the methods of all the classes are Internal.
-
-"
+"No docstring provided."
 %enddef
 %module (package="OCC.Core", docstring=INTIMPPARGENDOCSTRING) IntImpParGen
 
-#pragma SWIG nowarn=504,325,503
+#pragma SWIG nowarn=504,325,503,520,350,351,383,389,394,395, 404
 
 %{
 #ifdef WNT
@@ -47,6 +39,13 @@ All the methods of all the classes are Internal.
 
 %include IntImpParGen_headers.i
 
+/* rttiext only ojects wrapped as handles */
+/* end rttiext only declaration */
+
+/* templates */
+/* end templates declaration */
+
+
 /* typedefs */
 /* end typedefs declaration */
 
@@ -57,6 +56,18 @@ All the methods of all the classes are Internal.
 %rename(intimppargen) IntImpParGen;
 class IntImpParGen {
 	public:
+		%feature("compactdefaultargs") DeterminePosition;
+		%feature("autodoc", "	:param Pos1:
+	:type Pos1: IntRes2d_Position &
+	:param Dom1:
+	:type Dom1: IntRes2d_Domain &
+	:param P1:
+	:type P1: gp_Pnt2d
+	:param Tol:
+	:type Tol: float
+	:rtype: void
+") DeterminePosition;
+		static void DeterminePosition (IntRes2d_Position & Pos1,const IntRes2d_Domain & Dom1,const gp_Pnt2d & P1,const Standard_Real Tol);
 		%feature("compactdefaultargs") DetermineTransition;
 		%feature("autodoc", "	* Template class for an implicit curve. Math function, instantiated inside the Intersector. Tool used by the package IntCurve and IntImpParGen
 
@@ -99,18 +110,6 @@ class IntImpParGen {
 	:rtype: bool
 ") DetermineTransition;
 		static Standard_Boolean DetermineTransition (const IntRes2d_Position Pos1,gp_Vec2d & Tan1,IntRes2d_Transition & Trans1,const IntRes2d_Position Pos2,gp_Vec2d & Tan2,IntRes2d_Transition & Trans2,const Standard_Real Tol);
-		%feature("compactdefaultargs") DeterminePosition;
-		%feature("autodoc", "	:param Pos1:
-	:type Pos1: IntRes2d_Position &
-	:param Dom1:
-	:type Dom1: IntRes2d_Domain &
-	:param P1:
-	:type P1: gp_Pnt2d
-	:param Tol:
-	:type Tol: float
-	:rtype: void
-") DeterminePosition;
-		static void DeterminePosition (IntRes2d_Position & Pos1,const IntRes2d_Domain & Dom1,const gp_Pnt2d & P1,const Standard_Real Tol);
 		%feature("compactdefaultargs") NormalizeOnDomain;
 		%feature("autodoc", "	:param Par1:
 	:type Par1: float &
@@ -127,3 +126,6 @@ class IntImpParGen {
 	__repr__ = _dumps_object
 	}
 };
+/* harray1 class */
+/* harray2 class */
+/* harray2 class */
