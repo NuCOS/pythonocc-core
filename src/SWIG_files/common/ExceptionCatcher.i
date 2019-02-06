@@ -31,14 +31,13 @@ Exception handling
 {
     try
     {
+        OCC_CATCH_SIGNALS
         $action
     } 
-    catch(Standard_Failure)
+    catch(Standard_Failure &ex)
     {
-	    /*
-	    Handle(Standard_Failure) error = Standard_Failure::Caught();
-	    char *error_name = (char*) error->DynamicType()->Name();
-	    char *error_message = (char*) error->GetMessageString();
+	    char *error_name = (char*) ex.DynamicType()->Name();
+	    char *error_message = (char*) ex.GetMessageString();
 	    std::string message;
 	    if (error_name) message += std::string(error_name) + "\n";
 	    if (error_message) message += std::string(error_message);
@@ -46,7 +45,7 @@ Exception handling
 	    message += "\nwrapper details:\n  * symname: $symname\n  * wrapname: $wrapname\n  * fulldecl: $fulldecl";
 	    // raise the python exception
 	    PyErr_SetString(PyExc_RuntimeError, message.c_str());
-	    */
+	    
 	    SWIG_fail;
     }
 }
