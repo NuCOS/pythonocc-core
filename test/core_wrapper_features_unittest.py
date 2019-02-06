@@ -28,8 +28,8 @@ from OCC.Core.Standard import Standard_Transient, Handle_Standard_Transient
 from OCC.Core.BRepPrimAPI import BRepPrimAPI_MakeBox
 from OCC.Core.BRepBuilderAPI import (BRepBuilderAPI_MakeVertex,
                                      BRepBuilderAPI_MakeEdge)
-from OCC.Core.gp import (gp_Pnt, gp_Vec, gp_Pnt2d, gp_Lin, gp_Dir,
-                         gp_Quaternion, gp_QuaternionSLerp)
+from OCC.Core.gp import (gp_Pnt, gp_Vec, gp_Pnt2d, gp_Lin, gp_Dir, gp_Ax2,
+                         gp_Quaternion, gp_QuaternionSLerp, gp_XYZ, gp_Mat)
 from OCC.Core.GC import GC_MakeSegment
 from OCC.Core.STEPControl import STEPControl_Writer
 from OCC.Core.Interface import Interface_Static_SetCVal, Interface_Static_CVal
@@ -52,6 +52,8 @@ from OCC.Core.BRepCheck import (BRepCheck_ListIteratorOfListOfStatus,
                                 BRepCheck_EmptyWire)
 from OCC.Core.Geom import Geom_Curve, Geom_Line, Geom_BSplineCurve
 from OCC.Core.BRep import BRep_Tool_Curve
+from OCC.Core.HLRBRep import HLRBRep_Algo, HLRBRep_HLRToShape
+from OCC.Core.HLRAlgo import HLRAlgo_Projector
 
 @contextmanager
 def assert_warns_deprecated():
@@ -59,8 +61,10 @@ def assert_warns_deprecated():
         warnings.simplefilter("always")
         yield w
         # Verify some things
-        assert issubclass(w[-1].category, DeprecationWarning)
-        assert "deprecated" in str(w[-1].message)
+        if not issubclass(w[-1].category, DeprecationWarning):
+        	raise AssertionError("Wrong exception type")
+        if not "deprecated" in str(w[-1].message):
+        	raise AssertionError("deprecated string not in message")
 
 
 
@@ -97,7 +101,8 @@ class TestWrapperFeatures(unittest.TestCase):
             handle = Standard_Transient(t)
             return handle
         t = Standard_Transient()
-        evil_function(t)
+        self.assertIsNotNone(t)
+        self.assertIsNotNone(evil_function(t))
 
     def test_list(self):
         '''
@@ -300,10 +305,12 @@ class TestWrapperFeatures(unittest.TestCase):
         cyl1 = BRepPrimAPI_MakeCylinder(10., 10.).Shape()
         cyl2 = BRepPrimAPI_MakeCylinder(100., 50.).Shape()
         c = TopoDS_Compound()
+        self.assertTrue(c.IsNull())
         bb = TopoDS_Builder()
         bb.MakeCompound(c)
         for child in [cyl1, cyl2]:
             bb.Add(c, child)
+        self.assertFalse(c.IsNull())
 
     def test_standard_boolean_byref(self):
         '''
@@ -449,9 +456,12 @@ class TestWrapperFeatures(unittest.TestCase):
         ''' OCE classes the defines standard alllocator can be instanciated
         if they're not abstract nor define any protected or private
         constructor '''
-        BRep_Builder()
-        TopoDS_Builder()
-        ShapeAnalysis_Curve()
+        b = BRep_Builder()
+        self.assertIsInstance(b, BRep_Builder)
+        t = TopoDS_Builder()
+        self.assertIsInstance(t, TopoDS_Builder)
+        s = ShapeAnalysis_Curve()
+        self.assertIsInstance(s, ShapeAnalysis_Curve)
 
     def test_handling_exceptions(self):
         """ asserts that handling of OCC exceptions is handled correctly in pythonocc
@@ -486,8 +496,6 @@ class TestWrapperFeatures(unittest.TestCase):
         self.assertTrue(b.IsEqual(line3.EndPoint(), 0.01))
         self.assertTrue(b.IsEqual(GC_MakeSegment(a, b).Value().EndPoint(), 0.01))
 
-
-
     def test_local_properties(self):
         """ Get and modify class local properties
         """
@@ -513,7 +521,7 @@ class TestWrapperFeatures(unittest.TestCase):
         self.assertTrue(isinstance(curve, Geom_Curve))
         # The edge is internally a line, so we should be able to downcast it
         line = Geom_Line.DownCast(curve)
-        self.assertTrue(isinstance(curve, Geom_Curve))
+        self.assertTrue(isinstance(line, Geom_Curve))
         # Hence, it should not be possible to downcast it as a B-Spline curve
         bspline = Geom_BSplineCurve.DownCast(curve)
         self.assertTrue(bspline is None)
@@ -543,6 +551,11 @@ class TestWrapperFeatures(unittest.TestCase):
         """
         with assert_warns_deprecated():
             from OCC.gp import gp_Pln
+            # create a gp_Pln object to avoid
+            # codacy and other static analysis tools
+            # to report the gp_Pln class is unused
+            # though it's not very elegant !
+            self.assertIsInstance(gp_Pln(), gp_Pln)
 
     def test_deprecation_get_handle(self):
         """ Handles are now completely transparent. The GetHandle method is
@@ -550,7 +563,8 @@ class TestWrapperFeatures(unittest.TestCase):
         """
         t = Standard_Transient()
         with assert_warns_deprecated():
-            t.GetHandle()
+            h = t.GetHandle()
+            self.assertFalse(h.IsNull())
 
     def test_deprecation_handle_class(self):
         """ Handles are now completely transparent. The Handle_* constructor is
@@ -559,6 +573,7 @@ class TestWrapperFeatures(unittest.TestCase):
         t = Standard_Transient()
         with assert_warns_deprecated():
             h = Handle_Standard_Transient(t)
+            self.assertFalse(h.IsNull())
 
     def test_deprecation_get_object(self):
         """ Handles are now completely transparent. The GetObject method is
@@ -566,12 +581,14 @@ class TestWrapperFeatures(unittest.TestCase):
         """
         t = Standard_Transient()
         with assert_warns_deprecated():
-            t.GetObject()
+            o = t.GetObject()
+            self.assertFalse(o.IsNull())
 
     def test_deprecation_downcasts(self):
         t = Standard_Transient()
         with assert_warns_deprecated():
-            Handle_Standard_Transient.DownCast(t)
+            h = Handle_Standard_Transient.DownCast(t)
+            self.assertFalse(h.IsNull())
 
     def test_array_iterator(self):
         P0 = gp_Pnt(1, 2, 3)
@@ -599,6 +616,79 @@ class TestWrapperFeatures(unittest.TestCase):
         s = TopoDS_Shape()
         self.assertTrue('Null' in v.__repr__())
         self.assertTrue('Null' in s.__repr__())
+
+    def test_in_place_operators(self):
+        # operator +=
+        a = gp_XYZ(1., 2., 3.)
+        self.assertEqual(a.X(), 1.)
+        self.assertEqual(a.Y(), 2.)
+        self.assertEqual(a.Z(), 3.)
+        a += gp_XYZ(4., 5., 6.)
+        self.assertEqual(a.X(), 5.)
+        self.assertEqual(a.Y(), 7.)
+        self.assertEqual(a.Z(), 9.)
+        # operator *= with a scalar
+        b1 = gp_XYZ(2., 4., 5.)
+        self.assertEqual(b1.X(), 2.)
+        self.assertEqual(b1.Y(), 4.)
+        self.assertEqual(b1.Z(), 5.)
+        b1 *= 2
+        self.assertEqual(b1.X(), 4.)
+        self.assertEqual(b1.Y(), 8.)
+        self.assertEqual(b1.Z(), 10.)
+        # operator *= with a gp_XYZ
+        b2 = gp_XYZ(4., 5., 6.)
+        self.assertEqual(b2.X(), 4.)
+        self.assertEqual(b2.Y(), 5.)
+        self.assertEqual(b2.Z(), 6.)
+        b2 *= gp_XYZ(3., 6., 7.)
+        self.assertEqual(b2.X(), 12.)
+        self.assertEqual(b2.Y(), 30.)
+        self.assertEqual(b2.Z(), 42.)
+        # operator *= with a gp_Mat
+        b3 = gp_XYZ(1., 2., 3.)
+        self.assertEqual(b3.X(), 1.)
+        self.assertEqual(b3.Y(), 2.)
+        self.assertEqual(b3.Z(), 3.)
+        m_ident = gp_Mat()
+        m_ident.SetIdentity()
+        b3 *= m_ident
+        self.assertEqual(b3.X(), 1.)
+        self.assertEqual(b3.Y(), 2.)
+        self.assertEqual(b3.Z(), 3.)
+        # operator -=
+        c = gp_XYZ(3., 2., 1.)
+        self.assertEqual(c.X(), 3.)
+        self.assertEqual(c.Y(), 2.)
+        self.assertEqual(c.Z(), 1.)
+        c -= gp_XYZ(1., 0.5, 1.5)
+        self.assertEqual(c.X(), 2.)
+        self.assertEqual(c.Y(), 1.5)
+        self.assertEqual(c.Z(), -0.5)
+        # operator /=
+        d = gp_XYZ(12., 14., 18.)
+        self.assertEqual(d.X(), 12.)
+        self.assertEqual(d.Y(), 14.)
+        self.assertEqual(d.Z(), 18.)
+        d /= 2.
+        self.assertEqual(d.X(), 6.)
+        self.assertEqual(d.Y(), 7.)
+        self.assertEqual(d.Z(), 9.)
+
+    def test_shape_conversion_as_py_none(self):
+        # see issue #600 and PR #614
+        # a null topods_shape should be returned as Py_None by the TopoDS transformer
+        # the following test case returns a null topods_shape
+        box = BRepPrimAPI_MakeBox(1., 1., 1.).Shape()
+        hlr = HLRBRep_Algo()
+        hlr.Add(box)
+        projector = HLRAlgo_Projector(gp_Ax2(gp_Pnt(), gp_Dir(-1.75, 1.1, 5)))
+        hlr.Projector(projector)
+        hlr.Update()
+        hlr.Hide()
+        hlr_shapes = HLRBRep_HLRToShape(hlr)
+        visible_smooth_edges = hlr_shapes.Rg1LineVCompound()
+        self.assertTrue(visible_smooth_edges is None)
 
 def suite():
     test_suite = unittest.TestSuite()
