@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,17 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define STEPTOTOPODSDOCSTRING
-"- Purpose: This package implements the mapping between AP214
-Shape representation and CAS.CAD Shape Representation.
-The source schema is Part42 (which is included in AP214)
-"
+"StepToTopoDS module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_steptotopods.html"
 %enddef
 %module (package="OCC.Core", docstring=STEPTOTOPODSDOCSTRING) StepToTopoDS
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -40,10 +35,50 @@ The source schema is Part42 (which is included in AP214)
 %include ../common/OccHandle.i
 
 
-%include StepToTopoDS_headers.i
+%{
+#include<StepToTopoDS_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<StepRepr_module.hxx>
+#include<StepGeom_module.hxx>
+#include<StepShape_module.hxx>
+#include<TCollection_module.hxx>
+#include<Geom_module.hxx>
+#include<TopoDS_module.hxx>
+#include<gp_module.hxx>
+#include<Transfer_module.hxx>
+#include<Geom2d_module.hxx>
+#include<Message_module.hxx>
+#include<StepBasic_module.hxx>
+#include<Interface_module.hxx>
+#include<TopLoc_module.hxx>
+#include<Transfer_module.hxx>
+#include<StepData_module.hxx>
+#include<MoniTool_module.hxx>
+#include<TopoDS_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+%import StepRepr.i
+%import StepGeom.i
+%import StepShape.i
+%import TCollection.i
+%import Geom.i
+%import TopoDS.i
+%import gp.i
+%import Transfer.i
+%import Geom2d.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 enum StepToTopoDS_GeometricToolError {
@@ -97,63 +132,223 @@ enum StepToTopoDS_TranslateVertexError {
 
 /* end public enums declaration */
 
-%wrap_handle(StepToTopoDS_DataMapNodeOfDataMapOfRI)
-%wrap_handle(StepToTopoDS_DataMapNodeOfDataMapOfRINames)
-%wrap_handle(StepToTopoDS_DataMapNodeOfDataMapOfTRI)
-%wrap_handle(StepToTopoDS_DataMapNodeOfPointEdgeMap)
-%wrap_handle(StepToTopoDS_DataMapNodeOfPointVertexMap)
+/* python proy classes for enums */
+%pythoncode {
 
+class StepToTopoDS_GeometricToolError(IntEnum):
+	StepToTopoDS_GeometricToolDone = 0
+	StepToTopoDS_GeometricToolIsDegenerated = 1
+	StepToTopoDS_GeometricToolHasNoPCurve = 2
+	StepToTopoDS_GeometricToolWrong3dParameters = 3
+	StepToTopoDS_GeometricToolNoProjectiOnCurve = 4
+	StepToTopoDS_GeometricToolOther = 5
+StepToTopoDS_GeometricToolDone = StepToTopoDS_GeometricToolError.StepToTopoDS_GeometricToolDone
+StepToTopoDS_GeometricToolIsDegenerated = StepToTopoDS_GeometricToolError.StepToTopoDS_GeometricToolIsDegenerated
+StepToTopoDS_GeometricToolHasNoPCurve = StepToTopoDS_GeometricToolError.StepToTopoDS_GeometricToolHasNoPCurve
+StepToTopoDS_GeometricToolWrong3dParameters = StepToTopoDS_GeometricToolError.StepToTopoDS_GeometricToolWrong3dParameters
+StepToTopoDS_GeometricToolNoProjectiOnCurve = StepToTopoDS_GeometricToolError.StepToTopoDS_GeometricToolNoProjectiOnCurve
+StepToTopoDS_GeometricToolOther = StepToTopoDS_GeometricToolError.StepToTopoDS_GeometricToolOther
+
+class StepToTopoDS_TranslateShellError(IntEnum):
+	StepToTopoDS_TranslateShellDone = 0
+	StepToTopoDS_TranslateShellOther = 1
+StepToTopoDS_TranslateShellDone = StepToTopoDS_TranslateShellError.StepToTopoDS_TranslateShellDone
+StepToTopoDS_TranslateShellOther = StepToTopoDS_TranslateShellError.StepToTopoDS_TranslateShellOther
+
+class StepToTopoDS_TranslatePolyLoopError(IntEnum):
+	StepToTopoDS_TranslatePolyLoopDone = 0
+	StepToTopoDS_TranslatePolyLoopOther = 1
+StepToTopoDS_TranslatePolyLoopDone = StepToTopoDS_TranslatePolyLoopError.StepToTopoDS_TranslatePolyLoopDone
+StepToTopoDS_TranslatePolyLoopOther = StepToTopoDS_TranslatePolyLoopError.StepToTopoDS_TranslatePolyLoopOther
+
+class StepToTopoDS_TranslateEdgeError(IntEnum):
+	StepToTopoDS_TranslateEdgeDone = 0
+	StepToTopoDS_TranslateEdgeOther = 1
+StepToTopoDS_TranslateEdgeDone = StepToTopoDS_TranslateEdgeError.StepToTopoDS_TranslateEdgeDone
+StepToTopoDS_TranslateEdgeOther = StepToTopoDS_TranslateEdgeError.StepToTopoDS_TranslateEdgeOther
+
+class StepToTopoDS_BuilderError(IntEnum):
+	StepToTopoDS_BuilderDone = 0
+	StepToTopoDS_BuilderOther = 1
+StepToTopoDS_BuilderDone = StepToTopoDS_BuilderError.StepToTopoDS_BuilderDone
+StepToTopoDS_BuilderOther = StepToTopoDS_BuilderError.StepToTopoDS_BuilderOther
+
+class StepToTopoDS_TranslateFaceError(IntEnum):
+	StepToTopoDS_TranslateFaceDone = 0
+	StepToTopoDS_TranslateFaceOther = 1
+StepToTopoDS_TranslateFaceDone = StepToTopoDS_TranslateFaceError.StepToTopoDS_TranslateFaceDone
+StepToTopoDS_TranslateFaceOther = StepToTopoDS_TranslateFaceError.StepToTopoDS_TranslateFaceOther
+
+class StepToTopoDS_TranslateVertexLoopError(IntEnum):
+	StepToTopoDS_TranslateVertexLoopDone = 0
+	StepToTopoDS_TranslateVertexLoopOther = 1
+StepToTopoDS_TranslateVertexLoopDone = StepToTopoDS_TranslateVertexLoopError.StepToTopoDS_TranslateVertexLoopDone
+StepToTopoDS_TranslateVertexLoopOther = StepToTopoDS_TranslateVertexLoopError.StepToTopoDS_TranslateVertexLoopOther
+
+class StepToTopoDS_TranslateEdgeLoopError(IntEnum):
+	StepToTopoDS_TranslateEdgeLoopDone = 0
+	StepToTopoDS_TranslateEdgeLoopOther = 1
+StepToTopoDS_TranslateEdgeLoopDone = StepToTopoDS_TranslateEdgeLoopError.StepToTopoDS_TranslateEdgeLoopDone
+StepToTopoDS_TranslateEdgeLoopOther = StepToTopoDS_TranslateEdgeLoopError.StepToTopoDS_TranslateEdgeLoopOther
+
+class StepToTopoDS_TranslateVertexError(IntEnum):
+	StepToTopoDS_TranslateVertexDone = 0
+	StepToTopoDS_TranslateVertexOther = 1
+StepToTopoDS_TranslateVertexDone = StepToTopoDS_TranslateVertexError.StepToTopoDS_TranslateVertexDone
+StepToTopoDS_TranslateVertexOther = StepToTopoDS_TranslateVertexError.StepToTopoDS_TranslateVertexOther
+};
+/* end python proxy for enums */
+
+/* handles */
+/* end handles declaration */
+
+/* templates */
+%template(StepToTopoDS_DataMapOfRI) NCollection_DataMap<opencascade::handle<StepRepr_RepresentationItem>,TopoDS_Shape,TColStd_MapTransientHasher>;
+%template(StepToTopoDS_DataMapOfRINames) NCollection_DataMap<TCollection_AsciiString,TopoDS_Shape,TCollection_AsciiString>;
+%template(StepToTopoDS_DataMapOfTRI) NCollection_DataMap<opencascade::handle<StepShape_TopologicalRepresentationItem>,TopoDS_Shape,TColStd_MapTransientHasher>;
+%template(StepToTopoDS_PointEdgeMap) NCollection_DataMap<StepToTopoDS_PointPair,TopoDS_Edge,StepToTopoDS_PointPairHasher>;
+%template(StepToTopoDS_PointVertexMap) NCollection_DataMap<opencascade::handle<StepGeom_CartesianPoint>,TopoDS_Vertex,StepToTopoDS_CartesianPointHasher>;
+/* end templates declaration */
+
+/* typedefs */
+typedef NCollection_DataMap<opencascade::handle<StepRepr_RepresentationItem>, TopoDS_Shape, TColStd_MapTransientHasher>::Iterator StepToTopoDS_DataMapIteratorOfDataMapOfRI;
+typedef NCollection_DataMap<TCollection_AsciiString, TopoDS_Shape, TCollection_AsciiString>::Iterator StepToTopoDS_DataMapIteratorOfDataMapOfRINames;
+typedef NCollection_DataMap<opencascade::handle<StepShape_TopologicalRepresentationItem>, TopoDS_Shape, TColStd_MapTransientHasher>::Iterator StepToTopoDS_DataMapIteratorOfDataMapOfTRI;
+typedef NCollection_DataMap<StepToTopoDS_PointPair, TopoDS_Edge, StepToTopoDS_PointPairHasher>::Iterator StepToTopoDS_DataMapIteratorOfPointEdgeMap;
+typedef NCollection_DataMap<opencascade::handle<StepGeom_CartesianPoint>, TopoDS_Vertex, StepToTopoDS_CartesianPointHasher>::Iterator StepToTopoDS_DataMapIteratorOfPointVertexMap;
+typedef NCollection_DataMap<opencascade::handle<StepRepr_RepresentationItem>, TopoDS_Shape, TColStd_MapTransientHasher> StepToTopoDS_DataMapOfRI;
+typedef NCollection_DataMap<TCollection_AsciiString, TopoDS_Shape, TCollection_AsciiString> StepToTopoDS_DataMapOfRINames;
+typedef NCollection_DataMap<opencascade::handle<StepShape_TopologicalRepresentationItem>, TopoDS_Shape, TColStd_MapTransientHasher> StepToTopoDS_DataMapOfTRI;
+typedef NCollection_DataMap<StepToTopoDS_PointPair, TopoDS_Edge, StepToTopoDS_PointPairHasher> StepToTopoDS_PointEdgeMap;
+typedef NCollection_DataMap<opencascade::handle<StepGeom_CartesianPoint>, TopoDS_Vertex, StepToTopoDS_CartesianPointHasher> StepToTopoDS_PointVertexMap;
+/* end typedefs declaration */
+
+/*********************
+* class StepToTopoDS *
+*********************/
 %rename(steptotopods) StepToTopoDS;
 class StepToTopoDS {
 	public:
+		/****************** DecodeBuilderError ******************/
+		/**** md5 signature: d71a875d14655678f1fac2d82f46f3d7 ****/
 		%feature("compactdefaultargs") DecodeBuilderError;
-		%feature("autodoc", "	:param Error:
-	:type Error: StepToTopoDS_BuilderError
-	:rtype: Handle_TCollection_HAsciiString
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Error: StepToTopoDS_BuilderError
+
+Returns
+-------
+opencascade::handle<TCollection_HAsciiString>
 ") DecodeBuilderError;
-		static Handle_TCollection_HAsciiString DecodeBuilderError (const StepToTopoDS_BuilderError Error);
-		%feature("compactdefaultargs") DecodeShellError;
-		%feature("autodoc", "	:param Error:
-	:type Error: StepToTopoDS_TranslateShellError
-	:rtype: Handle_TCollection_HAsciiString
-") DecodeShellError;
-		static Handle_TCollection_HAsciiString DecodeShellError (const StepToTopoDS_TranslateShellError Error);
-		%feature("compactdefaultargs") DecodeFaceError;
-		%feature("autodoc", "	:param Error:
-	:type Error: StepToTopoDS_TranslateFaceError
-	:rtype: Handle_TCollection_HAsciiString
-") DecodeFaceError;
-		static Handle_TCollection_HAsciiString DecodeFaceError (const StepToTopoDS_TranslateFaceError Error);
+		static opencascade::handle<TCollection_HAsciiString> DecodeBuilderError(const StepToTopoDS_BuilderError Error);
+
+		/****************** DecodeEdgeError ******************/
+		/**** md5 signature: 162c7a22b6733e03bf205f8c6feb7a25 ****/
 		%feature("compactdefaultargs") DecodeEdgeError;
-		%feature("autodoc", "	:param Error:
-	:type Error: StepToTopoDS_TranslateEdgeError
-	:rtype: Handle_TCollection_HAsciiString
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Error: StepToTopoDS_TranslateEdgeError
+
+Returns
+-------
+opencascade::handle<TCollection_HAsciiString>
 ") DecodeEdgeError;
-		static Handle_TCollection_HAsciiString DecodeEdgeError (const StepToTopoDS_TranslateEdgeError Error);
-		%feature("compactdefaultargs") DecodeVertexError;
-		%feature("autodoc", "	:param Error:
-	:type Error: StepToTopoDS_TranslateVertexError
-	:rtype: Handle_TCollection_HAsciiString
-") DecodeVertexError;
-		static Handle_TCollection_HAsciiString DecodeVertexError (const StepToTopoDS_TranslateVertexError Error);
-		%feature("compactdefaultargs") DecodeVertexLoopError;
-		%feature("autodoc", "	:param Error:
-	:type Error: StepToTopoDS_TranslateVertexLoopError
-	:rtype: Handle_TCollection_HAsciiString
-") DecodeVertexLoopError;
-		static Handle_TCollection_HAsciiString DecodeVertexLoopError (const StepToTopoDS_TranslateVertexLoopError Error);
-		%feature("compactdefaultargs") DecodePolyLoopError;
-		%feature("autodoc", "	:param Error:
-	:type Error: StepToTopoDS_TranslatePolyLoopError
-	:rtype: Handle_TCollection_HAsciiString
-") DecodePolyLoopError;
-		static Handle_TCollection_HAsciiString DecodePolyLoopError (const StepToTopoDS_TranslatePolyLoopError Error);
+		static opencascade::handle<TCollection_HAsciiString> DecodeEdgeError(const StepToTopoDS_TranslateEdgeError Error);
+
+		/****************** DecodeFaceError ******************/
+		/**** md5 signature: b617c00a43a67259f10a615382ce5a68 ****/
+		%feature("compactdefaultargs") DecodeFaceError;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Error: StepToTopoDS_TranslateFaceError
+
+Returns
+-------
+opencascade::handle<TCollection_HAsciiString>
+") DecodeFaceError;
+		static opencascade::handle<TCollection_HAsciiString> DecodeFaceError(const StepToTopoDS_TranslateFaceError Error);
+
+		/****************** DecodeGeometricToolError ******************/
+		/**** md5 signature: 284e670ce83fabf0c21eb4fab38169f7 ****/
 		%feature("compactdefaultargs") DecodeGeometricToolError;
-		%feature("autodoc", "	:param Error:
-	:type Error: StepToTopoDS_GeometricToolError
-	:rtype: char *
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Error: StepToTopoDS_GeometricToolError
+
+Returns
+-------
+char *
 ") DecodeGeometricToolError;
-		static const char * DecodeGeometricToolError (const StepToTopoDS_GeometricToolError Error);
+		static const char * DecodeGeometricToolError(const StepToTopoDS_GeometricToolError Error);
+
+		/****************** DecodePolyLoopError ******************/
+		/**** md5 signature: 2ca2e1443a619e76fe6a0cc8a856a348 ****/
+		%feature("compactdefaultargs") DecodePolyLoopError;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Error: StepToTopoDS_TranslatePolyLoopError
+
+Returns
+-------
+opencascade::handle<TCollection_HAsciiString>
+") DecodePolyLoopError;
+		static opencascade::handle<TCollection_HAsciiString> DecodePolyLoopError(const StepToTopoDS_TranslatePolyLoopError Error);
+
+		/****************** DecodeShellError ******************/
+		/**** md5 signature: 9e24abf3232d43c607fca654a7ef839d ****/
+		%feature("compactdefaultargs") DecodeShellError;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Error: StepToTopoDS_TranslateShellError
+
+Returns
+-------
+opencascade::handle<TCollection_HAsciiString>
+") DecodeShellError;
+		static opencascade::handle<TCollection_HAsciiString> DecodeShellError(const StepToTopoDS_TranslateShellError Error);
+
+		/****************** DecodeVertexError ******************/
+		/**** md5 signature: 3f5b57353135ca50c63bfa5a1198be21 ****/
+		%feature("compactdefaultargs") DecodeVertexError;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Error: StepToTopoDS_TranslateVertexError
+
+Returns
+-------
+opencascade::handle<TCollection_HAsciiString>
+") DecodeVertexError;
+		static opencascade::handle<TCollection_HAsciiString> DecodeVertexError(const StepToTopoDS_TranslateVertexError Error);
+
+		/****************** DecodeVertexLoopError ******************/
+		/**** md5 signature: bc1dd64ab12f098f461796aa5039267e ****/
+		%feature("compactdefaultargs") DecodeVertexLoopError;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Error: StepToTopoDS_TranslateVertexLoopError
+
+Returns
+-------
+opencascade::handle<TCollection_HAsciiString>
+") DecodeVertexLoopError;
+		static opencascade::handle<TCollection_HAsciiString> DecodeVertexLoopError(const StepToTopoDS_TranslateVertexLoopError Error);
+
 };
 
 
@@ -162,28 +357,44 @@ class StepToTopoDS {
 	__repr__ = _dumps_object
 	}
 };
+
+/******************************************
+* class StepToTopoDS_CartesianPointHasher *
+******************************************/
 class StepToTopoDS_CartesianPointHasher {
 	public:
+		/****************** HashCode ******************/
+		/**** md5 signature: ad7715c7dfea95e15d5cb8c8bcf0d5bc ****/
 		%feature("compactdefaultargs") HashCode;
-		%feature("autodoc", "	* Returns a HasCode value for the CartesianPoint
+		%feature("autodoc", "Computes a hash code for the cartesian point, in the range [1, theupperbound] @param thecartesianpoint the cartesian point which hash code is to be computed @param theupperbound the upper bound of the range a computing hash code must be within returns a computed hash code, in the range [1, theupperbound].
 
-	:param K:
-	:type K: Handle_StepGeom_CartesianPoint &
-	:param Upper:
-	:type Upper: int
-	:rtype: int
+Parameters
+----------
+theCartesianPoint: Handle ( StepGeom_CartesianPoint )
+theUpperBound: int
+
+Returns
+-------
+int
 ") HashCode;
-		static Standard_Integer HashCode (const Handle_StepGeom_CartesianPoint & K,const Standard_Integer Upper);
-		%feature("compactdefaultargs") IsEqual;
-		%feature("autodoc", "	* Returns True when the two CartesianPoint are the same
+		static Standard_Integer HashCode(const Handle ( StepGeom_CartesianPoint ) & theCartesianPoint, Standard_Integer theUpperBound);
 
-	:param K1:
-	:type K1: Handle_StepGeom_CartesianPoint &
-	:param K2:
-	:type K2: Handle_StepGeom_CartesianPoint &
-	:rtype: bool
+		/****************** IsEqual ******************/
+		/**** md5 signature: 4636634074af2fe56217175232fc9a6a ****/
+		%feature("compactdefaultargs") IsEqual;
+		%feature("autodoc", "Returns true when the two cartesianpoint are the same.
+
+Parameters
+----------
+K1: StepGeom_CartesianPoint
+K2: StepGeom_CartesianPoint
+
+Returns
+-------
+bool
 ") IsEqual;
-		static Standard_Boolean IsEqual (const Handle_StepGeom_CartesianPoint & K1,const Handle_StepGeom_CartesianPoint & K2);
+		static Standard_Boolean IsEqual(const opencascade::handle<StepGeom_CartesianPoint> & K1, const opencascade::handle<StepGeom_CartesianPoint> & K2);
+
 };
 
 
@@ -192,386 +403,84 @@ class StepToTopoDS_CartesianPointHasher {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_DataMapIteratorOfDataMapOfRI;
-class StepToTopoDS_DataMapIteratorOfDataMapOfRI : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") StepToTopoDS_DataMapIteratorOfDataMapOfRI;
-		%feature("autodoc", "	:rtype: None
-") StepToTopoDS_DataMapIteratorOfDataMapOfRI;
-		 StepToTopoDS_DataMapIteratorOfDataMapOfRI ();
-		%feature("compactdefaultargs") StepToTopoDS_DataMapIteratorOfDataMapOfRI;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: StepToTopoDS_DataMapOfRI &
-	:rtype: None
-") StepToTopoDS_DataMapIteratorOfDataMapOfRI;
-		 StepToTopoDS_DataMapIteratorOfDataMapOfRI (const StepToTopoDS_DataMapOfRI & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: StepToTopoDS_DataMapOfRI &
-	:rtype: None
-") Initialize;
-		void Initialize (const StepToTopoDS_DataMapOfRI & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: Handle_StepRepr_RepresentationItem
-") Key;
-		Handle_StepRepr_RepresentationItem Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		const TopoDS_Shape  Value ();
-};
 
-
-%extend StepToTopoDS_DataMapIteratorOfDataMapOfRI {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor StepToTopoDS_DataMapIteratorOfDataMapOfRINames;
-class StepToTopoDS_DataMapIteratorOfDataMapOfRINames : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") StepToTopoDS_DataMapIteratorOfDataMapOfRINames;
-		%feature("autodoc", "	:rtype: None
-") StepToTopoDS_DataMapIteratorOfDataMapOfRINames;
-		 StepToTopoDS_DataMapIteratorOfDataMapOfRINames ();
-		%feature("compactdefaultargs") StepToTopoDS_DataMapIteratorOfDataMapOfRINames;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: StepToTopoDS_DataMapOfRINames &
-	:rtype: None
-") StepToTopoDS_DataMapIteratorOfDataMapOfRINames;
-		 StepToTopoDS_DataMapIteratorOfDataMapOfRINames (const StepToTopoDS_DataMapOfRINames & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: StepToTopoDS_DataMapOfRINames &
-	:rtype: None
-") Initialize;
-		void Initialize (const StepToTopoDS_DataMapOfRINames & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: TCollection_AsciiString
-") Key;
-		const TCollection_AsciiString & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		const TopoDS_Shape  Value ();
-};
-
-
-%extend StepToTopoDS_DataMapIteratorOfDataMapOfRINames {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor StepToTopoDS_DataMapIteratorOfDataMapOfTRI;
-class StepToTopoDS_DataMapIteratorOfDataMapOfTRI : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") StepToTopoDS_DataMapIteratorOfDataMapOfTRI;
-		%feature("autodoc", "	:rtype: None
-") StepToTopoDS_DataMapIteratorOfDataMapOfTRI;
-		 StepToTopoDS_DataMapIteratorOfDataMapOfTRI ();
-		%feature("compactdefaultargs") StepToTopoDS_DataMapIteratorOfDataMapOfTRI;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: StepToTopoDS_DataMapOfTRI &
-	:rtype: None
-") StepToTopoDS_DataMapIteratorOfDataMapOfTRI;
-		 StepToTopoDS_DataMapIteratorOfDataMapOfTRI (const StepToTopoDS_DataMapOfTRI & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: StepToTopoDS_DataMapOfTRI &
-	:rtype: None
-") Initialize;
-		void Initialize (const StepToTopoDS_DataMapOfTRI & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: Handle_StepShape_TopologicalRepresentationItem
-") Key;
-		Handle_StepShape_TopologicalRepresentationItem Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		const TopoDS_Shape  Value ();
-};
-
-
-%extend StepToTopoDS_DataMapIteratorOfDataMapOfTRI {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor StepToTopoDS_DataMapIteratorOfPointEdgeMap;
-class StepToTopoDS_DataMapIteratorOfPointEdgeMap : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") StepToTopoDS_DataMapIteratorOfPointEdgeMap;
-		%feature("autodoc", "	:rtype: None
-") StepToTopoDS_DataMapIteratorOfPointEdgeMap;
-		 StepToTopoDS_DataMapIteratorOfPointEdgeMap ();
-		%feature("compactdefaultargs") StepToTopoDS_DataMapIteratorOfPointEdgeMap;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: StepToTopoDS_PointEdgeMap &
-	:rtype: None
-") StepToTopoDS_DataMapIteratorOfPointEdgeMap;
-		 StepToTopoDS_DataMapIteratorOfPointEdgeMap (const StepToTopoDS_PointEdgeMap & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: StepToTopoDS_PointEdgeMap &
-	:rtype: None
-") Initialize;
-		void Initialize (const StepToTopoDS_PointEdgeMap & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: StepToTopoDS_PointPair
-") Key;
-		const StepToTopoDS_PointPair  Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Edge
-") Value;
-		const TopoDS_Edge  Value ();
-};
-
-
-%extend StepToTopoDS_DataMapIteratorOfPointEdgeMap {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor StepToTopoDS_DataMapIteratorOfPointVertexMap;
-class StepToTopoDS_DataMapIteratorOfPointVertexMap : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") StepToTopoDS_DataMapIteratorOfPointVertexMap;
-		%feature("autodoc", "	:rtype: None
-") StepToTopoDS_DataMapIteratorOfPointVertexMap;
-		 StepToTopoDS_DataMapIteratorOfPointVertexMap ();
-		%feature("compactdefaultargs") StepToTopoDS_DataMapIteratorOfPointVertexMap;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: StepToTopoDS_PointVertexMap &
-	:rtype: None
-") StepToTopoDS_DataMapIteratorOfPointVertexMap;
-		 StepToTopoDS_DataMapIteratorOfPointVertexMap (const StepToTopoDS_PointVertexMap & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: StepToTopoDS_PointVertexMap &
-	:rtype: None
-") Initialize;
-		void Initialize (const StepToTopoDS_PointVertexMap & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: Handle_StepGeom_CartesianPoint
-") Key;
-		Handle_StepGeom_CartesianPoint Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Vertex
-") Value;
-		const TopoDS_Vertex  Value ();
-};
-
-
-%extend StepToTopoDS_DataMapIteratorOfPointVertexMap {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor StepToTopoDS_DataMapNodeOfDataMapOfRI;
-class StepToTopoDS_DataMapNodeOfDataMapOfRI : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") StepToTopoDS_DataMapNodeOfDataMapOfRI;
-		%feature("autodoc", "	:param K:
-	:type K: Handle_StepRepr_RepresentationItem &
-	:param I:
-	:type I: TopoDS_Shape &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") StepToTopoDS_DataMapNodeOfDataMapOfRI;
-		 StepToTopoDS_DataMapNodeOfDataMapOfRI (const Handle_StepRepr_RepresentationItem & K,const TopoDS_Shape & I,const TCollection_MapNodePtr & n);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: Handle_StepRepr_RepresentationItem
-") Key;
-		Handle_StepRepr_RepresentationItem Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		TopoDS_Shape  Value ();
-};
-
-
-%make_alias(StepToTopoDS_DataMapNodeOfDataMapOfRI)
-
-%extend StepToTopoDS_DataMapNodeOfDataMapOfRI {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor StepToTopoDS_DataMapNodeOfDataMapOfRINames;
-class StepToTopoDS_DataMapNodeOfDataMapOfRINames : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") StepToTopoDS_DataMapNodeOfDataMapOfRINames;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:param I:
-	:type I: TopoDS_Shape &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") StepToTopoDS_DataMapNodeOfDataMapOfRINames;
-		 StepToTopoDS_DataMapNodeOfDataMapOfRINames (const TCollection_AsciiString & K,const TopoDS_Shape & I,const TCollection_MapNodePtr & n);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: TCollection_AsciiString
-") Key;
-		TCollection_AsciiString & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		TopoDS_Shape  Value ();
-};
-
-
-%make_alias(StepToTopoDS_DataMapNodeOfDataMapOfRINames)
-
-%extend StepToTopoDS_DataMapNodeOfDataMapOfRINames {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor StepToTopoDS_DataMapNodeOfDataMapOfTRI;
-class StepToTopoDS_DataMapNodeOfDataMapOfTRI : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") StepToTopoDS_DataMapNodeOfDataMapOfTRI;
-		%feature("autodoc", "	:param K:
-	:type K: Handle_StepShape_TopologicalRepresentationItem &
-	:param I:
-	:type I: TopoDS_Shape &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") StepToTopoDS_DataMapNodeOfDataMapOfTRI;
-		 StepToTopoDS_DataMapNodeOfDataMapOfTRI (const Handle_StepShape_TopologicalRepresentationItem & K,const TopoDS_Shape & I,const TCollection_MapNodePtr & n);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: Handle_StepShape_TopologicalRepresentationItem
-") Key;
-		Handle_StepShape_TopologicalRepresentationItem Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		TopoDS_Shape  Value ();
-};
-
-
-%make_alias(StepToTopoDS_DataMapNodeOfDataMapOfTRI)
-
-%extend StepToTopoDS_DataMapNodeOfDataMapOfTRI {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor StepToTopoDS_DataMapNodeOfPointEdgeMap;
-class StepToTopoDS_DataMapNodeOfPointEdgeMap : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") StepToTopoDS_DataMapNodeOfPointEdgeMap;
-		%feature("autodoc", "	:param K:
-	:type K: StepToTopoDS_PointPair &
-	:param I:
-	:type I: TopoDS_Edge &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") StepToTopoDS_DataMapNodeOfPointEdgeMap;
-		 StepToTopoDS_DataMapNodeOfPointEdgeMap (const StepToTopoDS_PointPair & K,const TopoDS_Edge & I,const TCollection_MapNodePtr & n);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: StepToTopoDS_PointPair
-") Key;
-		StepToTopoDS_PointPair  Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Edge
-") Value;
-		TopoDS_Edge  Value ();
-};
-
-
-%make_alias(StepToTopoDS_DataMapNodeOfPointEdgeMap)
-
-%extend StepToTopoDS_DataMapNodeOfPointEdgeMap {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor StepToTopoDS_DataMapNodeOfPointVertexMap;
-class StepToTopoDS_DataMapNodeOfPointVertexMap : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") StepToTopoDS_DataMapNodeOfPointVertexMap;
-		%feature("autodoc", "	:param K:
-	:type K: Handle_StepGeom_CartesianPoint &
-	:param I:
-	:type I: TopoDS_Vertex &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") StepToTopoDS_DataMapNodeOfPointVertexMap;
-		 StepToTopoDS_DataMapNodeOfPointVertexMap (const Handle_StepGeom_CartesianPoint & K,const TopoDS_Vertex & I,const TCollection_MapNodePtr & n);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: Handle_StepGeom_CartesianPoint
-") Key;
-		Handle_StepGeom_CartesianPoint Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Vertex
-") Value;
-		TopoDS_Vertex  Value ();
-};
-
-
-%make_alias(StepToTopoDS_DataMapNodeOfPointVertexMap)
-
-%extend StepToTopoDS_DataMapNodeOfPointVertexMap {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
+/***********************************
+* class StepToTopoDS_GeometricTool *
+***********************************/
 class StepToTopoDS_GeometricTool {
 	public:
-		%feature("compactdefaultargs") PCurve;
-		%feature("autodoc", "	:param SC:
-	:type SC: Handle_StepGeom_SurfaceCurve &
-	:param S:
-	:type S: Handle_StepGeom_Surface &
-	:param PC:
-	:type PC: Handle_StepGeom_Pcurve &
-	:param last: default value is 0
-	:type last: int
-	:rtype: int
-") PCurve;
-		static Standard_Integer PCurve (const Handle_StepGeom_SurfaceCurve & SC,const Handle_StepGeom_Surface & S,Handle_StepGeom_Pcurve & PC,const Standard_Integer last = 0);
-		%feature("compactdefaultargs") IsSeamCurve;
-		%feature("autodoc", "	:param SC:
-	:type SC: Handle_StepGeom_SurfaceCurve &
-	:param S:
-	:type S: Handle_StepGeom_Surface &
-	:param E:
-	:type E: Handle_StepShape_Edge &
-	:param EL:
-	:type EL: Handle_StepShape_EdgeLoop &
-	:rtype: bool
-") IsSeamCurve;
-		static Standard_Boolean IsSeamCurve (const Handle_StepGeom_SurfaceCurve & SC,const Handle_StepGeom_Surface & S,const Handle_StepShape_Edge & E,const Handle_StepShape_EdgeLoop & EL);
+		/****************** IsLikeSeam ******************/
+		/**** md5 signature: 8679cc7de3782f930b4e1a99f45f83be ****/
 		%feature("compactdefaultargs") IsLikeSeam;
-		%feature("autodoc", "	:param SC:
-	:type SC: Handle_StepGeom_SurfaceCurve &
-	:param S:
-	:type S: Handle_StepGeom_Surface &
-	:param E:
-	:type E: Handle_StepShape_Edge &
-	:param EL:
-	:type EL: Handle_StepShape_EdgeLoop &
-	:rtype: bool
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+SC: StepGeom_SurfaceCurve
+S: StepGeom_Surface
+E: StepShape_Edge
+EL: StepShape_EdgeLoop
+
+Returns
+-------
+bool
 ") IsLikeSeam;
-		static Standard_Boolean IsLikeSeam (const Handle_StepGeom_SurfaceCurve & SC,const Handle_StepGeom_Surface & S,const Handle_StepShape_Edge & E,const Handle_StepShape_EdgeLoop & EL);
+		static Standard_Boolean IsLikeSeam(const opencascade::handle<StepGeom_SurfaceCurve> & SC, const opencascade::handle<StepGeom_Surface> & S, const opencascade::handle<StepShape_Edge> & E, const opencascade::handle<StepShape_EdgeLoop> & EL);
+
+		/****************** IsSeamCurve ******************/
+		/**** md5 signature: bc0405a968c33fae0a13d6001e05f654 ****/
+		%feature("compactdefaultargs") IsSeamCurve;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+SC: StepGeom_SurfaceCurve
+S: StepGeom_Surface
+E: StepShape_Edge
+EL: StepShape_EdgeLoop
+
+Returns
+-------
+bool
+") IsSeamCurve;
+		static Standard_Boolean IsSeamCurve(const opencascade::handle<StepGeom_SurfaceCurve> & SC, const opencascade::handle<StepGeom_Surface> & S, const opencascade::handle<StepShape_Edge> & E, const opencascade::handle<StepShape_EdgeLoop> & EL);
+
+		/****************** PCurve ******************/
+		/**** md5 signature: d9795b143e7c3626dd1864ca2e08f388 ****/
+		%feature("compactdefaultargs") PCurve;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+SC: StepGeom_SurfaceCurve
+S: StepGeom_Surface
+PC: StepGeom_Pcurve
+last: int,optional
+	default value is 0
+
+Returns
+-------
+int
+") PCurve;
+		static Standard_Integer PCurve(const opencascade::handle<StepGeom_SurfaceCurve> & SC, const opencascade::handle<StepGeom_Surface> & S, opencascade::handle<StepGeom_Pcurve> & PC, const Standard_Integer last = 0);
+
+		/****************** UpdateParam3d ******************/
+		/**** md5 signature: b718a006868f7ff304524fa58ad7846f ****/
 		%feature("compactdefaultargs") UpdateParam3d;
-		%feature("autodoc", "	:param C:
-	:type C: Handle_Geom_Curve &
-	:param w1:
-	:type w1: float &
-	:param w2:
-	:type w2: float &
-	:param preci:
-	:type preci: float
-	:rtype: bool
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+C: Geom_Curve
+preci: float
+
+Returns
+-------
+w1: float
+w2: float
 ") UpdateParam3d;
-		static Standard_Boolean UpdateParam3d (const Handle_Geom_Curve & C,Standard_Real &OutValue,Standard_Real &OutValue,const Standard_Real preci);
+		static Standard_Boolean UpdateParam3d(const opencascade::handle<Geom_Curve> & C, Standard_Real &OutValue, Standard_Real &OutValue, const Standard_Real preci);
+
 };
 
 
@@ -580,113 +489,256 @@ class StepToTopoDS_GeometricTool {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_NMTool;
+
+/****************************
+* class StepToTopoDS_NMTool *
+****************************/
 class StepToTopoDS_NMTool {
 	public:
+		/****************** StepToTopoDS_NMTool ******************/
+		/**** md5 signature: 8a7fb7b63397aa883e18cd7601fd9dc0 ****/
 		%feature("compactdefaultargs") StepToTopoDS_NMTool;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") StepToTopoDS_NMTool;
-		 StepToTopoDS_NMTool ();
+		 StepToTopoDS_NMTool();
+
+		/****************** StepToTopoDS_NMTool ******************/
+		/**** md5 signature: c00fee9bdc72c8f972685d998a33740d ****/
 		%feature("compactdefaultargs") StepToTopoDS_NMTool;
-		%feature("autodoc", "	:param MapOfRI:
-	:type MapOfRI: StepToTopoDS_DataMapOfRI &
-	:param MapOfRINames:
-	:type MapOfRINames: StepToTopoDS_DataMapOfRINames &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+MapOfRI: StepToTopoDS_DataMapOfRI
+MapOfRINames: StepToTopoDS_DataMapOfRINames
+
+Returns
+-------
+None
 ") StepToTopoDS_NMTool;
-		 StepToTopoDS_NMTool (const StepToTopoDS_DataMapOfRI & MapOfRI,const StepToTopoDS_DataMapOfRINames & MapOfRINames);
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	:param MapOfRI:
-	:type MapOfRI: StepToTopoDS_DataMapOfRI &
-	:param MapOfRINames:
-	:type MapOfRINames: StepToTopoDS_DataMapOfRINames &
-	:rtype: None
-") Init;
-		void Init (const StepToTopoDS_DataMapOfRI & MapOfRI,const StepToTopoDS_DataMapOfRINames & MapOfRINames);
-		%feature("compactdefaultargs") SetActive;
-		%feature("autodoc", "	:param isActive:
-	:type isActive: bool
-	:rtype: None
-") SetActive;
-		void SetActive (const Standard_Boolean isActive);
-		%feature("compactdefaultargs") IsActive;
-		%feature("autodoc", "	:rtype: bool
-") IsActive;
-		Standard_Boolean IsActive ();
+		 StepToTopoDS_NMTool(const StepToTopoDS_DataMapOfRI & MapOfRI, const StepToTopoDS_DataMapOfRINames & MapOfRINames);
+
+		/****************** Bind ******************/
+		/**** md5 signature: 0e1f9e51d96cb0b02f6de30681908e07 ****/
+		%feature("compactdefaultargs") Bind;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+RI: StepRepr_RepresentationItem
+S: TopoDS_Shape
+
+Returns
+-------
+None
+") Bind;
+		void Bind(const opencascade::handle<StepRepr_RepresentationItem> & RI, const TopoDS_Shape & S);
+
+		/****************** Bind ******************/
+		/**** md5 signature: e4d9798a62ddf4517cb0c0ae926f62fb ****/
+		%feature("compactdefaultargs") Bind;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+RIName: TCollection_AsciiString
+S: TopoDS_Shape
+
+Returns
+-------
+None
+") Bind;
+		void Bind(const TCollection_AsciiString & RIName, const TopoDS_Shape & S);
+
+		/****************** CleanUp ******************/
+		/**** md5 signature: f3a256cc048719bbee06926323c3a77c ****/
 		%feature("compactdefaultargs") CleanUp;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") CleanUp;
-		void CleanUp ();
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param RI:
-	:type RI: Handle_StepRepr_RepresentationItem &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const Handle_StepRepr_RepresentationItem & RI);
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param RIName:
-	:type RIName: TCollection_AsciiString &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const TCollection_AsciiString & RIName);
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param RI:
-	:type RI: Handle_StepRepr_RepresentationItem &
-	:param S:
-	:type S: TopoDS_Shape &
-	:rtype: None
-") Bind;
-		void Bind (const Handle_StepRepr_RepresentationItem & RI,const TopoDS_Shape & S);
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param RIName:
-	:type RIName: TCollection_AsciiString &
-	:param S:
-	:type S: TopoDS_Shape &
-	:rtype: None
-") Bind;
-		void Bind (const TCollection_AsciiString & RIName,const TopoDS_Shape & S);
+		void CleanUp();
+
+		/****************** Find ******************/
+		/**** md5 signature: 41b58c9cb17ece127101e06f2746b3d9 ****/
 		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param RI:
-	:type RI: Handle_StepRepr_RepresentationItem &
-	:rtype: TopoDS_Shape
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+RI: StepRepr_RepresentationItem
+
+Returns
+-------
+TopoDS_Shape
 ") Find;
-		const TopoDS_Shape  Find (const Handle_StepRepr_RepresentationItem & RI);
+		const TopoDS_Shape Find(const opencascade::handle<StepRepr_RepresentationItem> & RI);
+
+		/****************** Find ******************/
+		/**** md5 signature: d0c0d2e124c08e23451667b20c927dbf ****/
 		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param RIName:
-	:type RIName: TCollection_AsciiString &
-	:rtype: TopoDS_Shape
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+RIName: TCollection_AsciiString
+
+Returns
+-------
+TopoDS_Shape
 ") Find;
-		const TopoDS_Shape  Find (const TCollection_AsciiString & RIName);
-		%feature("compactdefaultargs") RegisterNMEdge;
-		%feature("autodoc", "	:param Edge:
-	:type Edge: TopoDS_Shape &
-	:rtype: None
-") RegisterNMEdge;
-		void RegisterNMEdge (const TopoDS_Shape & Edge);
-		%feature("compactdefaultargs") IsSuspectedAsClosing;
-		%feature("autodoc", "	:param BaseShell:
-	:type BaseShell: TopoDS_Shape &
-	:param SuspectedShell:
-	:type SuspectedShell: TopoDS_Shape &
-	:rtype: bool
-") IsSuspectedAsClosing;
-		Standard_Boolean IsSuspectedAsClosing (const TopoDS_Shape & BaseShell,const TopoDS_Shape & SuspectedShell);
-		%feature("compactdefaultargs") IsPureNMShell;
-		%feature("autodoc", "	:param Shell:
-	:type Shell: TopoDS_Shape &
-	:rtype: bool
-") IsPureNMShell;
-		Standard_Boolean IsPureNMShell (const TopoDS_Shape & Shell);
-		%feature("compactdefaultargs") SetIDEASCase;
-		%feature("autodoc", "	:param IDEASCase:
-	:type IDEASCase: bool
-	:rtype: None
-") SetIDEASCase;
-		void SetIDEASCase (const Standard_Boolean IDEASCase);
+		const TopoDS_Shape Find(const TCollection_AsciiString & RIName);
+
+		/****************** Init ******************/
+		/**** md5 signature: ef9b81781232fa5ed79ae79f4d4e8a14 ****/
+		%feature("compactdefaultargs") Init;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+MapOfRI: StepToTopoDS_DataMapOfRI
+MapOfRINames: StepToTopoDS_DataMapOfRINames
+
+Returns
+-------
+None
+") Init;
+		void Init(const StepToTopoDS_DataMapOfRI & MapOfRI, const StepToTopoDS_DataMapOfRINames & MapOfRINames);
+
+		/****************** IsActive ******************/
+		/**** md5 signature: 0ca6af43e1e5c31f31cae2bed4a28e09 ****/
+		%feature("compactdefaultargs") IsActive;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+bool
+") IsActive;
+		Standard_Boolean IsActive();
+
+		/****************** IsBound ******************/
+		/**** md5 signature: e08f20c0a82c0ec3e65d80414ab167d8 ****/
+		%feature("compactdefaultargs") IsBound;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+RI: StepRepr_RepresentationItem
+
+Returns
+-------
+bool
+") IsBound;
+		Standard_Boolean IsBound(const opencascade::handle<StepRepr_RepresentationItem> & RI);
+
+		/****************** IsBound ******************/
+		/**** md5 signature: a0afe6290fba9e98e79003a4a77154d9 ****/
+		%feature("compactdefaultargs") IsBound;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+RIName: TCollection_AsciiString
+
+Returns
+-------
+bool
+") IsBound;
+		Standard_Boolean IsBound(const TCollection_AsciiString & RIName);
+
+		/****************** IsIDEASCase ******************/
+		/**** md5 signature: cb4d1921b8ccac1de00b7adf6143ebbf ****/
 		%feature("compactdefaultargs") IsIDEASCase;
-		%feature("autodoc", "	:rtype: bool
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+bool
 ") IsIDEASCase;
-		Standard_Boolean IsIDEASCase ();
+		Standard_Boolean IsIDEASCase();
+
+		/****************** IsPureNMShell ******************/
+		/**** md5 signature: c02b194ff295d3ed0926c9e34201611e ****/
+		%feature("compactdefaultargs") IsPureNMShell;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Shell: TopoDS_Shape
+
+Returns
+-------
+bool
+") IsPureNMShell;
+		Standard_Boolean IsPureNMShell(const TopoDS_Shape & Shell);
+
+		/****************** IsSuspectedAsClosing ******************/
+		/**** md5 signature: 33012a3b2e76b3143c5496ff8ee156e4 ****/
+		%feature("compactdefaultargs") IsSuspectedAsClosing;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+BaseShell: TopoDS_Shape
+SuspectedShell: TopoDS_Shape
+
+Returns
+-------
+bool
+") IsSuspectedAsClosing;
+		Standard_Boolean IsSuspectedAsClosing(const TopoDS_Shape & BaseShell, const TopoDS_Shape & SuspectedShell);
+
+		/****************** RegisterNMEdge ******************/
+		/**** md5 signature: 289ad7c7ef45ab4177fdb4383800e6eb ****/
+		%feature("compactdefaultargs") RegisterNMEdge;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Edge: TopoDS_Shape
+
+Returns
+-------
+None
+") RegisterNMEdge;
+		void RegisterNMEdge(const TopoDS_Shape & Edge);
+
+		/****************** SetActive ******************/
+		/**** md5 signature: 3358e8f54abcc6d559a2d43b25856b04 ****/
+		%feature("compactdefaultargs") SetActive;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+isActive: bool
+
+Returns
+-------
+None
+") SetActive;
+		void SetActive(const Standard_Boolean isActive);
+
+		/****************** SetIDEASCase ******************/
+		/**** md5 signature: cedc3302b7a18f309680ea12dc03ce1d ****/
+		%feature("compactdefaultargs") SetIDEASCase;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+IDEASCase: bool
+
+Returns
+-------
+None
+") SetIDEASCase;
+		void SetIDEASCase(const Standard_Boolean IDEASCase);
+
 };
 
 
@@ -695,17 +747,28 @@ class StepToTopoDS_NMTool {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_PointPair;
+
+/*******************************
+* class StepToTopoDS_PointPair *
+*******************************/
 class StepToTopoDS_PointPair {
 	public:
+		/****************** StepToTopoDS_PointPair ******************/
+		/**** md5 signature: 7284d27a9958c9cec16be257b5e8b5f6 ****/
 		%feature("compactdefaultargs") StepToTopoDS_PointPair;
-		%feature("autodoc", "	:param P1:
-	:type P1: Handle_StepGeom_CartesianPoint &
-	:param P2:
-	:type P2: Handle_StepGeom_CartesianPoint &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+P1: StepGeom_CartesianPoint
+P2: StepGeom_CartesianPoint
+
+Returns
+-------
+None
 ") StepToTopoDS_PointPair;
-		 StepToTopoDS_PointPair (const Handle_StepGeom_CartesianPoint & P1,const Handle_StepGeom_CartesianPoint & P2);
+		 StepToTopoDS_PointPair(const opencascade::handle<StepGeom_CartesianPoint> & P1, const opencascade::handle<StepGeom_CartesianPoint> & P2);
+
 };
 
 
@@ -714,28 +777,44 @@ class StepToTopoDS_PointPair {
 	__repr__ = _dumps_object
 	}
 };
+
+/*************************************
+* class StepToTopoDS_PointPairHasher *
+*************************************/
 class StepToTopoDS_PointPairHasher {
 	public:
+		/****************** HashCode ******************/
+		/**** md5 signature: dcb519fee842577e3ec4e768de7a2e76 ****/
 		%feature("compactdefaultargs") HashCode;
-		%feature("autodoc", "	* Returns a HasCode value for the PointPair
+		%feature("autodoc", "Computes a hash code for the point pair, in the range [1, theupperbound] @param thepointpair the point pair which hash code is to be computed @param theupperbound the upper bound of the range a computing hash code must be within returns a computed hash code, in the range [1, theupperbound].
 
-	:param K:
-	:type K: StepToTopoDS_PointPair &
-	:param Upper:
-	:type Upper: int
-	:rtype: int
+Parameters
+----------
+thePointPair: StepToTopoDS_PointPair
+theUpperBound: int
+
+Returns
+-------
+int
 ") HashCode;
-		static Standard_Integer HashCode (const StepToTopoDS_PointPair & K,const Standard_Integer Upper);
-		%feature("compactdefaultargs") IsEqual;
-		%feature("autodoc", "	* Returns True when the two PointPair are the same
+		static Standard_Integer HashCode(const StepToTopoDS_PointPair & thePointPair, Standard_Integer theUpperBound);
 
-	:param K1:
-	:type K1: StepToTopoDS_PointPair &
-	:param K2:
-	:type K2: StepToTopoDS_PointPair &
-	:rtype: bool
+		/****************** IsEqual ******************/
+		/**** md5 signature: eab63b5288acc5d348e988bf2699b761 ****/
+		%feature("compactdefaultargs") IsEqual;
+		%feature("autodoc", "Returns true when the two pointpair are the same.
+
+Parameters
+----------
+K1: StepToTopoDS_PointPair
+K2: StepToTopoDS_PointPair
+
+Returns
+-------
+bool
 ") IsEqual;
-		static Standard_Boolean IsEqual (const StepToTopoDS_PointPair & K1,const StepToTopoDS_PointPair & K2);
+		static Standard_Boolean IsEqual(const StepToTopoDS_PointPair & K1, const StepToTopoDS_PointPair & K2);
+
 };
 
 
@@ -744,41 +823,76 @@ class StepToTopoDS_PointPairHasher {
 	__repr__ = _dumps_object
 	}
 };
+
+/**************************
+* class StepToTopoDS_Root *
+**************************/
 %nodefaultctor StepToTopoDS_Root;
 class StepToTopoDS_Root {
 	public:
+		/****************** IsDone ******************/
+		/**** md5 signature: ec0624071ec7da54b3d9dacc7bcb05f9 ****/
 		%feature("compactdefaultargs") IsDone;
-		%feature("autodoc", "	:rtype: bool
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+bool
 ") IsDone;
-		Standard_Boolean IsDone ();
-		%feature("compactdefaultargs") Precision;
-		%feature("autodoc", "	* Returns the value of 'MyPrecision'
+		Standard_Boolean IsDone();
 
-	:rtype: float
-") Precision;
-		Standard_Real Precision ();
-		%feature("compactdefaultargs") SetPrecision;
-		%feature("autodoc", "	* Sets the value of 'MyPrecision'
-
-	:param preci:
-	:type preci: float
-	:rtype: None
-") SetPrecision;
-		void SetPrecision (const Standard_Real preci);
+		/****************** MaxTol ******************/
+		/**** md5 signature: 0c3136ae5bf1b934384f3b243669f341 ****/
 		%feature("compactdefaultargs") MaxTol;
-		%feature("autodoc", "	* Returns the value of 'MaxTol'
+		%feature("autodoc", "Returns the value of 'maxtol'.
 
-	:rtype: float
+Returns
+-------
+float
 ") MaxTol;
-		Standard_Real MaxTol ();
-		%feature("compactdefaultargs") SetMaxTol;
-		%feature("autodoc", "	* Sets the value of MaxTol
+		Standard_Real MaxTol();
 
-	:param maxpreci:
-	:type maxpreci: float
-	:rtype: None
+		/****************** Precision ******************/
+		/**** md5 signature: 34c7e39bd57a685873eea74fa4629747 ****/
+		%feature("compactdefaultargs") Precision;
+		%feature("autodoc", "Returns the value of 'myprecision'.
+
+Returns
+-------
+float
+") Precision;
+		Standard_Real Precision();
+
+		/****************** SetMaxTol ******************/
+		/**** md5 signature: 3f6da2f43671d4077fc62f3d70405103 ****/
+		%feature("compactdefaultargs") SetMaxTol;
+		%feature("autodoc", "Sets the value of maxtol.
+
+Parameters
+----------
+maxpreci: float
+
+Returns
+-------
+None
 ") SetMaxTol;
-		void SetMaxTol (const Standard_Real maxpreci);
+		void SetMaxTol(const Standard_Real maxpreci);
+
+		/****************** SetPrecision ******************/
+		/**** md5 signature: a601cf881702916ad1a5bcd1fec314c4 ****/
+		%feature("compactdefaultargs") SetPrecision;
+		%feature("autodoc", "Sets the value of 'myprecision'.
+
+Parameters
+----------
+preci: float
+
+Returns
+-------
+None
+") SetPrecision;
+		void SetPrecision(const Standard_Real preci);
+
 };
 
 
@@ -787,222 +901,99 @@ class StepToTopoDS_Root {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_Tool;
-class StepToTopoDS_Tool {
-	public:
-		%feature("compactdefaultargs") StepToTopoDS_Tool;
-		%feature("autodoc", "	:rtype: None
-") StepToTopoDS_Tool;
-		 StepToTopoDS_Tool ();
-		%feature("compactdefaultargs") StepToTopoDS_Tool;
-		%feature("autodoc", "	:param Map:
-	:type Map: StepToTopoDS_DataMapOfTRI &
-	:param TP:
-	:type TP: Handle_Transfer_TransientProcess &
-	:rtype: None
-") StepToTopoDS_Tool;
-		 StepToTopoDS_Tool (const StepToTopoDS_DataMapOfTRI & Map,const Handle_Transfer_TransientProcess & TP);
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	:param Map:
-	:type Map: StepToTopoDS_DataMapOfTRI &
-	:param TP:
-	:type TP: Handle_Transfer_TransientProcess &
-	:rtype: None
-") Init;
-		void Init (const StepToTopoDS_DataMapOfTRI & Map,const Handle_Transfer_TransientProcess & TP);
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param TRI:
-	:type TRI: Handle_StepShape_TopologicalRepresentationItem &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const Handle_StepShape_TopologicalRepresentationItem & TRI);
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param TRI:
-	:type TRI: Handle_StepShape_TopologicalRepresentationItem &
-	:param S:
-	:type S: TopoDS_Shape &
-	:rtype: None
-") Bind;
-		void Bind (const Handle_StepShape_TopologicalRepresentationItem & TRI,const TopoDS_Shape & S);
-		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param TRI:
-	:type TRI: Handle_StepShape_TopologicalRepresentationItem &
-	:rtype: TopoDS_Shape
-") Find;
-		const TopoDS_Shape  Find (const Handle_StepShape_TopologicalRepresentationItem & TRI);
-		%feature("compactdefaultargs") ClearEdgeMap;
-		%feature("autodoc", "	:rtype: None
-") ClearEdgeMap;
-		void ClearEdgeMap ();
-		%feature("compactdefaultargs") IsEdgeBound;
-		%feature("autodoc", "	:param PP:
-	:type PP: StepToTopoDS_PointPair &
-	:rtype: bool
-") IsEdgeBound;
-		Standard_Boolean IsEdgeBound (const StepToTopoDS_PointPair & PP);
-		%feature("compactdefaultargs") BindEdge;
-		%feature("autodoc", "	:param PP:
-	:type PP: StepToTopoDS_PointPair &
-	:param E:
-	:type E: TopoDS_Edge &
-	:rtype: None
-") BindEdge;
-		void BindEdge (const StepToTopoDS_PointPair & PP,const TopoDS_Edge & E);
-		%feature("compactdefaultargs") FindEdge;
-		%feature("autodoc", "	:param PP:
-	:type PP: StepToTopoDS_PointPair &
-	:rtype: TopoDS_Edge
-") FindEdge;
-		const TopoDS_Edge  FindEdge (const StepToTopoDS_PointPair & PP);
-		%feature("compactdefaultargs") ClearVertexMap;
-		%feature("autodoc", "	:rtype: None
-") ClearVertexMap;
-		void ClearVertexMap ();
-		%feature("compactdefaultargs") IsVertexBound;
-		%feature("autodoc", "	:param PG:
-	:type PG: Handle_StepGeom_CartesianPoint &
-	:rtype: bool
-") IsVertexBound;
-		Standard_Boolean IsVertexBound (const Handle_StepGeom_CartesianPoint & PG);
-		%feature("compactdefaultargs") BindVertex;
-		%feature("autodoc", "	:param P:
-	:type P: Handle_StepGeom_CartesianPoint &
-	:param V:
-	:type V: TopoDS_Vertex &
-	:rtype: None
-") BindVertex;
-		void BindVertex (const Handle_StepGeom_CartesianPoint & P,const TopoDS_Vertex & V);
-		%feature("compactdefaultargs") FindVertex;
-		%feature("autodoc", "	:param P:
-	:type P: Handle_StepGeom_CartesianPoint &
-	:rtype: TopoDS_Vertex
-") FindVertex;
-		const TopoDS_Vertex  FindVertex (const Handle_StepGeom_CartesianPoint & P);
-		%feature("compactdefaultargs") ComputePCurve;
-		%feature("autodoc", "	:param B:
-	:type B: bool
-	:rtype: None
-") ComputePCurve;
-		void ComputePCurve (const Standard_Boolean B);
-		%feature("compactdefaultargs") ComputePCurve;
-		%feature("autodoc", "	:rtype: bool
-") ComputePCurve;
-		Standard_Boolean ComputePCurve ();
-		%feature("compactdefaultargs") TransientProcess;
-		%feature("autodoc", "	:rtype: Handle_Transfer_TransientProcess
-") TransientProcess;
-		Handle_Transfer_TransientProcess TransientProcess ();
-		%feature("compactdefaultargs") AddContinuity;
-		%feature("autodoc", "	:param GeomSurf:
-	:type GeomSurf: Handle_Geom_Surface &
-	:rtype: None
-") AddContinuity;
-		void AddContinuity (const Handle_Geom_Surface & GeomSurf);
-		%feature("compactdefaultargs") AddContinuity;
-		%feature("autodoc", "	:param GeomCurve:
-	:type GeomCurve: Handle_Geom_Curve &
-	:rtype: None
-") AddContinuity;
-		void AddContinuity (const Handle_Geom_Curve & GeomCurve);
-		%feature("compactdefaultargs") AddContinuity;
-		%feature("autodoc", "	:param GeomCur2d:
-	:type GeomCur2d: Handle_Geom2d_Curve &
-	:rtype: None
-") AddContinuity;
-		void AddContinuity (const Handle_Geom2d_Curve & GeomCur2d);
-		%feature("compactdefaultargs") C0Surf;
-		%feature("autodoc", "	:rtype: int
-") C0Surf;
-		Standard_Integer C0Surf ();
-		%feature("compactdefaultargs") C1Surf;
-		%feature("autodoc", "	:rtype: int
-") C1Surf;
-		Standard_Integer C1Surf ();
-		%feature("compactdefaultargs") C2Surf;
-		%feature("autodoc", "	:rtype: int
-") C2Surf;
-		Standard_Integer C2Surf ();
-		%feature("compactdefaultargs") C0Cur2;
-		%feature("autodoc", "	:rtype: int
-") C0Cur2;
-		Standard_Integer C0Cur2 ();
-		%feature("compactdefaultargs") C1Cur2;
-		%feature("autodoc", "	:rtype: int
-") C1Cur2;
-		Standard_Integer C1Cur2 ();
-		%feature("compactdefaultargs") C2Cur2;
-		%feature("autodoc", "	:rtype: int
-") C2Cur2;
-		Standard_Integer C2Cur2 ();
-		%feature("compactdefaultargs") C0Cur3;
-		%feature("autodoc", "	:rtype: int
-") C0Cur3;
-		Standard_Integer C0Cur3 ();
-		%feature("compactdefaultargs") C1Cur3;
-		%feature("autodoc", "	:rtype: int
-") C1Cur3;
-		Standard_Integer C1Cur3 ();
-		%feature("compactdefaultargs") C2Cur3;
-		%feature("autodoc", "	:rtype: int
-") C2Cur3;
-		Standard_Integer C2Cur3 ();
-};
 
-
-%extend StepToTopoDS_Tool {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor StepToTopoDS_MakeTransformed;
+/*****************************
+* class StepToTopoDS_Builder *
+*****************************/
+/*************************************
+* class StepToTopoDS_MakeTransformed *
+*************************************/
 class StepToTopoDS_MakeTransformed : public StepToTopoDS_Root {
 	public:
+		/****************** StepToTopoDS_MakeTransformed ******************/
+		/**** md5 signature: e017844d82ed89c10dab9aa8462b786b ****/
 		%feature("compactdefaultargs") StepToTopoDS_MakeTransformed;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") StepToTopoDS_MakeTransformed;
-		 StepToTopoDS_MakeTransformed ();
+		 StepToTopoDS_MakeTransformed();
+
+		/****************** Compute ******************/
+		/**** md5 signature: ef952eb1263e44bab9e69d95af7ec6c7 ****/
 		%feature("compactdefaultargs") Compute;
-		%feature("autodoc", "	* Computes a transformation to pass from an Origin placement to a Target placement. Returns True when done If not done, the transformation will by Identity
+		%feature("autodoc", "Computes a transformation to pass from an origin placement to a target placement. returns true when done if not done, the transformation will by identity.
 
-	:param Origin:
-	:type Origin: Handle_StepGeom_Axis2Placement3d &
-	:param Target:
-	:type Target: Handle_StepGeom_Axis2Placement3d &
-	:rtype: bool
+Parameters
+----------
+Origin: StepGeom_Axis2Placement3d
+Target: StepGeom_Axis2Placement3d
+
+Returns
+-------
+bool
 ") Compute;
-		Standard_Boolean Compute (const Handle_StepGeom_Axis2Placement3d & Origin,const Handle_StepGeom_Axis2Placement3d & Target);
+		Standard_Boolean Compute(const opencascade::handle<StepGeom_Axis2Placement3d> & Origin, const opencascade::handle<StepGeom_Axis2Placement3d> & Target);
+
+		/****************** Compute ******************/
+		/**** md5 signature: 72b8bc3c3cadc1c01529b12985800b95 ****/
 		%feature("compactdefaultargs") Compute;
-		%feature("autodoc", "	* Computes a transformation defined by an operator 3D
+		%feature("autodoc", "Computes a transformation defined by an operator 3d.
 
-	:param Operator:
-	:type Operator: Handle_StepGeom_CartesianTransformationOperator3d &
-	:rtype: bool
+Parameters
+----------
+Operator: StepGeom_CartesianTransformationOperator3d
+
+Returns
+-------
+bool
 ") Compute;
-		Standard_Boolean Compute (const Handle_StepGeom_CartesianTransformationOperator3d & Operator);
-		%feature("compactdefaultargs") Transformation;
-		%feature("autodoc", "	* Returns the computed transformation (Identity if not yet or if failed)
+		Standard_Boolean Compute(const opencascade::handle<StepGeom_CartesianTransformationOperator3d> & Operator);
 
-	:rtype: gp_Trsf
-") Transformation;
-		const gp_Trsf  Transformation ();
+		/****************** Transform ******************/
+		/**** md5 signature: ae541322c2f3f8d7777b0df5eb5a3d2d ****/
 		%feature("compactdefaultargs") Transform;
-		%feature("autodoc", "	* Applies the computed transformation to a shape Returns False if the transformation is Identity
+		%feature("autodoc", "Applies the computed transformation to a shape returns false if the transformation is identity.
 
-	:param shape:
-	:type shape: TopoDS_Shape &
-	:rtype: bool
+Parameters
+----------
+shape: TopoDS_Shape
+
+Returns
+-------
+bool
 ") Transform;
-		Standard_Boolean Transform (TopoDS_Shape & shape);
-		%feature("compactdefaultargs") TranslateMappedItem;
-		%feature("autodoc", "	* Translates a MappedItem. More precisely A MappedItem has a MappingSource and a MappingTarget MappingSource has a MappedRepresentation and a MappingOrigin MappedRepresentation is the basic item to be instanced MappingOrigin is the starting placement MappingTarget is the final placement //! Hence, the transformation from MappingOrigin and MappingTarget is computed, the MappedRepr. is converted to a Shape, then transformed as an instance of this Shape
+		Standard_Boolean Transform(TopoDS_Shape & shape);
 
-	:param mapit:
-	:type mapit: Handle_StepRepr_MappedItem &
-	:param TP:
-	:type TP: Handle_Transfer_TransientProcess &
-	:rtype: TopoDS_Shape
+		/****************** Transformation ******************/
+		/**** md5 signature: 567e6ee373139970f4679dbb49e28e7c ****/
+		%feature("compactdefaultargs") Transformation;
+		%feature("autodoc", "Returns the computed transformation (identity if not yet or if failed).
+
+Returns
+-------
+gp_Trsf
+") Transformation;
+		const gp_Trsf Transformation();
+
+		/****************** TranslateMappedItem ******************/
+		/**** md5 signature: 1d1508d9a18582e9e3dcf12391aa3ace ****/
+		%feature("compactdefaultargs") TranslateMappedItem;
+		%feature("autodoc", "Translates a mappeditem. more precisely a mappeditem has a mappingsource and a mappingtarget mappingsource has a mappedrepresentation and a mappingorigin mappedrepresentation is the basic item to be instanced mappingorigin is the starting placement mappingtarget is the final placement //! hence, the transformation from mappingorigin and mappingtarget is computed, the mappedrepr. is converted to a shape, then transformed as an instance of this shape.
+
+Parameters
+----------
+mapit: StepRepr_MappedItem
+TP: Transfer_TransientProcess
+
+Returns
+-------
+TopoDS_Shape
 ") TranslateMappedItem;
-		TopoDS_Shape TranslateMappedItem (const Handle_StepRepr_MappedItem & mapit,const Handle_Transfer_TransientProcess & TP);
+		TopoDS_Shape TranslateMappedItem(const opencascade::handle<StepRepr_MappedItem> & mapit, const opencascade::handle<Transfer_TransientProcess> & TP);
+
 };
 
 
@@ -1011,75 +1002,113 @@ class StepToTopoDS_MakeTransformed : public StepToTopoDS_Root {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_TranslateCompositeCurve;
+
+/*********************************************
+* class StepToTopoDS_TranslateCompositeCurve *
+*********************************************/
 class StepToTopoDS_TranslateCompositeCurve : public StepToTopoDS_Root {
 	public:
+		/****************** StepToTopoDS_TranslateCompositeCurve ******************/
+		/**** md5 signature: 6257d03934cc757cf941eeb16439ba16 ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateCompositeCurve;
-		%feature("autodoc", "	* Empty constructor
+		%feature("autodoc", "Empty constructor.
 
-	:rtype: None
+Returns
+-------
+None
 ") StepToTopoDS_TranslateCompositeCurve;
-		 StepToTopoDS_TranslateCompositeCurve ();
+		 StepToTopoDS_TranslateCompositeCurve();
+
+		/****************** StepToTopoDS_TranslateCompositeCurve ******************/
+		/**** md5 signature: 8d0dbb01c599d183bec5649adfee8fdc ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateCompositeCurve;
-		%feature("autodoc", "	* Translates standalone composite_curve
+		%feature("autodoc", "Translates standalone composite_curve.
 
-	:param CC:
-	:type CC: Handle_StepGeom_CompositeCurve &
-	:param TP:
-	:type TP: Handle_Transfer_TransientProcess &
-	:rtype: None
+Parameters
+----------
+CC: StepGeom_CompositeCurve
+TP: Transfer_TransientProcess
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateCompositeCurve;
-		 StepToTopoDS_TranslateCompositeCurve (const Handle_StepGeom_CompositeCurve & CC,const Handle_Transfer_TransientProcess & TP);
+		 StepToTopoDS_TranslateCompositeCurve(const opencascade::handle<StepGeom_CompositeCurve> & CC, const opencascade::handle<Transfer_TransientProcess> & TP);
+
+		/****************** StepToTopoDS_TranslateCompositeCurve ******************/
+		/**** md5 signature: 84f0f9b8f6c086cdda37021da670d9bf ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateCompositeCurve;
-		%feature("autodoc", "	* Translates composite_curve lying on surface
+		%feature("autodoc", "Translates composite_curve lying on surface.
 
-	:param CC:
-	:type CC: Handle_StepGeom_CompositeCurve &
-	:param TP:
-	:type TP: Handle_Transfer_TransientProcess &
-	:param S:
-	:type S: Handle_StepGeom_Surface &
-	:param Surf:
-	:type Surf: Handle_Geom_Surface &
-	:rtype: None
+Parameters
+----------
+CC: StepGeom_CompositeCurve
+TP: Transfer_TransientProcess
+S: StepGeom_Surface
+Surf: Geom_Surface
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateCompositeCurve;
-		 StepToTopoDS_TranslateCompositeCurve (const Handle_StepGeom_CompositeCurve & CC,const Handle_Transfer_TransientProcess & TP,const Handle_StepGeom_Surface & S,const Handle_Geom_Surface & Surf);
+		 StepToTopoDS_TranslateCompositeCurve(const opencascade::handle<StepGeom_CompositeCurve> & CC, const opencascade::handle<Transfer_TransientProcess> & TP, const opencascade::handle<StepGeom_Surface> & S, const opencascade::handle<Geom_Surface> & Surf);
+
+		/****************** Init ******************/
+		/**** md5 signature: 0bbaf2475e507a45e42b4dd9eba98125 ****/
 		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	* Translates standalone composite_curve
+		%feature("autodoc", "Translates standalone composite_curve.
 
-	:param CC:
-	:type CC: Handle_StepGeom_CompositeCurve &
-	:param TP:
-	:type TP: Handle_Transfer_TransientProcess &
-	:rtype: bool
+Parameters
+----------
+CC: StepGeom_CompositeCurve
+TP: Transfer_TransientProcess
+
+Returns
+-------
+bool
 ") Init;
-		Standard_Boolean Init (const Handle_StepGeom_CompositeCurve & CC,const Handle_Transfer_TransientProcess & TP);
+		Standard_Boolean Init(const opencascade::handle<StepGeom_CompositeCurve> & CC, const opencascade::handle<Transfer_TransientProcess> & TP);
+
+		/****************** Init ******************/
+		/**** md5 signature: 4887ea50532f0701757e4d2cdeec08db ****/
 		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	* Translates composite_curve lying on surface
+		%feature("autodoc", "Translates composite_curve lying on surface.
 
-	:param CC:
-	:type CC: Handle_StepGeom_CompositeCurve &
-	:param TP:
-	:type TP: Handle_Transfer_TransientProcess &
-	:param S:
-	:type S: Handle_StepGeom_Surface &
-	:param Surf:
-	:type Surf: Handle_Geom_Surface &
-	:rtype: bool
+Parameters
+----------
+CC: StepGeom_CompositeCurve
+TP: Transfer_TransientProcess
+S: StepGeom_Surface
+Surf: Geom_Surface
+
+Returns
+-------
+bool
 ") Init;
-		Standard_Boolean Init (const Handle_StepGeom_CompositeCurve & CC,const Handle_Transfer_TransientProcess & TP,const Handle_StepGeom_Surface & S,const Handle_Geom_Surface & Surf);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	* Returns result of last translation or null wire if failed.
+		Standard_Boolean Init(const opencascade::handle<StepGeom_CompositeCurve> & CC, const opencascade::handle<Transfer_TransientProcess> & TP, const opencascade::handle<StepGeom_Surface> & S, const opencascade::handle<Geom_Surface> & Surf);
 
-	:rtype: TopoDS_Wire
-") Value;
-		const TopoDS_Wire  Value ();
+		/****************** IsInfiniteSegment ******************/
+		/**** md5 signature: be0b48bb5bf6dd8b382853323416d189 ****/
 		%feature("compactdefaultargs") IsInfiniteSegment;
-		%feature("autodoc", "	* Returns True if composite_curve contains a segment with infinite parameters.
+		%feature("autodoc", "Returns true if composite_curve contains a segment with infinite parameters.
 
-	:rtype: bool
+Returns
+-------
+bool
 ") IsInfiniteSegment;
-		Standard_Boolean IsInfiniteSegment ();
+		Standard_Boolean IsInfiniteSegment();
+
+		/****************** Value ******************/
+		/**** md5 signature: eb9143e5c5c30ac8712cf3bfb04cba14 ****/
+		%feature("compactdefaultargs") Value;
+		%feature("autodoc", "Returns result of last translation or null wire if failed.
+
+Returns
+-------
+TopoDS_Wire
+") Value;
+		const TopoDS_Wire Value();
+
 };
 
 
@@ -1088,41 +1117,66 @@ class StepToTopoDS_TranslateCompositeCurve : public StepToTopoDS_Root {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_TranslateCurveBoundedSurface;
+
+/**************************************************
+* class StepToTopoDS_TranslateCurveBoundedSurface *
+**************************************************/
 class StepToTopoDS_TranslateCurveBoundedSurface : public StepToTopoDS_Root {
 	public:
+		/****************** StepToTopoDS_TranslateCurveBoundedSurface ******************/
+		/**** md5 signature: b546faeadcbb5cf9880e5ea86c03f574 ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateCurveBoundedSurface;
-		%feature("autodoc", "	* Create empty tool
+		%feature("autodoc", "Create empty tool.
 
-	:rtype: None
+Returns
+-------
+None
 ") StepToTopoDS_TranslateCurveBoundedSurface;
-		 StepToTopoDS_TranslateCurveBoundedSurface ();
+		 StepToTopoDS_TranslateCurveBoundedSurface();
+
+		/****************** StepToTopoDS_TranslateCurveBoundedSurface ******************/
+		/**** md5 signature: 7014b036cf85af0c3c8c2042001e5ce3 ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateCurveBoundedSurface;
-		%feature("autodoc", "	* Translate surface
+		%feature("autodoc", "Translate surface.
 
-	:param CBS:
-	:type CBS: Handle_StepGeom_CurveBoundedSurface &
-	:param TP:
-	:type TP: Handle_Transfer_TransientProcess &
-	:rtype: None
+Parameters
+----------
+CBS: StepGeom_CurveBoundedSurface
+TP: Transfer_TransientProcess
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateCurveBoundedSurface;
-		 StepToTopoDS_TranslateCurveBoundedSurface (const Handle_StepGeom_CurveBoundedSurface & CBS,const Handle_Transfer_TransientProcess & TP);
+		 StepToTopoDS_TranslateCurveBoundedSurface(const opencascade::handle<StepGeom_CurveBoundedSurface> & CBS, const opencascade::handle<Transfer_TransientProcess> & TP);
+
+		/****************** Init ******************/
+		/**** md5 signature: c9ed3cf9b1bbfb4d29066736d02538a8 ****/
 		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	* Translate surface
+		%feature("autodoc", "Translate surface.
 
-	:param CBS:
-	:type CBS: Handle_StepGeom_CurveBoundedSurface &
-	:param TP:
-	:type TP: Handle_Transfer_TransientProcess &
-	:rtype: bool
+Parameters
+----------
+CBS: StepGeom_CurveBoundedSurface
+TP: Transfer_TransientProcess
+
+Returns
+-------
+bool
 ") Init;
-		Standard_Boolean Init (const Handle_StepGeom_CurveBoundedSurface & CBS,const Handle_Transfer_TransientProcess & TP);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	* Returns result of last translation or null wire if failed.
+		Standard_Boolean Init(const opencascade::handle<StepGeom_CurveBoundedSurface> & CBS, const opencascade::handle<Transfer_TransientProcess> & TP);
 
-	:rtype: TopoDS_Face
+		/****************** Value ******************/
+		/**** md5 signature: b5b497eab24ec930cccd989e4142789f ****/
+		%feature("compactdefaultargs") Value;
+		%feature("autodoc", "Returns result of last translation or null wire if failed.
+
+Returns
+-------
+TopoDS_Face
 ") Value;
-		const TopoDS_Face  Value ();
+		const TopoDS_Face Value();
+
 };
 
 
@@ -1131,71 +1185,117 @@ class StepToTopoDS_TranslateCurveBoundedSurface : public StepToTopoDS_Root {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_TranslateEdge;
+
+/***********************************
+* class StepToTopoDS_TranslateEdge *
+***********************************/
 class StepToTopoDS_TranslateEdge : public StepToTopoDS_Root {
 	public:
+		/****************** StepToTopoDS_TranslateEdge ******************/
+		/**** md5 signature: 67f1752d7e20a192995a7282c080bdb5 ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateEdge;
-		%feature("autodoc", "	:rtype: None
-") StepToTopoDS_TranslateEdge;
-		 StepToTopoDS_TranslateEdge ();
-		%feature("compactdefaultargs") StepToTopoDS_TranslateEdge;
-		%feature("autodoc", "	:param E:
-	:type E: Handle_StepShape_Edge &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param NMTool:
-	:type NMTool: StepToTopoDS_NMTool &
-	:rtype: None
-") StepToTopoDS_TranslateEdge;
-		 StepToTopoDS_TranslateEdge (const Handle_StepShape_Edge & E,StepToTopoDS_Tool & T,StepToTopoDS_NMTool & NMTool);
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	:param E:
-	:type E: Handle_StepShape_Edge &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param NMTool:
-	:type NMTool: StepToTopoDS_NMTool &
-	:rtype: None
-") Init;
-		void Init (const Handle_StepShape_Edge & E,StepToTopoDS_Tool & T,StepToTopoDS_NMTool & NMTool);
-		%feature("compactdefaultargs") MakeFromCurve3D;
-		%feature("autodoc", "	* Warning! C3D is assumed to be a Curve 3D ... other cases to checked before calling this
+		%feature("autodoc", "No available documentation.
 
-	:param C3D:
-	:type C3D: Handle_StepGeom_Curve &
-	:param EC:
-	:type EC: Handle_StepShape_EdgeCurve &
-	:param Vend:
-	:type Vend: Handle_StepShape_Vertex &
-	:param preci:
-	:type preci: float
-	:param E:
-	:type E: TopoDS_Edge &
-	:param V1:
-	:type V1: TopoDS_Vertex &
-	:param V2:
-	:type V2: TopoDS_Vertex &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:rtype: None
-") MakeFromCurve3D;
-		void MakeFromCurve3D (const Handle_StepGeom_Curve & C3D,const Handle_StepShape_EdgeCurve & EC,const Handle_StepShape_Vertex & Vend,const Standard_Real preci,TopoDS_Edge & E,TopoDS_Vertex & V1,TopoDS_Vertex & V2,StepToTopoDS_Tool & T);
-		%feature("compactdefaultargs") MakePCurve;
-		%feature("autodoc", "	:param PCU:
-	:type PCU: Handle_StepGeom_Pcurve &
-	:param ConvSurf:
-	:type ConvSurf: Handle_Geom_Surface &
-	:rtype: Handle_Geom2d_Curve
-") MakePCurve;
-		Handle_Geom2d_Curve MakePCurve (const Handle_StepGeom_Pcurve & PCU,const Handle_Geom_Surface & ConvSurf);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		const TopoDS_Shape  Value ();
+Returns
+-------
+None
+") StepToTopoDS_TranslateEdge;
+		 StepToTopoDS_TranslateEdge();
+
+		/****************** StepToTopoDS_TranslateEdge ******************/
+		/**** md5 signature: 1b1152b46d8fe1bdbc89506b6264b46a ****/
+		%feature("compactdefaultargs") StepToTopoDS_TranslateEdge;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+E: StepShape_Edge
+T: StepToTopoDS_Tool
+NMTool: StepToTopoDS_NMTool
+
+Returns
+-------
+None
+") StepToTopoDS_TranslateEdge;
+		 StepToTopoDS_TranslateEdge(const opencascade::handle<StepShape_Edge> & E, StepToTopoDS_Tool & T, StepToTopoDS_NMTool & NMTool);
+
+		/****************** Error ******************/
+		/**** md5 signature: 7959af5964376dbce1968ae8ef06cbcb ****/
 		%feature("compactdefaultargs") Error;
-		%feature("autodoc", "	:rtype: StepToTopoDS_TranslateEdgeError
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+StepToTopoDS_TranslateEdgeError
 ") Error;
-		StepToTopoDS_TranslateEdgeError Error ();
+		StepToTopoDS_TranslateEdgeError Error();
+
+		/****************** Init ******************/
+		/**** md5 signature: fa466c026f7d2ba6dc36e270a126d96d ****/
+		%feature("compactdefaultargs") Init;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+E: StepShape_Edge
+T: StepToTopoDS_Tool
+NMTool: StepToTopoDS_NMTool
+
+Returns
+-------
+None
+") Init;
+		void Init(const opencascade::handle<StepShape_Edge> & E, StepToTopoDS_Tool & T, StepToTopoDS_NMTool & NMTool);
+
+		/****************** MakeFromCurve3D ******************/
+		/**** md5 signature: 9bec30f36d980a31f18231e661d987ba ****/
+		%feature("compactdefaultargs") MakeFromCurve3D;
+		%feature("autodoc", "Warning! c3d is assumed to be a curve 3d ... other cases to checked before calling this.
+
+Parameters
+----------
+C3D: StepGeom_Curve
+EC: StepShape_EdgeCurve
+Vend: StepShape_Vertex
+preci: float
+E: TopoDS_Edge
+V1: TopoDS_Vertex
+V2: TopoDS_Vertex
+T: StepToTopoDS_Tool
+
+Returns
+-------
+None
+") MakeFromCurve3D;
+		void MakeFromCurve3D(const opencascade::handle<StepGeom_Curve> & C3D, const opencascade::handle<StepShape_EdgeCurve> & EC, const opencascade::handle<StepShape_Vertex> & Vend, const Standard_Real preci, TopoDS_Edge & E, TopoDS_Vertex & V1, TopoDS_Vertex & V2, StepToTopoDS_Tool & T);
+
+		/****************** MakePCurve ******************/
+		/**** md5 signature: aceaed334313f8c0903695bf0bbdd42f ****/
+		%feature("compactdefaultargs") MakePCurve;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+PCU: StepGeom_Pcurve
+ConvSurf: Geom_Surface
+
+Returns
+-------
+opencascade::handle<Geom2d_Curve>
+") MakePCurve;
+		opencascade::handle<Geom2d_Curve> MakePCurve(const opencascade::handle<StepGeom_Pcurve> & PCU, const opencascade::handle<Geom_Surface> & ConvSurf);
+
+		/****************** Value ******************/
+		/**** md5 signature: 9e28ce63f808ff9cca4234cb4dd1cbd0 ****/
+		%feature("compactdefaultargs") Value;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+TopoDS_Shape
+") Value;
+		const TopoDS_Shape Value();
+
 };
 
 
@@ -1204,57 +1304,87 @@ class StepToTopoDS_TranslateEdge : public StepToTopoDS_Root {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_TranslateEdgeLoop;
+
+/***************************************
+* class StepToTopoDS_TranslateEdgeLoop *
+***************************************/
 class StepToTopoDS_TranslateEdgeLoop : public StepToTopoDS_Root {
 	public:
+		/****************** StepToTopoDS_TranslateEdgeLoop ******************/
+		/**** md5 signature: 3c19b5dcaa2b6dabda6b6c90ff860d43 ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateEdgeLoop;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateEdgeLoop;
-		 StepToTopoDS_TranslateEdgeLoop ();
+		 StepToTopoDS_TranslateEdgeLoop();
+
+		/****************** StepToTopoDS_TranslateEdgeLoop ******************/
+		/**** md5 signature: eccc4c3cfcc7c4cc95831b5e98b69b3d ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateEdgeLoop;
-		%feature("autodoc", "	:param FB:
-	:type FB: Handle_StepShape_FaceBound &
-	:param F:
-	:type F: TopoDS_Face &
-	:param S:
-	:type S: Handle_Geom_Surface &
-	:param SS:
-	:type SS: Handle_StepGeom_Surface &
-	:param ss:
-	:type ss: bool
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param NMTool:
-	:type NMTool: StepToTopoDS_NMTool &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+FB: StepShape_FaceBound
+F: TopoDS_Face
+S: Geom_Surface
+SS: StepGeom_Surface
+ss: bool
+T: StepToTopoDS_Tool
+NMTool: StepToTopoDS_NMTool
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateEdgeLoop;
-		 StepToTopoDS_TranslateEdgeLoop (const Handle_StepShape_FaceBound & FB,const TopoDS_Face & F,const Handle_Geom_Surface & S,const Handle_StepGeom_Surface & SS,const Standard_Boolean ss,StepToTopoDS_Tool & T,StepToTopoDS_NMTool & NMTool);
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	:param FB:
-	:type FB: Handle_StepShape_FaceBound &
-	:param F:
-	:type F: TopoDS_Face &
-	:param S:
-	:type S: Handle_Geom_Surface &
-	:param SS:
-	:type SS: Handle_StepGeom_Surface &
-	:param ss:
-	:type ss: bool
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param NMTool:
-	:type NMTool: StepToTopoDS_NMTool &
-	:rtype: None
-") Init;
-		void Init (const Handle_StepShape_FaceBound & FB,const TopoDS_Face & F,const Handle_Geom_Surface & S,const Handle_StepGeom_Surface & SS,const Standard_Boolean ss,StepToTopoDS_Tool & T,StepToTopoDS_NMTool & NMTool);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		const TopoDS_Shape  Value ();
+		 StepToTopoDS_TranslateEdgeLoop(const opencascade::handle<StepShape_FaceBound> & FB, const TopoDS_Face & F, const opencascade::handle<Geom_Surface> & S, const opencascade::handle<StepGeom_Surface> & SS, const Standard_Boolean ss, StepToTopoDS_Tool & T, StepToTopoDS_NMTool & NMTool);
+
+		/****************** Error ******************/
+		/**** md5 signature: 972d261b46108646d94d6f19a66c3792 ****/
 		%feature("compactdefaultargs") Error;
-		%feature("autodoc", "	:rtype: StepToTopoDS_TranslateEdgeLoopError
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+StepToTopoDS_TranslateEdgeLoopError
 ") Error;
-		StepToTopoDS_TranslateEdgeLoopError Error ();
+		StepToTopoDS_TranslateEdgeLoopError Error();
+
+		/****************** Init ******************/
+		/**** md5 signature: f66bea236097a4bc705f4602912be975 ****/
+		%feature("compactdefaultargs") Init;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+FB: StepShape_FaceBound
+F: TopoDS_Face
+S: Geom_Surface
+SS: StepGeom_Surface
+ss: bool
+T: StepToTopoDS_Tool
+NMTool: StepToTopoDS_NMTool
+
+Returns
+-------
+None
+") Init;
+		void Init(const opencascade::handle<StepShape_FaceBound> & FB, const TopoDS_Face & F, const opencascade::handle<Geom_Surface> & S, const opencascade::handle<StepGeom_Surface> & SS, const Standard_Boolean ss, StepToTopoDS_Tool & T, StepToTopoDS_NMTool & NMTool);
+
+		/****************** Value ******************/
+		/**** md5 signature: 9e28ce63f808ff9cca4234cb4dd1cbd0 ****/
+		%feature("compactdefaultargs") Value;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+TopoDS_Shape
+") Value;
+		const TopoDS_Shape Value();
+
 };
 
 
@@ -1263,41 +1393,79 @@ class StepToTopoDS_TranslateEdgeLoop : public StepToTopoDS_Root {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_TranslateFace;
+
+/***********************************
+* class StepToTopoDS_TranslateFace *
+***********************************/
 class StepToTopoDS_TranslateFace : public StepToTopoDS_Root {
 	public:
+		/****************** StepToTopoDS_TranslateFace ******************/
+		/**** md5 signature: fe774e5c33e076954c36e443cd166036 ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateFace;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateFace;
-		 StepToTopoDS_TranslateFace ();
+		 StepToTopoDS_TranslateFace();
+
+		/****************** StepToTopoDS_TranslateFace ******************/
+		/**** md5 signature: 202b10159c363ae03f23988045b9d57d ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateFace;
-		%feature("autodoc", "	:param FS:
-	:type FS: Handle_StepShape_FaceSurface &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param NMTool:
-	:type NMTool: StepToTopoDS_NMTool &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+FS: StepShape_FaceSurface
+T: StepToTopoDS_Tool
+NMTool: StepToTopoDS_NMTool
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateFace;
-		 StepToTopoDS_TranslateFace (const Handle_StepShape_FaceSurface & FS,StepToTopoDS_Tool & T,StepToTopoDS_NMTool & NMTool);
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	:param FS:
-	:type FS: Handle_StepShape_FaceSurface &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param NMTool:
-	:type NMTool: StepToTopoDS_NMTool &
-	:rtype: None
-") Init;
-		void Init (const Handle_StepShape_FaceSurface & FS,StepToTopoDS_Tool & T,StepToTopoDS_NMTool & NMTool);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		const TopoDS_Shape  Value ();
+		 StepToTopoDS_TranslateFace(const opencascade::handle<StepShape_FaceSurface> & FS, StepToTopoDS_Tool & T, StepToTopoDS_NMTool & NMTool);
+
+		/****************** Error ******************/
+		/**** md5 signature: d8d7070b3c140555673282970df02982 ****/
 		%feature("compactdefaultargs") Error;
-		%feature("autodoc", "	:rtype: StepToTopoDS_TranslateFaceError
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+StepToTopoDS_TranslateFaceError
 ") Error;
-		StepToTopoDS_TranslateFaceError Error ();
+		StepToTopoDS_TranslateFaceError Error();
+
+		/****************** Init ******************/
+		/**** md5 signature: da30c4e3ea286db183e2d9c22d2bfc6a ****/
+		%feature("compactdefaultargs") Init;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+FS: StepShape_FaceSurface
+T: StepToTopoDS_Tool
+NMTool: StepToTopoDS_NMTool
+
+Returns
+-------
+None
+") Init;
+		void Init(const opencascade::handle<StepShape_FaceSurface> & FS, StepToTopoDS_Tool & T, StepToTopoDS_NMTool & NMTool);
+
+		/****************** Value ******************/
+		/**** md5 signature: 9e28ce63f808ff9cca4234cb4dd1cbd0 ****/
+		%feature("compactdefaultargs") Value;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+TopoDS_Shape
+") Value;
+		const TopoDS_Shape Value();
+
 };
 
 
@@ -1306,45 +1474,81 @@ class StepToTopoDS_TranslateFace : public StepToTopoDS_Root {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_TranslatePolyLoop;
+
+/***************************************
+* class StepToTopoDS_TranslatePolyLoop *
+***************************************/
 class StepToTopoDS_TranslatePolyLoop : public StepToTopoDS_Root {
 	public:
+		/****************** StepToTopoDS_TranslatePolyLoop ******************/
+		/**** md5 signature: 6815f851fee46c2ec164f46ad6a5c770 ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslatePolyLoop;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslatePolyLoop;
-		 StepToTopoDS_TranslatePolyLoop ();
+		 StepToTopoDS_TranslatePolyLoop();
+
+		/****************** StepToTopoDS_TranslatePolyLoop ******************/
+		/**** md5 signature: d120fb12f9cb2c1529a3e1d2d2037fca ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslatePolyLoop;
-		%feature("autodoc", "	:param PL:
-	:type PL: Handle_StepShape_PolyLoop &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param S:
-	:type S: Handle_Geom_Surface &
-	:param F:
-	:type F: TopoDS_Face &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+PL: StepShape_PolyLoop
+T: StepToTopoDS_Tool
+S: Geom_Surface
+F: TopoDS_Face
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslatePolyLoop;
-		 StepToTopoDS_TranslatePolyLoop (const Handle_StepShape_PolyLoop & PL,StepToTopoDS_Tool & T,const Handle_Geom_Surface & S,const TopoDS_Face & F);
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	:param PL:
-	:type PL: Handle_StepShape_PolyLoop &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param S:
-	:type S: Handle_Geom_Surface &
-	:param F:
-	:type F: TopoDS_Face &
-	:rtype: None
-") Init;
-		void Init (const Handle_StepShape_PolyLoop & PL,StepToTopoDS_Tool & T,const Handle_Geom_Surface & S,const TopoDS_Face & F);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		const TopoDS_Shape  Value ();
+		 StepToTopoDS_TranslatePolyLoop(const opencascade::handle<StepShape_PolyLoop> & PL, StepToTopoDS_Tool & T, const opencascade::handle<Geom_Surface> & S, const TopoDS_Face & F);
+
+		/****************** Error ******************/
+		/**** md5 signature: 962c2106db55809a22bc9095ee479fa7 ****/
 		%feature("compactdefaultargs") Error;
-		%feature("autodoc", "	:rtype: StepToTopoDS_TranslatePolyLoopError
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+StepToTopoDS_TranslatePolyLoopError
 ") Error;
-		StepToTopoDS_TranslatePolyLoopError Error ();
+		StepToTopoDS_TranslatePolyLoopError Error();
+
+		/****************** Init ******************/
+		/**** md5 signature: 4cb4106fcf2e34b54540c7d08d9a55d6 ****/
+		%feature("compactdefaultargs") Init;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+PL: StepShape_PolyLoop
+T: StepToTopoDS_Tool
+S: Geom_Surface
+F: TopoDS_Face
+
+Returns
+-------
+None
+") Init;
+		void Init(const opencascade::handle<StepShape_PolyLoop> & PL, StepToTopoDS_Tool & T, const opencascade::handle<Geom_Surface> & S, const TopoDS_Face & F);
+
+		/****************** Value ******************/
+		/**** md5 signature: 9e28ce63f808ff9cca4234cb4dd1cbd0 ****/
+		%feature("compactdefaultargs") Value;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+TopoDS_Shape
+") Value;
+		const TopoDS_Shape Value();
+
 };
 
 
@@ -1353,41 +1557,79 @@ class StepToTopoDS_TranslatePolyLoop : public StepToTopoDS_Root {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_TranslateShell;
+
+/************************************
+* class StepToTopoDS_TranslateShell *
+************************************/
 class StepToTopoDS_TranslateShell : public StepToTopoDS_Root {
 	public:
+		/****************** StepToTopoDS_TranslateShell ******************/
+		/**** md5 signature: af07629395766e1161453a2892bab3e5 ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateShell;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateShell;
-		 StepToTopoDS_TranslateShell ();
+		 StepToTopoDS_TranslateShell();
+
+		/****************** StepToTopoDS_TranslateShell ******************/
+		/**** md5 signature: c64dac141f5411feeeabb688e921ba62 ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateShell;
-		%feature("autodoc", "	:param CFS:
-	:type CFS: Handle_StepShape_ConnectedFaceSet &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param NMTool:
-	:type NMTool: StepToTopoDS_NMTool &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+CFS: StepShape_ConnectedFaceSet
+T: StepToTopoDS_Tool
+NMTool: StepToTopoDS_NMTool
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateShell;
-		 StepToTopoDS_TranslateShell (const Handle_StepShape_ConnectedFaceSet & CFS,StepToTopoDS_Tool & T,StepToTopoDS_NMTool & NMTool);
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	:param CFS:
-	:type CFS: Handle_StepShape_ConnectedFaceSet &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param NMTool:
-	:type NMTool: StepToTopoDS_NMTool &
-	:rtype: None
-") Init;
-		void Init (const Handle_StepShape_ConnectedFaceSet & CFS,StepToTopoDS_Tool & T,StepToTopoDS_NMTool & NMTool);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		const TopoDS_Shape  Value ();
+		 StepToTopoDS_TranslateShell(const opencascade::handle<StepShape_ConnectedFaceSet> & CFS, StepToTopoDS_Tool & T, StepToTopoDS_NMTool & NMTool);
+
+		/****************** Error ******************/
+		/**** md5 signature: fa654c6e3e1001e67d10206a2c654b17 ****/
 		%feature("compactdefaultargs") Error;
-		%feature("autodoc", "	:rtype: StepToTopoDS_TranslateShellError
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+StepToTopoDS_TranslateShellError
 ") Error;
-		StepToTopoDS_TranslateShellError Error ();
+		StepToTopoDS_TranslateShellError Error();
+
+		/****************** Init ******************/
+		/**** md5 signature: 18d2efe1b2856a58c5c16d94e73b7060 ****/
+		%feature("compactdefaultargs") Init;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+CFS: StepShape_ConnectedFaceSet
+T: StepToTopoDS_Tool
+NMTool: StepToTopoDS_NMTool
+
+Returns
+-------
+None
+") Init;
+		void Init(const opencascade::handle<StepShape_ConnectedFaceSet> & CFS, StepToTopoDS_Tool & T, StepToTopoDS_NMTool & NMTool);
+
+		/****************** Value ******************/
+		/**** md5 signature: 9e28ce63f808ff9cca4234cb4dd1cbd0 ****/
+		%feature("compactdefaultargs") Value;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+TopoDS_Shape
+") Value;
+		const TopoDS_Shape Value();
+
 };
 
 
@@ -1396,41 +1638,79 @@ class StepToTopoDS_TranslateShell : public StepToTopoDS_Root {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_TranslateVertex;
+
+/*************************************
+* class StepToTopoDS_TranslateVertex *
+*************************************/
 class StepToTopoDS_TranslateVertex : public StepToTopoDS_Root {
 	public:
+		/****************** StepToTopoDS_TranslateVertex ******************/
+		/**** md5 signature: 5cdb5f6424559263f1047127f97964d5 ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateVertex;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateVertex;
-		 StepToTopoDS_TranslateVertex ();
+		 StepToTopoDS_TranslateVertex();
+
+		/****************** StepToTopoDS_TranslateVertex ******************/
+		/**** md5 signature: 03a5c946d2630696d8076a4c21a0f4c1 ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateVertex;
-		%feature("autodoc", "	:param V:
-	:type V: Handle_StepShape_Vertex &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param NMTool:
-	:type NMTool: StepToTopoDS_NMTool &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+V: StepShape_Vertex
+T: StepToTopoDS_Tool
+NMTool: StepToTopoDS_NMTool
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateVertex;
-		 StepToTopoDS_TranslateVertex (const Handle_StepShape_Vertex & V,StepToTopoDS_Tool & T,StepToTopoDS_NMTool & NMTool);
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	:param V:
-	:type V: Handle_StepShape_Vertex &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param NMTool:
-	:type NMTool: StepToTopoDS_NMTool &
-	:rtype: None
-") Init;
-		void Init (const Handle_StepShape_Vertex & V,StepToTopoDS_Tool & T,StepToTopoDS_NMTool & NMTool);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		const TopoDS_Shape  Value ();
+		 StepToTopoDS_TranslateVertex(const opencascade::handle<StepShape_Vertex> & V, StepToTopoDS_Tool & T, StepToTopoDS_NMTool & NMTool);
+
+		/****************** Error ******************/
+		/**** md5 signature: ce1730d22af9104c4c4fb1b6d3448148 ****/
 		%feature("compactdefaultargs") Error;
-		%feature("autodoc", "	:rtype: StepToTopoDS_TranslateVertexError
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+StepToTopoDS_TranslateVertexError
 ") Error;
-		StepToTopoDS_TranslateVertexError Error ();
+		StepToTopoDS_TranslateVertexError Error();
+
+		/****************** Init ******************/
+		/**** md5 signature: 1c35f9b19e50e212ed8c85799d430c4a ****/
+		%feature("compactdefaultargs") Init;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+V: StepShape_Vertex
+T: StepToTopoDS_Tool
+NMTool: StepToTopoDS_NMTool
+
+Returns
+-------
+None
+") Init;
+		void Init(const opencascade::handle<StepShape_Vertex> & V, StepToTopoDS_Tool & T, StepToTopoDS_NMTool & NMTool);
+
+		/****************** Value ******************/
+		/**** md5 signature: 9e28ce63f808ff9cca4234cb4dd1cbd0 ****/
+		%feature("compactdefaultargs") Value;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+TopoDS_Shape
+") Value;
+		const TopoDS_Shape Value();
+
 };
 
 
@@ -1439,41 +1719,79 @@ class StepToTopoDS_TranslateVertex : public StepToTopoDS_Root {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor StepToTopoDS_TranslateVertexLoop;
+
+/*****************************************
+* class StepToTopoDS_TranslateVertexLoop *
+*****************************************/
 class StepToTopoDS_TranslateVertexLoop : public StepToTopoDS_Root {
 	public:
+		/****************** StepToTopoDS_TranslateVertexLoop ******************/
+		/**** md5 signature: ad56fa19c94f4aceb198b1be577f32c2 ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateVertexLoop;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateVertexLoop;
-		 StepToTopoDS_TranslateVertexLoop ();
+		 StepToTopoDS_TranslateVertexLoop();
+
+		/****************** StepToTopoDS_TranslateVertexLoop ******************/
+		/**** md5 signature: b01661a976f607b43c4e6cbd449e3f3c ****/
 		%feature("compactdefaultargs") StepToTopoDS_TranslateVertexLoop;
-		%feature("autodoc", "	:param VL:
-	:type VL: Handle_StepShape_VertexLoop &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param NMTool:
-	:type NMTool: StepToTopoDS_NMTool &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+VL: StepShape_VertexLoop
+T: StepToTopoDS_Tool
+NMTool: StepToTopoDS_NMTool
+
+Returns
+-------
+None
 ") StepToTopoDS_TranslateVertexLoop;
-		 StepToTopoDS_TranslateVertexLoop (const Handle_StepShape_VertexLoop & VL,StepToTopoDS_Tool & T,StepToTopoDS_NMTool & NMTool);
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	:param VL:
-	:type VL: Handle_StepShape_VertexLoop &
-	:param T:
-	:type T: StepToTopoDS_Tool &
-	:param NMTool:
-	:type NMTool: StepToTopoDS_NMTool &
-	:rtype: None
-") Init;
-		void Init (const Handle_StepShape_VertexLoop & VL,StepToTopoDS_Tool & T,StepToTopoDS_NMTool & NMTool);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TopoDS_Shape
-") Value;
-		const TopoDS_Shape  Value ();
+		 StepToTopoDS_TranslateVertexLoop(const opencascade::handle<StepShape_VertexLoop> & VL, StepToTopoDS_Tool & T, StepToTopoDS_NMTool & NMTool);
+
+		/****************** Error ******************/
+		/**** md5 signature: 60bfd24853f7287af19ff4ca1ce94fd9 ****/
 		%feature("compactdefaultargs") Error;
-		%feature("autodoc", "	:rtype: StepToTopoDS_TranslateVertexLoopError
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+StepToTopoDS_TranslateVertexLoopError
 ") Error;
-		StepToTopoDS_TranslateVertexLoopError Error ();
+		StepToTopoDS_TranslateVertexLoopError Error();
+
+		/****************** Init ******************/
+		/**** md5 signature: ce3ad894374cb777b1a0e1e217d780fe ****/
+		%feature("compactdefaultargs") Init;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+VL: StepShape_VertexLoop
+T: StepToTopoDS_Tool
+NMTool: StepToTopoDS_NMTool
+
+Returns
+-------
+None
+") Init;
+		void Init(const opencascade::handle<StepShape_VertexLoop> & VL, StepToTopoDS_Tool & T, StepToTopoDS_NMTool & NMTool);
+
+		/****************** Value ******************/
+		/**** md5 signature: 9e28ce63f808ff9cca4234cb4dd1cbd0 ****/
+		%feature("compactdefaultargs") Value;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+TopoDS_Shape
+") Value;
+		const TopoDS_Shape Value();
+
 };
 
 
@@ -1482,3 +1800,19 @@ class StepToTopoDS_TranslateVertexLoop : public StepToTopoDS_Root {
 	__repr__ = _dumps_object
 	}
 };
+
+/* python proxy for excluded classes */
+%pythoncode {
+@classnotwrapped
+class StepToTopoDS_Builder:
+	pass
+
+@classnotwrapped
+class StepToTopoDS_PointVertexMap:
+	pass
+
+}
+/* end python proxy for excluded classes */
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */

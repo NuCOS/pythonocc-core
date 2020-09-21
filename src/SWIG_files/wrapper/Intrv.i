@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,14 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define INTRVDOCSTRING
-""
+"Intrv module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_intrv.html"
 %enddef
 %module (package="OCC.Core", docstring=INTRVDOCSTRING) Intrv
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -37,10 +35,24 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/OccHandle.i
 
 
-%include Intrv_headers.i
+%{
+#include<Intrv_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 enum Intrv_Position {
@@ -61,237 +73,485 @@ enum Intrv_Position {
 
 /* end public enums declaration */
 
-%wrap_handle(Intrv_SequenceNodeOfSequenceOfInterval)
+/* python proy classes for enums */
+%pythoncode {
 
-%nodefaultctor Intrv_Interval;
+class Intrv_Position(IntEnum):
+	Intrv_Before = 0
+	Intrv_JustBefore = 1
+	Intrv_OverlappingAtStart = 2
+	Intrv_JustEnclosingAtEnd = 3
+	Intrv_Enclosing = 4
+	Intrv_JustOverlappingAtStart = 5
+	Intrv_Similar = 6
+	Intrv_JustEnclosingAtStart = 7
+	Intrv_Inside = 8
+	Intrv_JustOverlappingAtEnd = 9
+	Intrv_OverlappingAtEnd = 10
+	Intrv_JustAfter = 11
+	Intrv_After = 12
+Intrv_Before = Intrv_Position.Intrv_Before
+Intrv_JustBefore = Intrv_Position.Intrv_JustBefore
+Intrv_OverlappingAtStart = Intrv_Position.Intrv_OverlappingAtStart
+Intrv_JustEnclosingAtEnd = Intrv_Position.Intrv_JustEnclosingAtEnd
+Intrv_Enclosing = Intrv_Position.Intrv_Enclosing
+Intrv_JustOverlappingAtStart = Intrv_Position.Intrv_JustOverlappingAtStart
+Intrv_Similar = Intrv_Position.Intrv_Similar
+Intrv_JustEnclosingAtStart = Intrv_Position.Intrv_JustEnclosingAtStart
+Intrv_Inside = Intrv_Position.Intrv_Inside
+Intrv_JustOverlappingAtEnd = Intrv_Position.Intrv_JustOverlappingAtEnd
+Intrv_OverlappingAtEnd = Intrv_Position.Intrv_OverlappingAtEnd
+Intrv_JustAfter = Intrv_Position.Intrv_JustAfter
+Intrv_After = Intrv_Position.Intrv_After
+};
+/* end python proxy for enums */
+
+/* handles */
+/* end handles declaration */
+
+/* templates */
+%template(Intrv_SequenceOfInterval) NCollection_Sequence<Intrv_Interval>;
+
+%extend NCollection_Sequence<Intrv_Interval> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+/* end templates declaration */
+
+/* typedefs */
+typedef NCollection_Sequence<Intrv_Interval> Intrv_SequenceOfInterval;
+/* end typedefs declaration */
+
+/***********************
+* class Intrv_Interval *
+***********************/
 class Intrv_Interval {
 	public:
+		/****************** Intrv_Interval ******************/
+		/**** md5 signature: 33d6cc10bb2975b436aa245b8092498b ****/
 		%feature("compactdefaultargs") Intrv_Interval;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") Intrv_Interval;
-		 Intrv_Interval ();
+		 Intrv_Interval();
+
+		/****************** Intrv_Interval ******************/
+		/**** md5 signature: 3673b33b4bbde60fc105ef0711659d29 ****/
 		%feature("compactdefaultargs") Intrv_Interval;
-		%feature("autodoc", "	:param Start:
-	:type Start: float
-	:param End:
-	:type End: float
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Start: float
+End: float
+
+Returns
+-------
+None
 ") Intrv_Interval;
-		 Intrv_Interval (const Standard_Real Start,const Standard_Real End);
+		 Intrv_Interval(const Standard_Real Start, const Standard_Real End);
+
+		/****************** Intrv_Interval ******************/
+		/**** md5 signature: 1cb5dba0db82fe9550ea330f07af1759 ****/
 		%feature("compactdefaultargs") Intrv_Interval;
-		%feature("autodoc", "	:param Start:
-	:type Start: float
-	:param TolStart:
-	:type TolStart: Standard_ShortReal
-	:param End:
-	:type End: float
-	:param TolEnd:
-	:type TolEnd: Standard_ShortReal
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Start: float
+TolStart: Standard_ShortReal
+End: float
+TolEnd: Standard_ShortReal
+
+Returns
+-------
+None
 ") Intrv_Interval;
-		 Intrv_Interval (const Standard_Real Start,const Standard_ShortReal TolStart,const Standard_Real End,const Standard_ShortReal TolEnd);
-		%feature("compactdefaultargs") Start;
-		%feature("autodoc", "	:rtype: float
-") Start;
-		Standard_Real Start ();
-		%feature("compactdefaultargs") End;
-		%feature("autodoc", "	:rtype: float
-") End;
-		Standard_Real End ();
-		%feature("compactdefaultargs") TolStart;
-		%feature("autodoc", "	:rtype: Standard_ShortReal
-") TolStart;
-		Standard_ShortReal TolStart ();
-		%feature("compactdefaultargs") TolEnd;
-		%feature("autodoc", "	:rtype: Standard_ShortReal
-") TolEnd;
-		Standard_ShortReal TolEnd ();
+		 Intrv_Interval(const Standard_Real Start, const Standard_ShortReal TolStart, const Standard_Real End, const Standard_ShortReal TolEnd);
+
+		/****************** Bounds ******************/
+		/**** md5 signature: 891abb34b04a15a8931783d3c3440916 ****/
 		%feature("compactdefaultargs") Bounds;
-		%feature("autodoc", "	:param Start:
-	:type Start: float &
-	:param TolStart:
-	:type TolStart: Standard_ShortReal &
-	:param End:
-	:type End: float &
-	:param TolEnd:
-	:type TolEnd: Standard_ShortReal &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+TolStart: Standard_ShortReal
+TolEnd: Standard_ShortReal
+
+Returns
+-------
+Start: float
+End: float
 ") Bounds;
-		void Bounds (Standard_Real &OutValue,Standard_ShortReal & TolStart,Standard_Real &OutValue,Standard_ShortReal & TolEnd);
-		%feature("compactdefaultargs") SetStart;
-		%feature("autodoc", "	:param Start:
-	:type Start: float
-	:param TolStart:
-	:type TolStart: Standard_ShortReal
-	:rtype: None
-") SetStart;
-		void SetStart (const Standard_Real Start,const Standard_ShortReal TolStart);
-		%feature("compactdefaultargs") FuseAtStart;
-		%feature("autodoc", "	* ****+****--------------------> Old one ****+****------------------------> New one to fuse <<< <<< ****+****------------------------> result
+		void Bounds(Standard_Real &OutValue, Standard_ShortReal & TolStart, Standard_Real &OutValue, Standard_ShortReal & TolEnd);
 
-	:param Start:
-	:type Start: float
-	:param TolStart:
-	:type TolStart: Standard_ShortReal
-	:rtype: None
-") FuseAtStart;
-		void FuseAtStart (const Standard_Real Start,const Standard_ShortReal TolStart);
-		%feature("compactdefaultargs") CutAtStart;
-		%feature("autodoc", "	* ****+****-----------> Old one <----------**+** Tool for cutting >>> >>> ****+****-----------> result
-
-	:param Start:
-	:type Start: float
-	:param TolStart:
-	:type TolStart: Standard_ShortReal
-	:rtype: None
-") CutAtStart;
-		void CutAtStart (const Standard_Real Start,const Standard_ShortReal TolStart);
-		%feature("compactdefaultargs") SetEnd;
-		%feature("autodoc", "	:param End:
-	:type End: float
-	:param TolEnd:
-	:type TolEnd: Standard_ShortReal
-	:rtype: None
-") SetEnd;
-		void SetEnd (const Standard_Real End,const Standard_ShortReal TolEnd);
-		%feature("compactdefaultargs") FuseAtEnd;
-		%feature("autodoc", "	* <---------------------****+**** Old one <-----------------**+**  New one to fuse >>> >>> <---------------------****+**** result
-
-	:param End:
-	:type End: float
-	:param TolEnd:
-	:type TolEnd: Standard_ShortReal
-	:rtype: None
-") FuseAtEnd;
-		void FuseAtEnd (const Standard_Real End,const Standard_ShortReal TolEnd);
+		/****************** CutAtEnd ******************/
+		/**** md5 signature: 016f363129bd1797c683a8d0f6c91793 ****/
 		%feature("compactdefaultargs") CutAtEnd;
-		%feature("autodoc", "	* <-----****+****  Old one **+**------> Tool for cutting <<< <<< <-----****+****  result
+		%feature("autodoc", "<-----****+****  old one **+**------> tool for cutting <<< <<< <-----****+****  result.
 
-	:param End:
-	:type End: float
-	:param TolEnd:
-	:type TolEnd: Standard_ShortReal
-	:rtype: None
+Parameters
+----------
+End: float
+TolEnd: Standard_ShortReal
+
+Returns
+-------
+None
 ") CutAtEnd;
-		void CutAtEnd (const Standard_Real End,const Standard_ShortReal TolEnd);
-		%feature("compactdefaultargs") IsProbablyEmpty;
-		%feature("autodoc", "	* True if myStart+myTolStart > myEnd-myTolEnd or if myEnd+myTolEnd > myStart-myTolStart
+		void CutAtEnd(const Standard_Real End, const Standard_ShortReal TolEnd);
 
-	:rtype: bool
-") IsProbablyEmpty;
-		Standard_Boolean IsProbablyEmpty ();
-		%feature("compactdefaultargs") Position;
-		%feature("autodoc", "	* True if me is Before Other **-----------**** Other ***-----*   Before ***------------*  JustBefore ***-----------------*  OverlappingAtStart ***--------------------------*  JustEnclosingAtEnd ***-------------------------------------* Enclosing ***----*  JustOverlappingAtStart ***-------------*  Similar ***------------------------* JustEnclosingAtStart ***-*  Inside ***------*  JustOverlappingAtEnd ***-----------------* OverlappingAtEnd ***--------* JustAfter ***---* After
+		/****************** CutAtStart ******************/
+		/**** md5 signature: b230d89b1ea891f35fb7591edf3e10ca ****/
+		%feature("compactdefaultargs") CutAtStart;
+		%feature("autodoc", "****+****-----------> old one <----------**+** tool for cutting >>> >>> ****+****-----------> result.
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: Intrv_Position
-") Position;
-		Intrv_Position Position (const Intrv_Interval & Other);
-		%feature("compactdefaultargs") IsBefore;
-		%feature("autodoc", "	* True if me is Before Other ***----------------**  me **-----------**** Other
+Parameters
+----------
+Start: float
+TolStart: Standard_ShortReal
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
-") IsBefore;
-		Standard_Boolean IsBefore (const Intrv_Interval & Other);
+Returns
+-------
+None
+") CutAtStart;
+		void CutAtStart(const Standard_Real Start, const Standard_ShortReal TolStart);
+
+		/****************** End ******************/
+		/**** md5 signature: 2be3dc76a1b5b647442c292ec6dd93e3 ****/
+		%feature("compactdefaultargs") End;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+float
+") End;
+		Standard_Real End();
+
+		/****************** FuseAtEnd ******************/
+		/**** md5 signature: f45c70a3da084801256aa753e442ce89 ****/
+		%feature("compactdefaultargs") FuseAtEnd;
+		%feature("autodoc", "<---------------------****+**** old one <-----------------**+**  new one to fuse >>> >>> <---------------------****+**** result.
+
+Parameters
+----------
+End: float
+TolEnd: Standard_ShortReal
+
+Returns
+-------
+None
+") FuseAtEnd;
+		void FuseAtEnd(const Standard_Real End, const Standard_ShortReal TolEnd);
+
+		/****************** FuseAtStart ******************/
+		/**** md5 signature: 23ad6ee7ce2bfdcf69a06789a622cc7d ****/
+		%feature("compactdefaultargs") FuseAtStart;
+		%feature("autodoc", "****+****--------------------> old one ****+****------------------------> new one to fuse <<< <<< ****+****------------------------> result.
+
+Parameters
+----------
+Start: float
+TolStart: Standard_ShortReal
+
+Returns
+-------
+None
+") FuseAtStart;
+		void FuseAtStart(const Standard_Real Start, const Standard_ShortReal TolStart);
+
+		/****************** IsAfter ******************/
+		/**** md5 signature: 15efede7ef840b503c8c599701a17050 ****/
 		%feature("compactdefaultargs") IsAfter;
-		%feature("autodoc", "	* True if me is After Other **-----------**** me ***----------------**  Other
+		%feature("autodoc", "True if me is after other **-----------**** me ***----------------**  other.
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
+Parameters
+----------
+Other: Intrv_Interval
+
+Returns
+-------
+bool
 ") IsAfter;
-		Standard_Boolean IsAfter (const Intrv_Interval & Other);
-		%feature("compactdefaultargs") IsInside;
-		%feature("autodoc", "	* True if me is Inside Other **-----------****  me ***--------------------------**  Other
+		Standard_Boolean IsAfter(const Intrv_Interval & Other);
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
-") IsInside;
-		Standard_Boolean IsInside (const Intrv_Interval & Other);
+		/****************** IsBefore ******************/
+		/**** md5 signature: cac693f4ba643a40db02bebb58a30eee ****/
+		%feature("compactdefaultargs") IsBefore;
+		%feature("autodoc", "True if me is before other ***----------------**  me **-----------**** other.
+
+Parameters
+----------
+Other: Intrv_Interval
+
+Returns
+-------
+bool
+") IsBefore;
+		Standard_Boolean IsBefore(const Intrv_Interval & Other);
+
+		/****************** IsEnclosing ******************/
+		/**** md5 signature: 3236b77fa5c340b28d1405358457ca41 ****/
 		%feature("compactdefaultargs") IsEnclosing;
-		%feature("autodoc", "	* True if me is Enclosing Other ***----------------------------**** me ***------------------** Other
+		%feature("autodoc", "True if me is enclosing other ***----------------------------**** me ***------------------** other.
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
+Parameters
+----------
+Other: Intrv_Interval
+
+Returns
+-------
+bool
 ") IsEnclosing;
-		Standard_Boolean IsEnclosing (const Intrv_Interval & Other);
-		%feature("compactdefaultargs") IsJustEnclosingAtStart;
-		%feature("autodoc", "	* True if me is just Enclosing Other at start ***---------------------------**** me ***------------------** Other
+		Standard_Boolean IsEnclosing(const Intrv_Interval & Other);
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
-") IsJustEnclosingAtStart;
-		Standard_Boolean IsJustEnclosingAtStart (const Intrv_Interval & Other);
-		%feature("compactdefaultargs") IsJustEnclosingAtEnd;
-		%feature("autodoc", "	* True if me is just Enclosing Other at End ***----------------------------**** me ***-----------------****  Other
+		/****************** IsInside ******************/
+		/**** md5 signature: 051f8a2b719124d352598312c6cec8ad ****/
+		%feature("compactdefaultargs") IsInside;
+		%feature("autodoc", "True if me is inside other **-----------****  me ***--------------------------**  other.
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
-") IsJustEnclosingAtEnd;
-		Standard_Boolean IsJustEnclosingAtEnd (const Intrv_Interval & Other);
-		%feature("compactdefaultargs") IsJustBefore;
-		%feature("autodoc", "	* True if me is just before Other ***--------****   me ***-----------** Other
+Parameters
+----------
+Other: Intrv_Interval
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
-") IsJustBefore;
-		Standard_Boolean IsJustBefore (const Intrv_Interval & Other);
+Returns
+-------
+bool
+") IsInside;
+		Standard_Boolean IsInside(const Intrv_Interval & Other);
+
+		/****************** IsJustAfter ******************/
+		/**** md5 signature: 10c4d1f99eb68de8d0bd2e7fa34e4f79 ****/
 		%feature("compactdefaultargs") IsJustAfter;
-		%feature("autodoc", "	* True if me is just after Other ****-------****  me ***-----------**  Other
+		%feature("autodoc", "True if me is just after other ****-------****  me ***-----------**  other.
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
+Parameters
+----------
+Other: Intrv_Interval
+
+Returns
+-------
+bool
 ") IsJustAfter;
-		Standard_Boolean IsJustAfter (const Intrv_Interval & Other);
-		%feature("compactdefaultargs") IsOverlappingAtStart;
-		%feature("autodoc", "	* True if me is overlapping Other at start ***---------------***  me ***-----------** Other
+		Standard_Boolean IsJustAfter(const Intrv_Interval & Other);
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
-") IsOverlappingAtStart;
-		Standard_Boolean IsOverlappingAtStart (const Intrv_Interval & Other);
-		%feature("compactdefaultargs") IsOverlappingAtEnd;
-		%feature("autodoc", "	* True if me is overlapping Other at end ***-----------** me ***---------------***  Other
+		/****************** IsJustBefore ******************/
+		/**** md5 signature: 8fb5c54a872f6646238c379940a13c45 ****/
+		%feature("compactdefaultargs") IsJustBefore;
+		%feature("autodoc", "True if me is just before other ***--------****   me ***-----------** other.
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
-") IsOverlappingAtEnd;
-		Standard_Boolean IsOverlappingAtEnd (const Intrv_Interval & Other);
-		%feature("compactdefaultargs") IsJustOverlappingAtStart;
-		%feature("autodoc", "	* True if me is just overlapping Other at start ***-----------***  me ***------------------------** Other
+Parameters
+----------
+Other: Intrv_Interval
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
-") IsJustOverlappingAtStart;
-		Standard_Boolean IsJustOverlappingAtStart (const Intrv_Interval & Other);
+Returns
+-------
+bool
+") IsJustBefore;
+		Standard_Boolean IsJustBefore(const Intrv_Interval & Other);
+
+		/****************** IsJustEnclosingAtEnd ******************/
+		/**** md5 signature: 2d8c5266845cdc63b3edd3e247aa1ce1 ****/
+		%feature("compactdefaultargs") IsJustEnclosingAtEnd;
+		%feature("autodoc", "True if me is just enclosing other at end ***----------------------------**** me ***-----------------****  other.
+
+Parameters
+----------
+Other: Intrv_Interval
+
+Returns
+-------
+bool
+") IsJustEnclosingAtEnd;
+		Standard_Boolean IsJustEnclosingAtEnd(const Intrv_Interval & Other);
+
+		/****************** IsJustEnclosingAtStart ******************/
+		/**** md5 signature: 7406c71c8b68a10c0a74cd3df1d49015 ****/
+		%feature("compactdefaultargs") IsJustEnclosingAtStart;
+		%feature("autodoc", "True if me is just enclosing other at start ***---------------------------**** me ***------------------** other.
+
+Parameters
+----------
+Other: Intrv_Interval
+
+Returns
+-------
+bool
+") IsJustEnclosingAtStart;
+		Standard_Boolean IsJustEnclosingAtStart(const Intrv_Interval & Other);
+
+		/****************** IsJustOverlappingAtEnd ******************/
+		/**** md5 signature: 6edf743e69c8c25097a558b2042e9878 ****/
 		%feature("compactdefaultargs") IsJustOverlappingAtEnd;
-		%feature("autodoc", "	* True if me is just overlapping Other at end ***-----------*  me ***------------------------** Other
+		%feature("autodoc", "True if me is just overlapping other at end ***-----------*  me ***------------------------** other.
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
+Parameters
+----------
+Other: Intrv_Interval
+
+Returns
+-------
+bool
 ") IsJustOverlappingAtEnd;
-		Standard_Boolean IsJustOverlappingAtEnd (const Intrv_Interval & Other);
-		%feature("compactdefaultargs") IsSimilar;
-		%feature("autodoc", "	* True if me and Other have the same bounds *----------------***  me ***-----------------**  Other
+		Standard_Boolean IsJustOverlappingAtEnd(const Intrv_Interval & Other);
 
-	:param Other:
-	:type Other: Intrv_Interval &
-	:rtype: bool
+		/****************** IsJustOverlappingAtStart ******************/
+		/**** md5 signature: 53976ced8ef2bbdc1ff57ca774a2f1b3 ****/
+		%feature("compactdefaultargs") IsJustOverlappingAtStart;
+		%feature("autodoc", "True if me is just overlapping other at start ***-----------***  me ***------------------------** other.
+
+Parameters
+----------
+Other: Intrv_Interval
+
+Returns
+-------
+bool
+") IsJustOverlappingAtStart;
+		Standard_Boolean IsJustOverlappingAtStart(const Intrv_Interval & Other);
+
+		/****************** IsOverlappingAtEnd ******************/
+		/**** md5 signature: 148aedd16da51bf75cbfa6e0b6d360ab ****/
+		%feature("compactdefaultargs") IsOverlappingAtEnd;
+		%feature("autodoc", "True if me is overlapping other at end ***-----------** me ***---------------***  other.
+
+Parameters
+----------
+Other: Intrv_Interval
+
+Returns
+-------
+bool
+") IsOverlappingAtEnd;
+		Standard_Boolean IsOverlappingAtEnd(const Intrv_Interval & Other);
+
+		/****************** IsOverlappingAtStart ******************/
+		/**** md5 signature: 91dc4cddd79f7690ee2f35ceac6d4e9c ****/
+		%feature("compactdefaultargs") IsOverlappingAtStart;
+		%feature("autodoc", "True if me is overlapping other at start ***---------------***  me ***-----------** other.
+
+Parameters
+----------
+Other: Intrv_Interval
+
+Returns
+-------
+bool
+") IsOverlappingAtStart;
+		Standard_Boolean IsOverlappingAtStart(const Intrv_Interval & Other);
+
+		/****************** IsProbablyEmpty ******************/
+		/**** md5 signature: f37bd5da2664f5887417aeba55f7d543 ****/
+		%feature("compactdefaultargs") IsProbablyEmpty;
+		%feature("autodoc", "True if mystart+mytolstart > myend-mytolend or if myend+mytolend > mystart-mytolstart.
+
+Returns
+-------
+bool
+") IsProbablyEmpty;
+		Standard_Boolean IsProbablyEmpty();
+
+		/****************** IsSimilar ******************/
+		/**** md5 signature: cf48d62ba6acc5986b1162c14628137b ****/
+		%feature("compactdefaultargs") IsSimilar;
+		%feature("autodoc", "True if me and other have the same bounds *----------------***  me ***-----------------**  other.
+
+Parameters
+----------
+Other: Intrv_Interval
+
+Returns
+-------
+bool
 ") IsSimilar;
-		Standard_Boolean IsSimilar (const Intrv_Interval & Other);
+		Standard_Boolean IsSimilar(const Intrv_Interval & Other);
+
+		/****************** Position ******************/
+		/**** md5 signature: 23b3dced13e904e86be9a11b268d2a4d ****/
+		%feature("compactdefaultargs") Position;
+		%feature("autodoc", "True if me is before other **-----------**** other ***-----*   before ***------------*  justbefore ***-----------------*  overlappingatstart ***--------------------------*  justenclosingatend ***-------------------------------------* enclosing ***----*  justoverlappingatstart ***-------------*  similar ***------------------------* justenclosingatstart ***-*  inside ***------*  justoverlappingatend ***-----------------* overlappingatend ***--------* justafter ***---* after.
+
+Parameters
+----------
+Other: Intrv_Interval
+
+Returns
+-------
+Intrv_Position
+") Position;
+		Intrv_Position Position(const Intrv_Interval & Other);
+
+		/****************** SetEnd ******************/
+		/**** md5 signature: a369402cbf509247465aad466c905c23 ****/
+		%feature("compactdefaultargs") SetEnd;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+End: float
+TolEnd: Standard_ShortReal
+
+Returns
+-------
+None
+") SetEnd;
+		void SetEnd(const Standard_Real End, const Standard_ShortReal TolEnd);
+
+		/****************** SetStart ******************/
+		/**** md5 signature: f854b17e8c6e6fc2e07c0e4ce9d3c29a ****/
+		%feature("compactdefaultargs") SetStart;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Start: float
+TolStart: Standard_ShortReal
+
+Returns
+-------
+None
+") SetStart;
+		void SetStart(const Standard_Real Start, const Standard_ShortReal TolStart);
+
+		/****************** Start ******************/
+		/**** md5 signature: 3435834d1b536f94af7747405588cfdd ****/
+		%feature("compactdefaultargs") Start;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+float
+") Start;
+		Standard_Real Start();
+
+		/****************** TolEnd ******************/
+		/**** md5 signature: 0ba4e5e42f27ac97ac757f85ad4c5fb2 ****/
+		%feature("compactdefaultargs") TolEnd;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+Standard_ShortReal
+") TolEnd;
+		Standard_ShortReal TolEnd();
+
+		/****************** TolStart ******************/
+		/**** md5 signature: 83b2da6f9993863c462fec9a2c7d8591 ****/
+		%feature("compactdefaultargs") TolStart;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+Standard_ShortReal
+") TolStart;
+		Standard_ShortReal TolStart();
+
 };
 
 
@@ -300,93 +560,199 @@ class Intrv_Interval {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor Intrv_Intervals;
+
+/************************
+* class Intrv_Intervals *
+************************/
 class Intrv_Intervals {
 	public:
+		/****************** Intrv_Intervals ******************/
+		/**** md5 signature: be6232adefab507170d08ff623c85cfd ****/
 		%feature("compactdefaultargs") Intrv_Intervals;
-		%feature("autodoc", "	* Creates a void sequence of intervals.
+		%feature("autodoc", "Creates a void sequence of intervals.
 
-	:rtype: None
+Returns
+-------
+None
 ") Intrv_Intervals;
-		 Intrv_Intervals ();
+		 Intrv_Intervals();
+
+		/****************** Intrv_Intervals ******************/
+		/**** md5 signature: c12cf3acf1772c29dd9b7848f7f4fd49 ****/
 		%feature("compactdefaultargs") Intrv_Intervals;
-		%feature("autodoc", "	* Creates a sequence of one interval.
+		%feature("autodoc", "Creates a sequence of one interval.
 
-	:param Int:
-	:type Int: Intrv_Interval &
-	:rtype: None
+Parameters
+----------
+Int: Intrv_Interval
+
+Returns
+-------
+None
 ") Intrv_Intervals;
-		 Intrv_Intervals (const Intrv_Interval & Int);
+		 Intrv_Intervals(const Intrv_Interval & Int);
+
+		/****************** Intrv_Intervals ******************/
+		/**** md5 signature: 4d384c9d768b34a6520cc907b05c5001 ****/
 		%feature("compactdefaultargs") Intrv_Intervals;
-		%feature("autodoc", "	* Creates by copying an existing sequence of intervals.
+		%feature("autodoc", "Creates by copying an existing sequence of intervals.
 
-	:param Int:
-	:type Int: Intrv_Intervals &
-	:rtype: None
+Parameters
+----------
+Int: Intrv_Intervals
+
+Returns
+-------
+None
 ") Intrv_Intervals;
-		 Intrv_Intervals (const Intrv_Intervals & Int);
+		 Intrv_Intervals(const Intrv_Intervals & Int);
+
+		/****************** Intersect ******************/
+		/**** md5 signature: e12a005317201bc1bd17d62e86f0673e ****/
 		%feature("compactdefaultargs") Intersect;
-		%feature("autodoc", "	* Intersects the intervals with the interval <Tool>.
+		%feature("autodoc", "Intersects the intervals with the interval <tool>.
 
-	:param Tool:
-	:type Tool: Intrv_Interval &
-	:rtype: None
+Parameters
+----------
+Tool: Intrv_Interval
+
+Returns
+-------
+None
 ") Intersect;
-		void Intersect (const Intrv_Interval & Tool);
+		void Intersect(const Intrv_Interval & Tool);
+
+		/****************** Intersect ******************/
+		/**** md5 signature: 691a0590e25f134c38c8690782055db9 ****/
 		%feature("compactdefaultargs") Intersect;
-		%feature("autodoc", "	* Intersects the intervals with the intervals in the sequence <Tool>.
+		%feature("autodoc", "Intersects the intervals with the intervals in the sequence <tool>.
 
-	:param Tool:
-	:type Tool: Intrv_Intervals &
-	:rtype: None
+Parameters
+----------
+Tool: Intrv_Intervals
+
+Returns
+-------
+None
 ") Intersect;
-		void Intersect (const Intrv_Intervals & Tool);
-		%feature("compactdefaultargs") Subtract;
-		%feature("autodoc", "	:param Tool:
-	:type Tool: Intrv_Interval &
-	:rtype: None
-") Subtract;
-		void Subtract (const Intrv_Interval & Tool);
-		%feature("compactdefaultargs") Subtract;
-		%feature("autodoc", "	:param Tool:
-	:type Tool: Intrv_Intervals &
-	:rtype: None
-") Subtract;
-		void Subtract (const Intrv_Intervals & Tool);
-		%feature("compactdefaultargs") Unite;
-		%feature("autodoc", "	:param Tool:
-	:type Tool: Intrv_Interval &
-	:rtype: None
-") Unite;
-		void Unite (const Intrv_Interval & Tool);
-		%feature("compactdefaultargs") Unite;
-		%feature("autodoc", "	:param Tool:
-	:type Tool: Intrv_Intervals &
-	:rtype: None
-") Unite;
-		void Unite (const Intrv_Intervals & Tool);
-		%feature("compactdefaultargs") XUnite;
-		%feature("autodoc", "	:param Tool:
-	:type Tool: Intrv_Interval &
-	:rtype: None
-") XUnite;
-		void XUnite (const Intrv_Interval & Tool);
-		%feature("compactdefaultargs") XUnite;
-		%feature("autodoc", "	:param Tool:
-	:type Tool: Intrv_Intervals &
-	:rtype: None
-") XUnite;
-		void XUnite (const Intrv_Intervals & Tool);
+		void Intersect(const Intrv_Intervals & Tool);
+
+		/****************** NbIntervals ******************/
+		/**** md5 signature: 64f54fde4d9752772b52d73d27261bcb ****/
 		%feature("compactdefaultargs") NbIntervals;
-		%feature("autodoc", "	:rtype: int
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
 ") NbIntervals;
-		Standard_Integer NbIntervals ();
+		Standard_Integer NbIntervals();
+
+		/****************** Subtract ******************/
+		/**** md5 signature: 84d450900772c0ab496765aa3b97e5e0 ****/
+		%feature("compactdefaultargs") Subtract;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Tool: Intrv_Interval
+
+Returns
+-------
+None
+") Subtract;
+		void Subtract(const Intrv_Interval & Tool);
+
+		/****************** Subtract ******************/
+		/**** md5 signature: 2fed38f550387f5eaeecc8b41a3d89dd ****/
+		%feature("compactdefaultargs") Subtract;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Tool: Intrv_Intervals
+
+Returns
+-------
+None
+") Subtract;
+		void Subtract(const Intrv_Intervals & Tool);
+
+		/****************** Unite ******************/
+		/**** md5 signature: 0d5f961c161ee90870ec4968fb8da826 ****/
+		%feature("compactdefaultargs") Unite;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Tool: Intrv_Interval
+
+Returns
+-------
+None
+") Unite;
+		void Unite(const Intrv_Interval & Tool);
+
+		/****************** Unite ******************/
+		/**** md5 signature: e14122155e21a0b69837acc9ae886d66 ****/
+		%feature("compactdefaultargs") Unite;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Tool: Intrv_Intervals
+
+Returns
+-------
+None
+") Unite;
+		void Unite(const Intrv_Intervals & Tool);
+
+		/****************** Value ******************/
+		/**** md5 signature: f71fcd7e5d1f4f7275e8da12794f644f ****/
 		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Intrv_Interval
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+Intrv_Interval
 ") Value;
-		const Intrv_Interval & Value (const Standard_Integer Index);
+		const Intrv_Interval & Value(const Standard_Integer Index);
+
+		/****************** XUnite ******************/
+		/**** md5 signature: 1b9a7792b19b82175cf1ec256710edea ****/
+		%feature("compactdefaultargs") XUnite;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Tool: Intrv_Interval
+
+Returns
+-------
+None
+") XUnite;
+		void XUnite(const Intrv_Interval & Tool);
+
+		/****************** XUnite ******************/
+		/**** md5 signature: 0ec9c3d932976dd5752f27da217001f3 ****/
+		%feature("compactdefaultargs") XUnite;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Tool: Intrv_Intervals
+
+Returns
+-------
+None
+") XUnite;
+		void XUnite(const Intrv_Intervals & Tool);
+
 };
 
 
@@ -395,173 +761,7 @@ class Intrv_Intervals {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor Intrv_SequenceNodeOfSequenceOfInterval;
-class Intrv_SequenceNodeOfSequenceOfInterval : public TCollection_SeqNode {
-	public:
-		%feature("compactdefaultargs") Intrv_SequenceNodeOfSequenceOfInterval;
-		%feature("autodoc", "	:param I:
-	:type I: Intrv_Interval &
-	:param n:
-	:type n: TCollection_SeqNodePtr &
-	:param p:
-	:type p: TCollection_SeqNodePtr &
-	:rtype: None
-") Intrv_SequenceNodeOfSequenceOfInterval;
-		 Intrv_SequenceNodeOfSequenceOfInterval (const Intrv_Interval & I,const TCollection_SeqNodePtr & n,const TCollection_SeqNodePtr & p);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Intrv_Interval
-") Value;
-		Intrv_Interval & Value ();
-};
 
-
-%make_alias(Intrv_SequenceNodeOfSequenceOfInterval)
-
-%extend Intrv_SequenceNodeOfSequenceOfInterval {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor Intrv_SequenceOfInterval;
-class Intrv_SequenceOfInterval : public TCollection_BaseSequence {
-	public:
-		%feature("compactdefaultargs") Intrv_SequenceOfInterval;
-		%feature("autodoc", "	:rtype: None
-") Intrv_SequenceOfInterval;
-		 Intrv_SequenceOfInterval ();
-		%feature("compactdefaultargs") Intrv_SequenceOfInterval;
-		%feature("autodoc", "	:param Other:
-	:type Other: Intrv_SequenceOfInterval &
-	:rtype: None
-") Intrv_SequenceOfInterval;
-		 Intrv_SequenceOfInterval (const Intrv_SequenceOfInterval & Other);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: Intrv_SequenceOfInterval &
-	:rtype: Intrv_SequenceOfInterval
-") Assign;
-		const Intrv_SequenceOfInterval & Assign (const Intrv_SequenceOfInterval & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: Intrv_SequenceOfInterval &
-	:rtype: Intrv_SequenceOfInterval
-") operator =;
-		const Intrv_SequenceOfInterval & operator = (const Intrv_SequenceOfInterval & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param T:
-	:type T: Intrv_Interval &
-	:rtype: None
-") Append;
-		void Append (const Intrv_Interval & T);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param S:
-	:type S: Intrv_SequenceOfInterval &
-	:rtype: None
-") Append;
-		void Append (Intrv_SequenceOfInterval & S);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param T:
-	:type T: Intrv_Interval &
-	:rtype: None
-") Prepend;
-		void Prepend (const Intrv_Interval & T);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param S:
-	:type S: Intrv_SequenceOfInterval &
-	:rtype: None
-") Prepend;
-		void Prepend (Intrv_SequenceOfInterval & S);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: Intrv_Interval &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,const Intrv_Interval & T);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: Intrv_SequenceOfInterval &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,Intrv_SequenceOfInterval & S);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: Intrv_Interval &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,const Intrv_Interval & T);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: Intrv_SequenceOfInterval &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,Intrv_SequenceOfInterval & S);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: Intrv_Interval
-") First;
-		const Intrv_Interval & First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: Intrv_Interval
-") Last;
-		const Intrv_Interval & Last ();
-		%feature("compactdefaultargs") Split;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param Sub:
-	:type Sub: Intrv_SequenceOfInterval &
-	:rtype: None
-") Split;
-		void Split (const Standard_Integer Index,Intrv_SequenceOfInterval & Sub);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Intrv_Interval
-") Value;
-		const Intrv_Interval & Value (const Standard_Integer Index);
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param I:
-	:type I: Intrv_Interval &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer Index,const Intrv_Interval & I);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Intrv_Interval
-") ChangeValue;
-		Intrv_Interval & ChangeValue (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param FromIndex:
-	:type FromIndex: int
-	:param ToIndex:
-	:type ToIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer FromIndex,const Standard_Integer ToIndex);
-};
-
-
-%extend Intrv_SequenceOfInterval {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */

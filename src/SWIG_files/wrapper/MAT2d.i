@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,16 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define MAT2DDOCSTRING
-"-Purpose : Package of computation of Bisector locus on a
-Set of geometrys from Geom2d.
-"
+"MAT2d module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_mat2d.html"
 %enddef
 %module (package="OCC.Core", docstring=MAT2DDOCSTRING) MAT2d
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -39,188 +35,271 @@ Set of geometrys from Geom2d.
 %include ../common/OccHandle.i
 
 
-%include MAT2d_headers.i
+%{
+#include<MAT2d_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<GeomAbs_module.hxx>
+#include<TColStd_module.hxx>
+#include<Geom2d_module.hxx>
+#include<gp_module.hxx>
+#include<MAT_module.hxx>
+#include<Bisector_module.hxx>
+#include<Geom2d_module.hxx>
+#include<Message_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+%import GeomAbs.i
+%import TColStd.i
+%import Geom2d.i
+%import gp.i
+%import MAT.i
+%import Bisector.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 /* end public enums declaration */
 
+/* python proy classes for enums */
+%pythoncode {
+};
+/* end python proxy for enums */
+
+/* handles */
 %wrap_handle(MAT2d_Circuit)
 %wrap_handle(MAT2d_Connexion)
-%wrap_handle(MAT2d_DataMapNodeOfDataMapOfBiIntInteger)
-%wrap_handle(MAT2d_DataMapNodeOfDataMapOfBiIntSequenceOfInteger)
-%wrap_handle(MAT2d_DataMapNodeOfDataMapOfIntegerBisec)
-%wrap_handle(MAT2d_DataMapNodeOfDataMapOfIntegerConnexion)
-%wrap_handle(MAT2d_DataMapNodeOfDataMapOfIntegerPnt2d)
-%wrap_handle(MAT2d_DataMapNodeOfDataMapOfIntegerSequenceOfConnexion)
-%wrap_handle(MAT2d_DataMapNodeOfDataMapOfIntegerVec2d)
-%wrap_handle(MAT2d_SequenceNodeOfSequenceOfConnexion)
-%wrap_handle(MAT2d_SequenceNodeOfSequenceOfSequenceOfCurve)
-%wrap_handle(MAT2d_SequenceNodeOfSequenceOfSequenceOfGeometry)
+/* end handles declaration */
 
-%nodefaultctor MAT2d_Array2OfConnexion;
-class MAT2d_Array2OfConnexion {
-	public:
-		%feature("compactdefaultargs") MAT2d_Array2OfConnexion;
-		%feature("autodoc", "	:param R1:
-	:type R1: int
-	:param R2:
-	:type R2: int
-	:param C1:
-	:type C1: int
-	:param C2:
-	:type C2: int
-	:rtype: None
-") MAT2d_Array2OfConnexion;
-		 MAT2d_Array2OfConnexion (const Standard_Integer R1,const Standard_Integer R2,const Standard_Integer C1,const Standard_Integer C2);
-		%feature("compactdefaultargs") MAT2d_Array2OfConnexion;
-		%feature("autodoc", "	:param Item:
-	:type Item: Handle_MAT2d_Connexion &
-	:param R1:
-	:type R1: int
-	:param R2:
-	:type R2: int
-	:param C1:
-	:type C1: int
-	:param C2:
-	:type C2: int
-	:rtype: None
-") MAT2d_Array2OfConnexion;
-		 MAT2d_Array2OfConnexion (const Handle_MAT2d_Connexion & Item,const Standard_Integer R1,const Standard_Integer R2,const Standard_Integer C1,const Standard_Integer C2);
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	:param V:
-	:type V: Handle_MAT2d_Connexion &
-	:rtype: None
-") Init;
-		void Init (const Handle_MAT2d_Connexion & V);
-		%feature("compactdefaultargs") Destroy;
-		%feature("autodoc", "	:rtype: None
-") Destroy;
-		void Destroy ();
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_Array2OfConnexion &
-	:rtype: MAT2d_Array2OfConnexion
-") Assign;
-		const MAT2d_Array2OfConnexion & Assign (const MAT2d_Array2OfConnexion & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_Array2OfConnexion &
-	:rtype: MAT2d_Array2OfConnexion
-") operator =;
-		const MAT2d_Array2OfConnexion & operator = (const MAT2d_Array2OfConnexion & Other);
-		%feature("compactdefaultargs") ColLength;
-		%feature("autodoc", "	:rtype: int
-") ColLength;
-		Standard_Integer ColLength ();
-		%feature("compactdefaultargs") RowLength;
-		%feature("autodoc", "	:rtype: int
-") RowLength;
-		Standard_Integer RowLength ();
-		%feature("compactdefaultargs") LowerCol;
-		%feature("autodoc", "	:rtype: int
-") LowerCol;
-		Standard_Integer LowerCol ();
-		%feature("compactdefaultargs") LowerRow;
-		%feature("autodoc", "	:rtype: int
-") LowerRow;
-		Standard_Integer LowerRow ();
-		%feature("compactdefaultargs") UpperCol;
-		%feature("autodoc", "	:rtype: int
-") UpperCol;
-		Standard_Integer UpperCol ();
-		%feature("compactdefaultargs") UpperRow;
-		%feature("autodoc", "	:rtype: int
-") UpperRow;
-		Standard_Integer UpperRow ();
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param Row:
-	:type Row: int
-	:param Col:
-	:type Col: int
-	:param Value:
-	:type Value: Handle_MAT2d_Connexion &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer Row,const Standard_Integer Col,const Handle_MAT2d_Connexion & Value);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Row:
-	:type Row: int
-	:param Col:
-	:type Col: int
-	:rtype: Handle_MAT2d_Connexion
-") Value;
-		Handle_MAT2d_Connexion Value (const Standard_Integer Row,const Standard_Integer Col);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param Row:
-	:type Row: int
-	:param Col:
-	:type Col: int
-	:rtype: Handle_MAT2d_Connexion
-") ChangeValue;
-		Handle_MAT2d_Connexion ChangeValue (const Standard_Integer Row,const Standard_Integer Col);
+/* templates */
+%template(MAT2d_Array2OfConnexion) NCollection_Array2<opencascade::handle<MAT2d_Connexion>>;
+%template(MAT2d_DataMapOfBiIntInteger) NCollection_DataMap<MAT2d_BiInt,Standard_Integer,MAT2d_MapBiIntHasher>;
+%template(MAT2d_DataMapOfBiIntSequenceOfInteger) NCollection_DataMap<MAT2d_BiInt,TColStd_SequenceOfInteger,MAT2d_MapBiIntHasher>;
+%template(MAT2d_DataMapOfIntegerBisec) NCollection_DataMap<Standard_Integer,Bisector_Bisec,TColStd_MapIntegerHasher>;
+
+%extend NCollection_DataMap<Standard_Integer,Bisector_Bisec,TColStd_MapIntegerHasher> {
+    PyObject* Keys() {
+        PyObject *l=PyList_New(0);
+        for (MAT2d_DataMapOfIntegerBisec::Iterator anIt1(*self); anIt1.More(); anIt1.Next()) {
+          PyObject *o = PyLong_FromLong(anIt1.Key());
+          PyList_Append(l, o);
+          Py_DECREF(o);
+        }
+    return l;
+    }
 };
+%template(MAT2d_DataMapOfIntegerConnexion) NCollection_DataMap<Standard_Integer,opencascade::handle<MAT2d_Connexion>,TColStd_MapIntegerHasher>;
 
-
-%extend MAT2d_Array2OfConnexion {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
+%extend NCollection_DataMap<Standard_Integer,opencascade::handle<MAT2d_Connexion>,TColStd_MapIntegerHasher> {
+    PyObject* Keys() {
+        PyObject *l=PyList_New(0);
+        for (MAT2d_DataMapOfIntegerConnexion::Iterator anIt1(*self); anIt1.More(); anIt1.Next()) {
+          PyObject *o = PyLong_FromLong(anIt1.Key());
+          PyList_Append(l, o);
+          Py_DECREF(o);
+        }
+    return l;
+    }
 };
-%nodefaultctor MAT2d_BiInt;
+%template(MAT2d_DataMapOfIntegerPnt2d) NCollection_DataMap<Standard_Integer,gp_Pnt2d,TColStd_MapIntegerHasher>;
+
+%extend NCollection_DataMap<Standard_Integer,gp_Pnt2d,TColStd_MapIntegerHasher> {
+    PyObject* Keys() {
+        PyObject *l=PyList_New(0);
+        for (MAT2d_DataMapOfIntegerPnt2d::Iterator anIt1(*self); anIt1.More(); anIt1.Next()) {
+          PyObject *o = PyLong_FromLong(anIt1.Key());
+          PyList_Append(l, o);
+          Py_DECREF(o);
+        }
+    return l;
+    }
+};
+%template(MAT2d_DataMapOfIntegerSequenceOfConnexion) NCollection_DataMap<Standard_Integer,MAT2d_SequenceOfConnexion,TColStd_MapIntegerHasher>;
+
+%extend NCollection_DataMap<Standard_Integer,MAT2d_SequenceOfConnexion,TColStd_MapIntegerHasher> {
+    PyObject* Keys() {
+        PyObject *l=PyList_New(0);
+        for (MAT2d_DataMapOfIntegerSequenceOfConnexion::Iterator anIt1(*self); anIt1.More(); anIt1.Next()) {
+          PyObject *o = PyLong_FromLong(anIt1.Key());
+          PyList_Append(l, o);
+          Py_DECREF(o);
+        }
+    return l;
+    }
+};
+%template(MAT2d_DataMapOfIntegerVec2d) NCollection_DataMap<Standard_Integer,gp_Vec2d,TColStd_MapIntegerHasher>;
+
+%extend NCollection_DataMap<Standard_Integer,gp_Vec2d,TColStd_MapIntegerHasher> {
+    PyObject* Keys() {
+        PyObject *l=PyList_New(0);
+        for (MAT2d_DataMapOfIntegerVec2d::Iterator anIt1(*self); anIt1.More(); anIt1.Next()) {
+          PyObject *o = PyLong_FromLong(anIt1.Key());
+          PyList_Append(l, o);
+          Py_DECREF(o);
+        }
+    return l;
+    }
+};
+%template(MAT2d_SequenceOfConnexion) NCollection_Sequence<opencascade::handle<MAT2d_Connexion>>;
+
+%extend NCollection_Sequence<opencascade::handle<MAT2d_Connexion>> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+%template(MAT2d_SequenceOfSequenceOfCurve) NCollection_Sequence<TColGeom2d_SequenceOfCurve>;
+
+%extend NCollection_Sequence<TColGeom2d_SequenceOfCurve> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+%template(MAT2d_SequenceOfSequenceOfGeometry) NCollection_Sequence<TColGeom2d_SequenceOfGeometry>;
+
+%extend NCollection_Sequence<TColGeom2d_SequenceOfGeometry> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+/* end templates declaration */
+
+/* typedefs */
+typedef NCollection_Array2<opencascade::handle<MAT2d_Connexion>> MAT2d_Array2OfConnexion;
+typedef NCollection_DataMap<MAT2d_BiInt, Standard_Integer, MAT2d_MapBiIntHasher>::Iterator MAT2d_DataMapIteratorOfDataMapOfBiIntInteger;
+typedef NCollection_DataMap<MAT2d_BiInt, TColStd_SequenceOfInteger, MAT2d_MapBiIntHasher>::Iterator MAT2d_DataMapIteratorOfDataMapOfBiIntSequenceOfInteger;
+typedef NCollection_DataMap<Standard_Integer, Bisector_Bisec, TColStd_MapIntegerHasher>::Iterator MAT2d_DataMapIteratorOfDataMapOfIntegerBisec;
+typedef NCollection_DataMap<Standard_Integer, opencascade::handle<MAT2d_Connexion>, TColStd_MapIntegerHasher>::Iterator MAT2d_DataMapIteratorOfDataMapOfIntegerConnexion;
+typedef NCollection_DataMap<Standard_Integer, gp_Pnt2d, TColStd_MapIntegerHasher>::Iterator MAT2d_DataMapIteratorOfDataMapOfIntegerPnt2d;
+typedef NCollection_DataMap<Standard_Integer, MAT2d_SequenceOfConnexion, TColStd_MapIntegerHasher>::Iterator MAT2d_DataMapIteratorOfDataMapOfIntegerSequenceOfConnexion;
+typedef NCollection_DataMap<Standard_Integer, gp_Vec2d, TColStd_MapIntegerHasher>::Iterator MAT2d_DataMapIteratorOfDataMapOfIntegerVec2d;
+typedef NCollection_DataMap<MAT2d_BiInt, Standard_Integer, MAT2d_MapBiIntHasher> MAT2d_DataMapOfBiIntInteger;
+typedef NCollection_DataMap<MAT2d_BiInt, TColStd_SequenceOfInteger, MAT2d_MapBiIntHasher> MAT2d_DataMapOfBiIntSequenceOfInteger;
+typedef NCollection_DataMap<Standard_Integer, Bisector_Bisec, TColStd_MapIntegerHasher> MAT2d_DataMapOfIntegerBisec;
+typedef NCollection_DataMap<Standard_Integer, opencascade::handle<MAT2d_Connexion>, TColStd_MapIntegerHasher> MAT2d_DataMapOfIntegerConnexion;
+typedef NCollection_DataMap<Standard_Integer, gp_Pnt2d, TColStd_MapIntegerHasher> MAT2d_DataMapOfIntegerPnt2d;
+typedef NCollection_DataMap<Standard_Integer, MAT2d_SequenceOfConnexion, TColStd_MapIntegerHasher> MAT2d_DataMapOfIntegerSequenceOfConnexion;
+typedef NCollection_DataMap<Standard_Integer, gp_Vec2d, TColStd_MapIntegerHasher> MAT2d_DataMapOfIntegerVec2d;
+typedef NCollection_Sequence<opencascade::handle<MAT2d_Connexion>> MAT2d_SequenceOfConnexion;
+typedef NCollection_Sequence<TColGeom2d_SequenceOfCurve> MAT2d_SequenceOfSequenceOfCurve;
+typedef NCollection_Sequence<TColGeom2d_SequenceOfGeometry> MAT2d_SequenceOfSequenceOfGeometry;
+/* end typedefs declaration */
+
+/********************
+* class MAT2d_BiInt *
+********************/
 class MAT2d_BiInt {
 	public:
+		/****************** MAT2d_BiInt ******************/
+		/**** md5 signature: 78ab96464b0d583cf551a2b9faedb8d9 ****/
 		%feature("compactdefaultargs") MAT2d_BiInt;
-		%feature("autodoc", "	:param I1:
-	:type I1: int
-	:param I2:
-	:type I2: int
-	:rtype: None
-") MAT2d_BiInt;
-		 MAT2d_BiInt (const Standard_Integer I1,const Standard_Integer I2);
-		%feature("compactdefaultargs") FirstIndex;
-		%feature("autodoc", "	:rtype: int
-") FirstIndex;
-		Standard_Integer FirstIndex ();
-		%feature("compactdefaultargs") SecondIndex;
-		%feature("autodoc", "	:rtype: int
-") SecondIndex;
-		Standard_Integer SecondIndex ();
-		%feature("compactdefaultargs") FirstIndex;
-		%feature("autodoc", "	:param I1:
-	:type I1: int
-	:rtype: None
-") FirstIndex;
-		void FirstIndex (const Standard_Integer I1);
-		%feature("compactdefaultargs") SecondIndex;
-		%feature("autodoc", "	:param I2:
-	:type I2: int
-	:rtype: None
-") SecondIndex;
-		void SecondIndex (const Standard_Integer I2);
-		%feature("compactdefaultargs") IsEqual;
-		%feature("autodoc", "	:param B:
-	:type B: MAT2d_BiInt &
-	:rtype: bool
-") IsEqual;
-		Standard_Boolean IsEqual (const MAT2d_BiInt & B);
+		%feature("autodoc", "No available documentation.
 
-        %extend{
-            bool __eq_wrapper__(const MAT2d_BiInt  other) {
-            if (*self==other) return true;
-            else return false;
+Parameters
+----------
+I1: int
+I2: int
+
+Returns
+-------
+None
+") MAT2d_BiInt;
+		 MAT2d_BiInt(const Standard_Integer I1, const Standard_Integer I2);
+
+		/****************** FirstIndex ******************/
+		/**** md5 signature: d46869d30abf824c62a68bd55acf0cb1 ****/
+		%feature("compactdefaultargs") FirstIndex;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
+") FirstIndex;
+		Standard_Integer FirstIndex();
+
+		/****************** FirstIndex ******************/
+		/**** md5 signature: 17918e8ddbf3e2e971bdf84b0112a1fd ****/
+		%feature("compactdefaultargs") FirstIndex;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+I1: int
+
+Returns
+-------
+None
+") FirstIndex;
+		void FirstIndex(const Standard_Integer I1);
+
+		/****************** IsEqual ******************/
+		/**** md5 signature: b7f23e99a6a59778d6a351f9dbeadc3c ****/
+		%feature("compactdefaultargs") IsEqual;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+B: MAT2d_BiInt
+
+Returns
+-------
+bool
+") IsEqual;
+		Standard_Boolean IsEqual(const MAT2d_BiInt & B);
+
+		/****************** SecondIndex ******************/
+		/**** md5 signature: 10d01ee45fc32a68b77d02ef99308fa9 ****/
+		%feature("compactdefaultargs") SecondIndex;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
+") SecondIndex;
+		Standard_Integer SecondIndex();
+
+		/****************** SecondIndex ******************/
+		/**** md5 signature: 2d51f4e6989ca684356bd87abf2c6f3d ****/
+		%feature("compactdefaultargs") SecondIndex;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+I2: int
+
+Returns
+-------
+None
+") SecondIndex;
+		void SecondIndex(const Standard_Integer I2);
+
+
+            %extend{
+                bool __eq_wrapper__(const MAT2d_BiInt other) {
+                if (*self==other) return true;
+                else return false;
+                }
             }
-        }
-        %pythoncode {
-        def __eq__(self, right):
-            try:
-                return self.__eq_wrapper__(right)
-            except:
-                return False
-        }
-        };
+            %pythoncode {
+            def __eq__(self, right):
+                try:
+                    return self.__eq_wrapper__(right)
+                except:
+                    return False
+            }
+};
 
 
 %extend MAT2d_BiInt {
@@ -228,77 +307,135 @@ class MAT2d_BiInt {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor MAT2d_Circuit;
-class MAT2d_Circuit : public MMgt_TShared {
+
+/**********************
+* class MAT2d_Circuit *
+**********************/
+class MAT2d_Circuit : public Standard_Transient {
 	public:
+		/****************** MAT2d_Circuit ******************/
+		/**** md5 signature: 3d83ae3a1ddee5ab13cec53a08223b5d ****/
 		%feature("compactdefaultargs") MAT2d_Circuit;
-		%feature("autodoc", "	:param aJoinType: default value is GeomAbs_Arc
-	:type aJoinType: GeomAbs_JoinType
-	:param IsOpenResult: default value is Standard_False
-	:type IsOpenResult: bool
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+aJoinType: GeomAbs_JoinType,optional
+	default value is GeomAbs_Arc
+IsOpenResult: bool,optional
+	default value is Standard_False
+
+Returns
+-------
+None
 ") MAT2d_Circuit;
-		 MAT2d_Circuit (const GeomAbs_JoinType aJoinType = GeomAbs_Arc,const Standard_Boolean IsOpenResult = Standard_False);
-		%feature("compactdefaultargs") Perform;
-		%feature("autodoc", "	:param aFigure:
-	:type aFigure: MAT2d_SequenceOfSequenceOfGeometry &
-	:param IsClosed:
-	:type IsClosed: TColStd_SequenceOfBoolean &
-	:param IndRefLine:
-	:type IndRefLine: int
-	:param Trigo:
-	:type Trigo: bool
-	:rtype: None
-") Perform;
-		void Perform (MAT2d_SequenceOfSequenceOfGeometry & aFigure,const TColStd_SequenceOfBoolean & IsClosed,const Standard_Integer IndRefLine,const Standard_Boolean Trigo);
-		%feature("compactdefaultargs") NumberOfItems;
-		%feature("autodoc", "	* Returns the Number of Items .
+		 MAT2d_Circuit(const GeomAbs_JoinType aJoinType = GeomAbs_Arc, const Standard_Boolean IsOpenResult = Standard_False);
 
-	:rtype: int
-") NumberOfItems;
-		Standard_Integer NumberOfItems ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	* Returns the item at position <Index> in <self>.
-
-	:param Index:
-	:type Index: int
-	:rtype: Handle_Geom2d_Geometry
-") Value;
-		Handle_Geom2d_Geometry Value (const Standard_Integer Index);
-		%feature("compactdefaultargs") LineLength;
-		%feature("autodoc", "	* Returns the number of items on the line <IndexLine>.
-
-	:param IndexLine:
-	:type IndexLine: int
-	:rtype: int
-") LineLength;
-		Standard_Integer LineLength (const Standard_Integer IndexLine);
-		%feature("compactdefaultargs") RefToEqui;
-		%feature("autodoc", "	* Returns the set of index of the items in <self>corresponding to the curve <IndCurve> on the line <IndLine> from the initial figure.
-
-	:param IndLine:
-	:type IndLine: int
-	:param IndCurve:
-	:type IndCurve: int
-	:rtype: TColStd_SequenceOfInteger
-") RefToEqui;
-		const TColStd_SequenceOfInteger & RefToEqui (const Standard_Integer IndLine,const Standard_Integer IndCurve);
+		/****************** Connexion ******************/
+		/**** md5 signature: 326ba50670f9d4c1c46bce1f115c59e3 ****/
 		%feature("compactdefaultargs") Connexion;
-		%feature("autodoc", "	* Returns the Connexion on the item <Index> in me.
+		%feature("autodoc", "Returns the connexion on the item <index> in me.
 
-	:param Index:
-	:type Index: int
-	:rtype: Handle_MAT2d_Connexion
+Parameters
+----------
+Index: int
+
+Returns
+-------
+opencascade::handle<MAT2d_Connexion>
 ") Connexion;
-		Handle_MAT2d_Connexion Connexion (const Standard_Integer Index);
-		%feature("compactdefaultargs") ConnexionOn;
-		%feature("autodoc", "	* Returns <True> is there is a connexion on the item <Index> in <self>.
+		opencascade::handle<MAT2d_Connexion> Connexion(const Standard_Integer Index);
 
-	:param Index:
-	:type Index: int
-	:rtype: bool
+		/****************** ConnexionOn ******************/
+		/**** md5 signature: 99421e4e4a56e2a09bb778c89f4ec2dc ****/
+		%feature("compactdefaultargs") ConnexionOn;
+		%feature("autodoc", "Returns <true> is there is a connexion on the item <index> in <self>.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+bool
 ") ConnexionOn;
-		Standard_Boolean ConnexionOn (const Standard_Integer Index);
+		Standard_Boolean ConnexionOn(const Standard_Integer Index);
+
+		/****************** LineLength ******************/
+		/**** md5 signature: 469351f47df074eb89a0c7e8bfc384ef ****/
+		%feature("compactdefaultargs") LineLength;
+		%feature("autodoc", "Returns the number of items on the line <indexline>.
+
+Parameters
+----------
+IndexLine: int
+
+Returns
+-------
+int
+") LineLength;
+		Standard_Integer LineLength(const Standard_Integer IndexLine);
+
+		/****************** NumberOfItems ******************/
+		/**** md5 signature: 6320550c1d233b98551d924e74a6ceb4 ****/
+		%feature("compactdefaultargs") NumberOfItems;
+		%feature("autodoc", "Returns the number of items .
+
+Returns
+-------
+int
+") NumberOfItems;
+		Standard_Integer NumberOfItems();
+
+		/****************** Perform ******************/
+		/**** md5 signature: 9f56ef9060926bd1e36ee0efe117b1f7 ****/
+		%feature("compactdefaultargs") Perform;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+aFigure: MAT2d_SequenceOfSequenceOfGeometry
+IsClosed: TColStd_SequenceOfBoolean
+IndRefLine: int
+Trigo: bool
+
+Returns
+-------
+None
+") Perform;
+		void Perform(MAT2d_SequenceOfSequenceOfGeometry & aFigure, const TColStd_SequenceOfBoolean & IsClosed, const Standard_Integer IndRefLine, const Standard_Boolean Trigo);
+
+		/****************** RefToEqui ******************/
+		/**** md5 signature: d22a10fa0d9d9576992fd9ec8dc805bb ****/
+		%feature("compactdefaultargs") RefToEqui;
+		%feature("autodoc", "Returns the set of index of the items in <self>corresponding to the curve <indcurve> on the line <indline> from the initial figure.
+
+Parameters
+----------
+IndLine: int
+IndCurve: int
+
+Returns
+-------
+TColStd_SequenceOfInteger
+") RefToEqui;
+		const TColStd_SequenceOfInteger & RefToEqui(const Standard_Integer IndLine, const Standard_Integer IndCurve);
+
+		/****************** Value ******************/
+		/**** md5 signature: 46459dc52092fe0b601c69e4b3658782 ****/
+		%feature("compactdefaultargs") Value;
+		%feature("autodoc", "Returns the item at position <index> in <self>.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+opencascade::handle<Geom2d_Geometry>
+") Value;
+		opencascade::handle<Geom2d_Geometry> Value(const Standard_Integer Index);
+
 };
 
 
@@ -309,169 +446,325 @@ class MAT2d_Circuit : public MMgt_TShared {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor MAT2d_Connexion;
-class MAT2d_Connexion : public MMgt_TShared {
+
+/************************
+* class MAT2d_Connexion *
+************************/
+class MAT2d_Connexion : public Standard_Transient {
 	public:
+		/****************** MAT2d_Connexion ******************/
+		/**** md5 signature: 3839f447b9973506e7c31a3c602f8582 ****/
 		%feature("compactdefaultargs") MAT2d_Connexion;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") MAT2d_Connexion;
-		 MAT2d_Connexion ();
+		 MAT2d_Connexion();
+
+		/****************** MAT2d_Connexion ******************/
+		/**** md5 signature: 62cffa59d7c45597a0042e456300fe54 ****/
 		%feature("compactdefaultargs") MAT2d_Connexion;
-		%feature("autodoc", "	:param LineA:
-	:type LineA: int
-	:param LineB:
-	:type LineB: int
-	:param ItemA:
-	:type ItemA: int
-	:param ItemB:
-	:type ItemB: int
-	:param Distance:
-	:type Distance: float
-	:param ParameterOnA:
-	:type ParameterOnA: float
-	:param ParameterOnB:
-	:type ParameterOnB: float
-	:param PointA:
-	:type PointA: gp_Pnt2d
-	:param PointB:
-	:type PointB: gp_Pnt2d
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+LineA: int
+LineB: int
+ItemA: int
+ItemB: int
+Distance: float
+ParameterOnA: float
+ParameterOnB: float
+PointA: gp_Pnt2d
+PointB: gp_Pnt2d
+
+Returns
+-------
+None
 ") MAT2d_Connexion;
-		 MAT2d_Connexion (const Standard_Integer LineA,const Standard_Integer LineB,const Standard_Integer ItemA,const Standard_Integer ItemB,const Standard_Real Distance,const Standard_Real ParameterOnA,const Standard_Real ParameterOnB,const gp_Pnt2d & PointA,const gp_Pnt2d & PointB);
-		%feature("compactdefaultargs") IndexFirstLine;
-		%feature("autodoc", "	* Returns the Index on the first line.
+		 MAT2d_Connexion(const Standard_Integer LineA, const Standard_Integer LineB, const Standard_Integer ItemA, const Standard_Integer ItemB, const Standard_Real Distance, const Standard_Real ParameterOnA, const Standard_Real ParameterOnB, const gp_Pnt2d & PointA, const gp_Pnt2d & PointB);
 
-	:rtype: int
-") IndexFirstLine;
-		Standard_Integer IndexFirstLine ();
-		%feature("compactdefaultargs") IndexSecondLine;
-		%feature("autodoc", "	* Returns the Index on the Second line.
-
-	:rtype: int
-") IndexSecondLine;
-		Standard_Integer IndexSecondLine ();
-		%feature("compactdefaultargs") IndexItemOnFirst;
-		%feature("autodoc", "	* Returns the Index of the item on the first line.
-
-	:rtype: int
-") IndexItemOnFirst;
-		Standard_Integer IndexItemOnFirst ();
-		%feature("compactdefaultargs") IndexItemOnSecond;
-		%feature("autodoc", "	* Returns the Index of the item on the second line.
-
-	:rtype: int
-") IndexItemOnSecond;
-		Standard_Integer IndexItemOnSecond ();
-		%feature("compactdefaultargs") ParameterOnFirst;
-		%feature("autodoc", "	* Returns the parameter of the point on the firstline.
-
-	:rtype: float
-") ParameterOnFirst;
-		Standard_Real ParameterOnFirst ();
-		%feature("compactdefaultargs") ParameterOnSecond;
-		%feature("autodoc", "	* Returns the parameter of the point on the secondline.
-
-	:rtype: float
-") ParameterOnSecond;
-		Standard_Real ParameterOnSecond ();
-		%feature("compactdefaultargs") PointOnFirst;
-		%feature("autodoc", "	* Returns the point on the firstline.
-
-	:rtype: gp_Pnt2d
-") PointOnFirst;
-		gp_Pnt2d PointOnFirst ();
-		%feature("compactdefaultargs") PointOnSecond;
-		%feature("autodoc", "	* Returns the point on the secondline.
-
-	:rtype: gp_Pnt2d
-") PointOnSecond;
-		gp_Pnt2d PointOnSecond ();
+		/****************** Distance ******************/
+		/**** md5 signature: c054352e1b604c83d759bc4ccf6c526d ****/
 		%feature("compactdefaultargs") Distance;
-		%feature("autodoc", "	* Returns the distance between the two points.
+		%feature("autodoc", "Returns the distance between the two points.
 
-	:rtype: float
+Returns
+-------
+float
 ") Distance;
-		Standard_Real Distance ();
-		%feature("compactdefaultargs") IndexFirstLine;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:rtype: None
-") IndexFirstLine;
-		void IndexFirstLine (const Standard_Integer anIndex);
-		%feature("compactdefaultargs") IndexSecondLine;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:rtype: None
-") IndexSecondLine;
-		void IndexSecondLine (const Standard_Integer anIndex);
-		%feature("compactdefaultargs") IndexItemOnFirst;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:rtype: None
-") IndexItemOnFirst;
-		void IndexItemOnFirst (const Standard_Integer anIndex);
-		%feature("compactdefaultargs") IndexItemOnSecond;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:rtype: None
-") IndexItemOnSecond;
-		void IndexItemOnSecond (const Standard_Integer anIndex);
-		%feature("compactdefaultargs") ParameterOnFirst;
-		%feature("autodoc", "	:param aParameter:
-	:type aParameter: float
-	:rtype: None
-") ParameterOnFirst;
-		void ParameterOnFirst (const Standard_Real aParameter);
-		%feature("compactdefaultargs") ParameterOnSecond;
-		%feature("autodoc", "	:param aParameter:
-	:type aParameter: float
-	:rtype: None
-") ParameterOnSecond;
-		void ParameterOnSecond (const Standard_Real aParameter);
-		%feature("compactdefaultargs") PointOnFirst;
-		%feature("autodoc", "	:param aPoint:
-	:type aPoint: gp_Pnt2d
-	:rtype: None
-") PointOnFirst;
-		void PointOnFirst (const gp_Pnt2d & aPoint);
-		%feature("compactdefaultargs") PointOnSecond;
-		%feature("autodoc", "	:param aPoint:
-	:type aPoint: gp_Pnt2d
-	:rtype: None
-") PointOnSecond;
-		void PointOnSecond (const gp_Pnt2d & aPoint);
+		Standard_Real Distance();
+
+		/****************** Distance ******************/
+		/**** md5 signature: 3ae0b9dfb95cca74bdd17827ec43670b ****/
 		%feature("compactdefaultargs") Distance;
-		%feature("autodoc", "	:param aDistance:
-	:type aDistance: float
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+aDistance: float
+
+Returns
+-------
+None
 ") Distance;
-		void Distance (const Standard_Real aDistance);
-		%feature("compactdefaultargs") Reverse;
-		%feature("autodoc", "	* Returns the reverse connexion of <self>. the firstpoint is the secondpoint. the secondpoint is the firstpoint.
+		void Distance(const Standard_Real aDistance);
 
-	:rtype: Handle_MAT2d_Connexion
-") Reverse;
-		Handle_MAT2d_Connexion Reverse ();
-		%feature("compactdefaultargs") IsAfter;
-		%feature("autodoc", "	* Returns <True> if my firstPoint is on the same line than the firstpoint of <aConnexion> and my firstpoint is after the firstpoint of <aConnexion> on the line. <aSense> = 1 if <aConnexion> is on the Left of its firstline, else <aSense> = -1.
-
-	:param aConnexion:
-	:type aConnexion: Handle_MAT2d_Connexion &
-	:param aSense:
-	:type aSense: float
-	:rtype: bool
-") IsAfter;
-		Standard_Boolean IsAfter (const Handle_MAT2d_Connexion & aConnexion,const Standard_Real aSense);
+		/****************** Dump ******************/
+		/**** md5 signature: 23c1db28cacdaffb331052739c78df8b ****/
 		%feature("compactdefaultargs") Dump;
-		%feature("autodoc", "	* Print <self>.
+		%feature("autodoc", "Print <self>.
 
-	:param Deep: default value is 0
-	:type Deep: int
-	:param Offset: default value is 0
-	:type Offset: int
-	:rtype: None
+Parameters
+----------
+Deep: int,optional
+	default value is 0
+Offset: int,optional
+	default value is 0
+
+Returns
+-------
+None
 ") Dump;
-		void Dump (const Standard_Integer Deep = 0,const Standard_Integer Offset = 0);
+		void Dump(const Standard_Integer Deep = 0, const Standard_Integer Offset = 0);
+
+		/****************** IndexFirstLine ******************/
+		/**** md5 signature: 663d6504efd1a156fa9a482d62bc3dbb ****/
+		%feature("compactdefaultargs") IndexFirstLine;
+		%feature("autodoc", "Returns the index on the first line.
+
+Returns
+-------
+int
+") IndexFirstLine;
+		Standard_Integer IndexFirstLine();
+
+		/****************** IndexFirstLine ******************/
+		/**** md5 signature: e9ddfb6ae51bf8eb16c92d7b42609bca ****/
+		%feature("compactdefaultargs") IndexFirstLine;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+anIndex: int
+
+Returns
+-------
+None
+") IndexFirstLine;
+		void IndexFirstLine(const Standard_Integer anIndex);
+
+		/****************** IndexItemOnFirst ******************/
+		/**** md5 signature: 3ac29bd3c9804e66c2a315f62a355304 ****/
+		%feature("compactdefaultargs") IndexItemOnFirst;
+		%feature("autodoc", "Returns the index of the item on the first line.
+
+Returns
+-------
+int
+") IndexItemOnFirst;
+		Standard_Integer IndexItemOnFirst();
+
+		/****************** IndexItemOnFirst ******************/
+		/**** md5 signature: c6e9546b347dc7af06ccb4f85f109de1 ****/
+		%feature("compactdefaultargs") IndexItemOnFirst;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+anIndex: int
+
+Returns
+-------
+None
+") IndexItemOnFirst;
+		void IndexItemOnFirst(const Standard_Integer anIndex);
+
+		/****************** IndexItemOnSecond ******************/
+		/**** md5 signature: 9be18043761a97c465053e66cab18002 ****/
+		%feature("compactdefaultargs") IndexItemOnSecond;
+		%feature("autodoc", "Returns the index of the item on the second line.
+
+Returns
+-------
+int
+") IndexItemOnSecond;
+		Standard_Integer IndexItemOnSecond();
+
+		/****************** IndexItemOnSecond ******************/
+		/**** md5 signature: 20b450ff2c151e3735c3ccf7d96e2aab ****/
+		%feature("compactdefaultargs") IndexItemOnSecond;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+anIndex: int
+
+Returns
+-------
+None
+") IndexItemOnSecond;
+		void IndexItemOnSecond(const Standard_Integer anIndex);
+
+		/****************** IndexSecondLine ******************/
+		/**** md5 signature: 743690301073ae235797f67f19862988 ****/
+		%feature("compactdefaultargs") IndexSecondLine;
+		%feature("autodoc", "Returns the index on the second line.
+
+Returns
+-------
+int
+") IndexSecondLine;
+		Standard_Integer IndexSecondLine();
+
+		/****************** IndexSecondLine ******************/
+		/**** md5 signature: 85add49d77c865a820812ca36a4f15d4 ****/
+		%feature("compactdefaultargs") IndexSecondLine;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+anIndex: int
+
+Returns
+-------
+None
+") IndexSecondLine;
+		void IndexSecondLine(const Standard_Integer anIndex);
+
+		/****************** IsAfter ******************/
+		/**** md5 signature: b21a8f4e2e039eabad6ae1e4f9672a7c ****/
+		%feature("compactdefaultargs") IsAfter;
+		%feature("autodoc", "Returns <true> if my firstpoint is on the same line than the firstpoint of <aconnexion> and my firstpoint is after the firstpoint of <aconnexion> on the line. <asense> = 1 if <aconnexion> is on the left of its firstline, else <asense> = -1.
+
+Parameters
+----------
+aConnexion: MAT2d_Connexion
+aSense: float
+
+Returns
+-------
+bool
+") IsAfter;
+		Standard_Boolean IsAfter(const opencascade::handle<MAT2d_Connexion> & aConnexion, const Standard_Real aSense);
+
+		/****************** ParameterOnFirst ******************/
+		/**** md5 signature: e945fc6b92a0d895f5e2c28fd811543c ****/
+		%feature("compactdefaultargs") ParameterOnFirst;
+		%feature("autodoc", "Returns the parameter of the point on the firstline.
+
+Returns
+-------
+float
+") ParameterOnFirst;
+		Standard_Real ParameterOnFirst();
+
+		/****************** ParameterOnFirst ******************/
+		/**** md5 signature: 40eb40758621a9e79b96eda54b924eed ****/
+		%feature("compactdefaultargs") ParameterOnFirst;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+aParameter: float
+
+Returns
+-------
+None
+") ParameterOnFirst;
+		void ParameterOnFirst(const Standard_Real aParameter);
+
+		/****************** ParameterOnSecond ******************/
+		/**** md5 signature: 370f2ccf1ecbaea4fffac99aaa7fd27f ****/
+		%feature("compactdefaultargs") ParameterOnSecond;
+		%feature("autodoc", "Returns the parameter of the point on the secondline.
+
+Returns
+-------
+float
+") ParameterOnSecond;
+		Standard_Real ParameterOnSecond();
+
+		/****************** ParameterOnSecond ******************/
+		/**** md5 signature: cdd43381e112f28bae0990926bc372c0 ****/
+		%feature("compactdefaultargs") ParameterOnSecond;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+aParameter: float
+
+Returns
+-------
+None
+") ParameterOnSecond;
+		void ParameterOnSecond(const Standard_Real aParameter);
+
+		/****************** PointOnFirst ******************/
+		/**** md5 signature: 54421f5c73f6ba0c74b5afa285990e5b ****/
+		%feature("compactdefaultargs") PointOnFirst;
+		%feature("autodoc", "Returns the point on the firstline.
+
+Returns
+-------
+gp_Pnt2d
+") PointOnFirst;
+		gp_Pnt2d PointOnFirst();
+
+		/****************** PointOnFirst ******************/
+		/**** md5 signature: 74ebc8964e1ee6fe1859ebf395eea102 ****/
+		%feature("compactdefaultargs") PointOnFirst;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+aPoint: gp_Pnt2d
+
+Returns
+-------
+None
+") PointOnFirst;
+		void PointOnFirst(const gp_Pnt2d & aPoint);
+
+		/****************** PointOnSecond ******************/
+		/**** md5 signature: c95615a95f51f947e56f5937e2249445 ****/
+		%feature("compactdefaultargs") PointOnSecond;
+		%feature("autodoc", "Returns the point on the secondline.
+
+Returns
+-------
+gp_Pnt2d
+") PointOnSecond;
+		gp_Pnt2d PointOnSecond();
+
+		/****************** PointOnSecond ******************/
+		/**** md5 signature: 6968b9f51d7a90d8452620c6db0ae4d6 ****/
+		%feature("compactdefaultargs") PointOnSecond;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+aPoint: gp_Pnt2d
+
+Returns
+-------
+None
+") PointOnSecond;
+		void PointOnSecond(const gp_Pnt2d & aPoint);
+
+		/****************** Reverse ******************/
+		/**** md5 signature: e07079d2c4c2287fa0e4da37ec459818 ****/
+		%feature("compactdefaultargs") Reverse;
+		%feature("autodoc", "Returns the reverse connexion of <self>. the firstpoint is the secondpoint. the secondpoint is the firstpoint.
+
+Returns
+-------
+opencascade::handle<MAT2d_Connexion>
+") Reverse;
+		opencascade::handle<MAT2d_Connexion> Reverse();
+
 };
 
 
@@ -482,1121 +775,47 @@ class MAT2d_Connexion : public MMgt_TShared {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor MAT2d_DataMapIteratorOfDataMapOfBiIntInteger;
-class MAT2d_DataMapIteratorOfDataMapOfBiIntInteger : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfBiIntInteger;
-		%feature("autodoc", "	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfBiIntInteger;
-		 MAT2d_DataMapIteratorOfDataMapOfBiIntInteger ();
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfBiIntInteger;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfBiIntInteger &
-	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfBiIntInteger;
-		 MAT2d_DataMapIteratorOfDataMapOfBiIntInteger (const MAT2d_DataMapOfBiIntInteger & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfBiIntInteger &
-	:rtype: None
-") Initialize;
-		void Initialize (const MAT2d_DataMapOfBiIntInteger & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: MAT2d_BiInt
-") Key;
-		const MAT2d_BiInt & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: int
-") Value;
-		const Standard_Integer & Value ();
-};
 
-
-%extend MAT2d_DataMapIteratorOfDataMapOfBiIntInteger {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapIteratorOfDataMapOfBiIntSequenceOfInteger;
-class MAT2d_DataMapIteratorOfDataMapOfBiIntSequenceOfInteger : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfBiIntSequenceOfInteger;
-		%feature("autodoc", "	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfBiIntSequenceOfInteger;
-		 MAT2d_DataMapIteratorOfDataMapOfBiIntSequenceOfInteger ();
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfBiIntSequenceOfInteger;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfBiIntSequenceOfInteger &
-	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfBiIntSequenceOfInteger;
-		 MAT2d_DataMapIteratorOfDataMapOfBiIntSequenceOfInteger (const MAT2d_DataMapOfBiIntSequenceOfInteger & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfBiIntSequenceOfInteger &
-	:rtype: None
-") Initialize;
-		void Initialize (const MAT2d_DataMapOfBiIntSequenceOfInteger & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: MAT2d_BiInt
-") Key;
-		const MAT2d_BiInt & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TColStd_SequenceOfInteger
-") Value;
-		const TColStd_SequenceOfInteger & Value ();
-};
-
-
-%extend MAT2d_DataMapIteratorOfDataMapOfBiIntSequenceOfInteger {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapIteratorOfDataMapOfIntegerBisec;
-class MAT2d_DataMapIteratorOfDataMapOfIntegerBisec : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfIntegerBisec;
-		%feature("autodoc", "	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfIntegerBisec;
-		 MAT2d_DataMapIteratorOfDataMapOfIntegerBisec ();
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfIntegerBisec;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfIntegerBisec &
-	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfIntegerBisec;
-		 MAT2d_DataMapIteratorOfDataMapOfIntegerBisec (const MAT2d_DataMapOfIntegerBisec & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfIntegerBisec &
-	:rtype: None
-") Initialize;
-		void Initialize (const MAT2d_DataMapOfIntegerBisec & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: int
-") Key;
-		const Standard_Integer & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Bisector_Bisec
-") Value;
-		const Bisector_Bisec & Value ();
-};
-
-
-%extend MAT2d_DataMapIteratorOfDataMapOfIntegerBisec {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapIteratorOfDataMapOfIntegerConnexion;
-class MAT2d_DataMapIteratorOfDataMapOfIntegerConnexion : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfIntegerConnexion;
-		%feature("autodoc", "	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfIntegerConnexion;
-		 MAT2d_DataMapIteratorOfDataMapOfIntegerConnexion ();
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfIntegerConnexion;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfIntegerConnexion &
-	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfIntegerConnexion;
-		 MAT2d_DataMapIteratorOfDataMapOfIntegerConnexion (const MAT2d_DataMapOfIntegerConnexion & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfIntegerConnexion &
-	:rtype: None
-") Initialize;
-		void Initialize (const MAT2d_DataMapOfIntegerConnexion & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: int
-") Key;
-		const Standard_Integer & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_MAT2d_Connexion
-") Value;
-		Handle_MAT2d_Connexion Value ();
-};
-
-
-%extend MAT2d_DataMapIteratorOfDataMapOfIntegerConnexion {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapIteratorOfDataMapOfIntegerPnt2d;
-class MAT2d_DataMapIteratorOfDataMapOfIntegerPnt2d : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfIntegerPnt2d;
-		%feature("autodoc", "	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfIntegerPnt2d;
-		 MAT2d_DataMapIteratorOfDataMapOfIntegerPnt2d ();
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfIntegerPnt2d;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfIntegerPnt2d &
-	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfIntegerPnt2d;
-		 MAT2d_DataMapIteratorOfDataMapOfIntegerPnt2d (const MAT2d_DataMapOfIntegerPnt2d & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfIntegerPnt2d &
-	:rtype: None
-") Initialize;
-		void Initialize (const MAT2d_DataMapOfIntegerPnt2d & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: int
-") Key;
-		const Standard_Integer & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: gp_Pnt2d
-") Value;
-		const gp_Pnt2d  Value ();
-};
-
-
-%extend MAT2d_DataMapIteratorOfDataMapOfIntegerPnt2d {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapIteratorOfDataMapOfIntegerSequenceOfConnexion;
-class MAT2d_DataMapIteratorOfDataMapOfIntegerSequenceOfConnexion : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfIntegerSequenceOfConnexion;
-		%feature("autodoc", "	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfIntegerSequenceOfConnexion;
-		 MAT2d_DataMapIteratorOfDataMapOfIntegerSequenceOfConnexion ();
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfIntegerSequenceOfConnexion;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfIntegerSequenceOfConnexion &
-	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfIntegerSequenceOfConnexion;
-		 MAT2d_DataMapIteratorOfDataMapOfIntegerSequenceOfConnexion (const MAT2d_DataMapOfIntegerSequenceOfConnexion & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfIntegerSequenceOfConnexion &
-	:rtype: None
-") Initialize;
-		void Initialize (const MAT2d_DataMapOfIntegerSequenceOfConnexion & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: int
-") Key;
-		const Standard_Integer & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: MAT2d_SequenceOfConnexion
-") Value;
-		const MAT2d_SequenceOfConnexion & Value ();
-};
-
-
-%extend MAT2d_DataMapIteratorOfDataMapOfIntegerSequenceOfConnexion {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapIteratorOfDataMapOfIntegerVec2d;
-class MAT2d_DataMapIteratorOfDataMapOfIntegerVec2d : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfIntegerVec2d;
-		%feature("autodoc", "	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfIntegerVec2d;
-		 MAT2d_DataMapIteratorOfDataMapOfIntegerVec2d ();
-		%feature("compactdefaultargs") MAT2d_DataMapIteratorOfDataMapOfIntegerVec2d;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfIntegerVec2d &
-	:rtype: None
-") MAT2d_DataMapIteratorOfDataMapOfIntegerVec2d;
-		 MAT2d_DataMapIteratorOfDataMapOfIntegerVec2d (const MAT2d_DataMapOfIntegerVec2d & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: MAT2d_DataMapOfIntegerVec2d &
-	:rtype: None
-") Initialize;
-		void Initialize (const MAT2d_DataMapOfIntegerVec2d & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: int
-") Key;
-		const Standard_Integer & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: gp_Vec2d
-") Value;
-		const gp_Vec2d  Value ();
-};
-
-
-%extend MAT2d_DataMapIteratorOfDataMapOfIntegerVec2d {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapNodeOfDataMapOfBiIntInteger;
-class MAT2d_DataMapNodeOfDataMapOfBiIntInteger : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapNodeOfDataMapOfBiIntInteger;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:param I:
-	:type I: int &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") MAT2d_DataMapNodeOfDataMapOfBiIntInteger;
-		 MAT2d_DataMapNodeOfDataMapOfBiIntInteger (const MAT2d_BiInt & K,const Standard_Integer & I,const TCollection_MapNodePtr & n);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: MAT2d_BiInt
-") Key;
-		MAT2d_BiInt & Key ();
-
-            %feature("autodoc","1");
-            %extend {
-                Standard_Integer GetValue() {
-                return (Standard_Integer) $self->Value();
-                }
-            };
-            %feature("autodoc","1");
-            %extend {
-                void SetValue(Standard_Integer value ) {
-                $self->Value()=value;
-                }
-            };
-            };
-
-
-%make_alias(MAT2d_DataMapNodeOfDataMapOfBiIntInteger)
-
-%extend MAT2d_DataMapNodeOfDataMapOfBiIntInteger {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapNodeOfDataMapOfBiIntSequenceOfInteger;
-class MAT2d_DataMapNodeOfDataMapOfBiIntSequenceOfInteger : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapNodeOfDataMapOfBiIntSequenceOfInteger;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:param I:
-	:type I: TColStd_SequenceOfInteger &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") MAT2d_DataMapNodeOfDataMapOfBiIntSequenceOfInteger;
-		 MAT2d_DataMapNodeOfDataMapOfBiIntSequenceOfInteger (const MAT2d_BiInt & K,const TColStd_SequenceOfInteger & I,const TCollection_MapNodePtr & n);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: MAT2d_BiInt
-") Key;
-		MAT2d_BiInt & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TColStd_SequenceOfInteger
-") Value;
-		TColStd_SequenceOfInteger & Value ();
-};
-
-
-%make_alias(MAT2d_DataMapNodeOfDataMapOfBiIntSequenceOfInteger)
-
-%extend MAT2d_DataMapNodeOfDataMapOfBiIntSequenceOfInteger {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapNodeOfDataMapOfIntegerBisec;
-class MAT2d_DataMapNodeOfDataMapOfIntegerBisec : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapNodeOfDataMapOfIntegerBisec;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:param I:
-	:type I: Bisector_Bisec &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") MAT2d_DataMapNodeOfDataMapOfIntegerBisec;
-		 MAT2d_DataMapNodeOfDataMapOfIntegerBisec (const Standard_Integer & K,const Bisector_Bisec & I,const TCollection_MapNodePtr & n);
-
-            %feature("autodoc","1");
-            %extend {
-                Standard_Integer GetKey() {
-                return (Standard_Integer) $self->Key();
-                }
-            };
-            %feature("autodoc","1");
-            %extend {
-                void SetKey(Standard_Integer value ) {
-                $self->Key()=value;
-                }
-            };
-            		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Bisector_Bisec
-") Value;
-		Bisector_Bisec & Value ();
-};
-
-
-%make_alias(MAT2d_DataMapNodeOfDataMapOfIntegerBisec)
-
-%extend MAT2d_DataMapNodeOfDataMapOfIntegerBisec {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapNodeOfDataMapOfIntegerConnexion;
-class MAT2d_DataMapNodeOfDataMapOfIntegerConnexion : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapNodeOfDataMapOfIntegerConnexion;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:param I:
-	:type I: Handle_MAT2d_Connexion &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") MAT2d_DataMapNodeOfDataMapOfIntegerConnexion;
-		 MAT2d_DataMapNodeOfDataMapOfIntegerConnexion (const Standard_Integer & K,const Handle_MAT2d_Connexion & I,const TCollection_MapNodePtr & n);
-
-            %feature("autodoc","1");
-            %extend {
-                Standard_Integer GetKey() {
-                return (Standard_Integer) $self->Key();
-                }
-            };
-            %feature("autodoc","1");
-            %extend {
-                void SetKey(Standard_Integer value ) {
-                $self->Key()=value;
-                }
-            };
-            		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_MAT2d_Connexion
-") Value;
-		Handle_MAT2d_Connexion Value ();
-};
-
-
-%make_alias(MAT2d_DataMapNodeOfDataMapOfIntegerConnexion)
-
-%extend MAT2d_DataMapNodeOfDataMapOfIntegerConnexion {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapNodeOfDataMapOfIntegerPnt2d;
-class MAT2d_DataMapNodeOfDataMapOfIntegerPnt2d : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapNodeOfDataMapOfIntegerPnt2d;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:param I:
-	:type I: gp_Pnt2d
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") MAT2d_DataMapNodeOfDataMapOfIntegerPnt2d;
-		 MAT2d_DataMapNodeOfDataMapOfIntegerPnt2d (const Standard_Integer & K,const gp_Pnt2d & I,const TCollection_MapNodePtr & n);
-
-            %feature("autodoc","1");
-            %extend {
-                Standard_Integer GetKey() {
-                return (Standard_Integer) $self->Key();
-                }
-            };
-            %feature("autodoc","1");
-            %extend {
-                void SetKey(Standard_Integer value ) {
-                $self->Key()=value;
-                }
-            };
-            		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: gp_Pnt2d
-") Value;
-		gp_Pnt2d  Value ();
-};
-
-
-%make_alias(MAT2d_DataMapNodeOfDataMapOfIntegerPnt2d)
-
-%extend MAT2d_DataMapNodeOfDataMapOfIntegerPnt2d {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapNodeOfDataMapOfIntegerSequenceOfConnexion;
-class MAT2d_DataMapNodeOfDataMapOfIntegerSequenceOfConnexion : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapNodeOfDataMapOfIntegerSequenceOfConnexion;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:param I:
-	:type I: MAT2d_SequenceOfConnexion &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") MAT2d_DataMapNodeOfDataMapOfIntegerSequenceOfConnexion;
-		 MAT2d_DataMapNodeOfDataMapOfIntegerSequenceOfConnexion (const Standard_Integer & K,const MAT2d_SequenceOfConnexion & I,const TCollection_MapNodePtr & n);
-
-            %feature("autodoc","1");
-            %extend {
-                Standard_Integer GetKey() {
-                return (Standard_Integer) $self->Key();
-                }
-            };
-            %feature("autodoc","1");
-            %extend {
-                void SetKey(Standard_Integer value ) {
-                $self->Key()=value;
-                }
-            };
-            		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: MAT2d_SequenceOfConnexion
-") Value;
-		MAT2d_SequenceOfConnexion & Value ();
-};
-
-
-%make_alias(MAT2d_DataMapNodeOfDataMapOfIntegerSequenceOfConnexion)
-
-%extend MAT2d_DataMapNodeOfDataMapOfIntegerSequenceOfConnexion {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapNodeOfDataMapOfIntegerVec2d;
-class MAT2d_DataMapNodeOfDataMapOfIntegerVec2d : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapNodeOfDataMapOfIntegerVec2d;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:param I:
-	:type I: gp_Vec2d
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") MAT2d_DataMapNodeOfDataMapOfIntegerVec2d;
-		 MAT2d_DataMapNodeOfDataMapOfIntegerVec2d (const Standard_Integer & K,const gp_Vec2d & I,const TCollection_MapNodePtr & n);
-
-            %feature("autodoc","1");
-            %extend {
-                Standard_Integer GetKey() {
-                return (Standard_Integer) $self->Key();
-                }
-            };
-            %feature("autodoc","1");
-            %extend {
-                void SetKey(Standard_Integer value ) {
-                $self->Key()=value;
-                }
-            };
-            		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: gp_Vec2d
-") Value;
-		gp_Vec2d  Value ();
-};
-
-
-%make_alias(MAT2d_DataMapNodeOfDataMapOfIntegerVec2d)
-
-%extend MAT2d_DataMapNodeOfDataMapOfIntegerVec2d {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapOfBiIntInteger;
-class MAT2d_DataMapOfBiIntInteger : public TCollection_BasicMap {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapOfBiIntInteger;
-		%feature("autodoc", "	:param NbBuckets: default value is 1
-	:type NbBuckets: int
-	:rtype: None
-") MAT2d_DataMapOfBiIntInteger;
-		 MAT2d_DataMapOfBiIntInteger (const Standard_Integer NbBuckets = 1);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfBiIntInteger &
-	:rtype: MAT2d_DataMapOfBiIntInteger
-") Assign;
-		MAT2d_DataMapOfBiIntInteger & Assign (const MAT2d_DataMapOfBiIntInteger & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfBiIntInteger &
-	:rtype: MAT2d_DataMapOfBiIntInteger
-") operator =;
-		MAT2d_DataMapOfBiIntInteger & operator = (const MAT2d_DataMapOfBiIntInteger & Other);
-		%feature("compactdefaultargs") ReSize;
-		%feature("autodoc", "	:param NbBuckets:
-	:type NbBuckets: int
-	:rtype: None
-") ReSize;
-		void ReSize (const Standard_Integer NbBuckets);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:param I:
-	:type I: int &
-	:rtype: bool
-") Bind;
-		Standard_Boolean Bind (const MAT2d_BiInt & K,const Standard_Integer & I);
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const MAT2d_BiInt & K);
-		%feature("compactdefaultargs") UnBind;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:rtype: bool
-") UnBind;
-		Standard_Boolean UnBind (const MAT2d_BiInt & K);
-		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:rtype: int
-") Find;
-		const Standard_Integer & Find (const MAT2d_BiInt & K);
-		%feature("compactdefaultargs") ChangeFind;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:rtype: int
-") ChangeFind;
-		Standard_Integer & ChangeFind (const MAT2d_BiInt & K);
-		%feature("compactdefaultargs") Find1;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:rtype: Standard_Address
-") Find1;
-		Standard_Address Find1 (const MAT2d_BiInt & K);
-		%feature("compactdefaultargs") ChangeFind1;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:rtype: Standard_Address
-") ChangeFind1;
-		Standard_Address ChangeFind1 (const MAT2d_BiInt & K);
-};
-
-
-%extend MAT2d_DataMapOfBiIntInteger {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapOfBiIntSequenceOfInteger;
-class MAT2d_DataMapOfBiIntSequenceOfInteger : public TCollection_BasicMap {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapOfBiIntSequenceOfInteger;
-		%feature("autodoc", "	:param NbBuckets: default value is 1
-	:type NbBuckets: int
-	:rtype: None
-") MAT2d_DataMapOfBiIntSequenceOfInteger;
-		 MAT2d_DataMapOfBiIntSequenceOfInteger (const Standard_Integer NbBuckets = 1);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfBiIntSequenceOfInteger &
-	:rtype: MAT2d_DataMapOfBiIntSequenceOfInteger
-") Assign;
-		MAT2d_DataMapOfBiIntSequenceOfInteger & Assign (const MAT2d_DataMapOfBiIntSequenceOfInteger & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfBiIntSequenceOfInteger &
-	:rtype: MAT2d_DataMapOfBiIntSequenceOfInteger
-") operator =;
-		MAT2d_DataMapOfBiIntSequenceOfInteger & operator = (const MAT2d_DataMapOfBiIntSequenceOfInteger & Other);
-		%feature("compactdefaultargs") ReSize;
-		%feature("autodoc", "	:param NbBuckets:
-	:type NbBuckets: int
-	:rtype: None
-") ReSize;
-		void ReSize (const Standard_Integer NbBuckets);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:param I:
-	:type I: TColStd_SequenceOfInteger &
-	:rtype: bool
-") Bind;
-		Standard_Boolean Bind (const MAT2d_BiInt & K,const TColStd_SequenceOfInteger & I);
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const MAT2d_BiInt & K);
-		%feature("compactdefaultargs") UnBind;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:rtype: bool
-") UnBind;
-		Standard_Boolean UnBind (const MAT2d_BiInt & K);
-		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:rtype: TColStd_SequenceOfInteger
-") Find;
-		const TColStd_SequenceOfInteger & Find (const MAT2d_BiInt & K);
-		%feature("compactdefaultargs") ChangeFind;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:rtype: TColStd_SequenceOfInteger
-") ChangeFind;
-		TColStd_SequenceOfInteger & ChangeFind (const MAT2d_BiInt & K);
-		%feature("compactdefaultargs") Find1;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:rtype: Standard_Address
-") Find1;
-		Standard_Address Find1 (const MAT2d_BiInt & K);
-		%feature("compactdefaultargs") ChangeFind1;
-		%feature("autodoc", "	:param K:
-	:type K: MAT2d_BiInt &
-	:rtype: Standard_Address
-") ChangeFind1;
-		Standard_Address ChangeFind1 (const MAT2d_BiInt & K);
-};
-
-
-%extend MAT2d_DataMapOfBiIntSequenceOfInteger {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapOfIntegerBisec;
-class MAT2d_DataMapOfIntegerBisec : public TCollection_BasicMap {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapOfIntegerBisec;
-		%feature("autodoc", "	:param NbBuckets: default value is 1
-	:type NbBuckets: int
-	:rtype: None
-") MAT2d_DataMapOfIntegerBisec;
-		 MAT2d_DataMapOfIntegerBisec (const Standard_Integer NbBuckets = 1);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfIntegerBisec &
-	:rtype: MAT2d_DataMapOfIntegerBisec
-") Assign;
-		MAT2d_DataMapOfIntegerBisec & Assign (const MAT2d_DataMapOfIntegerBisec & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfIntegerBisec &
-	:rtype: MAT2d_DataMapOfIntegerBisec
-") operator =;
-		MAT2d_DataMapOfIntegerBisec & operator = (const MAT2d_DataMapOfIntegerBisec & Other);
-		%feature("compactdefaultargs") ReSize;
-		%feature("autodoc", "	:param NbBuckets:
-	:type NbBuckets: int
-	:rtype: None
-") ReSize;
-		void ReSize (const Standard_Integer NbBuckets);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:param I:
-	:type I: Bisector_Bisec &
-	:rtype: bool
-") Bind;
-		Standard_Boolean Bind (const Standard_Integer & K,const Bisector_Bisec & I);
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const Standard_Integer & K);
-		%feature("compactdefaultargs") UnBind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: bool
-") UnBind;
-		Standard_Boolean UnBind (const Standard_Integer & K);
-		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Bisector_Bisec
-") Find;
-		const Bisector_Bisec & Find (const Standard_Integer & K);
-		%feature("compactdefaultargs") ChangeFind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Bisector_Bisec
-") ChangeFind;
-		Bisector_Bisec & ChangeFind (const Standard_Integer & K);
-		%feature("compactdefaultargs") Find1;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Standard_Address
-") Find1;
-		Standard_Address Find1 (const Standard_Integer & K);
-		%feature("compactdefaultargs") ChangeFind1;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Standard_Address
-") ChangeFind1;
-		Standard_Address ChangeFind1 (const Standard_Integer & K);
-};
-
-
-%extend MAT2d_DataMapOfIntegerBisec {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapOfIntegerConnexion;
-class MAT2d_DataMapOfIntegerConnexion : public TCollection_BasicMap {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapOfIntegerConnexion;
-		%feature("autodoc", "	:param NbBuckets: default value is 1
-	:type NbBuckets: int
-	:rtype: None
-") MAT2d_DataMapOfIntegerConnexion;
-		 MAT2d_DataMapOfIntegerConnexion (const Standard_Integer NbBuckets = 1);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfIntegerConnexion &
-	:rtype: MAT2d_DataMapOfIntegerConnexion
-") Assign;
-		MAT2d_DataMapOfIntegerConnexion & Assign (const MAT2d_DataMapOfIntegerConnexion & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfIntegerConnexion &
-	:rtype: MAT2d_DataMapOfIntegerConnexion
-") operator =;
-		MAT2d_DataMapOfIntegerConnexion & operator = (const MAT2d_DataMapOfIntegerConnexion & Other);
-		%feature("compactdefaultargs") ReSize;
-		%feature("autodoc", "	:param NbBuckets:
-	:type NbBuckets: int
-	:rtype: None
-") ReSize;
-		void ReSize (const Standard_Integer NbBuckets);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:param I:
-	:type I: Handle_MAT2d_Connexion &
-	:rtype: bool
-") Bind;
-		Standard_Boolean Bind (const Standard_Integer & K,const Handle_MAT2d_Connexion & I);
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const Standard_Integer & K);
-		%feature("compactdefaultargs") UnBind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: bool
-") UnBind;
-		Standard_Boolean UnBind (const Standard_Integer & K);
-		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Handle_MAT2d_Connexion
-") Find;
-		Handle_MAT2d_Connexion Find (const Standard_Integer & K);
-		%feature("compactdefaultargs") ChangeFind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Handle_MAT2d_Connexion
-") ChangeFind;
-		Handle_MAT2d_Connexion ChangeFind (const Standard_Integer & K);
-		%feature("compactdefaultargs") Find1;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Standard_Address
-") Find1;
-		Standard_Address Find1 (const Standard_Integer & K);
-		%feature("compactdefaultargs") ChangeFind1;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Standard_Address
-") ChangeFind1;
-		Standard_Address ChangeFind1 (const Standard_Integer & K);
-};
-
-
-%extend MAT2d_DataMapOfIntegerConnexion {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapOfIntegerPnt2d;
-class MAT2d_DataMapOfIntegerPnt2d : public TCollection_BasicMap {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapOfIntegerPnt2d;
-		%feature("autodoc", "	:param NbBuckets: default value is 1
-	:type NbBuckets: int
-	:rtype: None
-") MAT2d_DataMapOfIntegerPnt2d;
-		 MAT2d_DataMapOfIntegerPnt2d (const Standard_Integer NbBuckets = 1);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfIntegerPnt2d &
-	:rtype: MAT2d_DataMapOfIntegerPnt2d
-") Assign;
-		MAT2d_DataMapOfIntegerPnt2d & Assign (const MAT2d_DataMapOfIntegerPnt2d & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfIntegerPnt2d &
-	:rtype: MAT2d_DataMapOfIntegerPnt2d
-") operator =;
-		MAT2d_DataMapOfIntegerPnt2d & operator = (const MAT2d_DataMapOfIntegerPnt2d & Other);
-		%feature("compactdefaultargs") ReSize;
-		%feature("autodoc", "	:param NbBuckets:
-	:type NbBuckets: int
-	:rtype: None
-") ReSize;
-		void ReSize (const Standard_Integer NbBuckets);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:param I:
-	:type I: gp_Pnt2d
-	:rtype: bool
-") Bind;
-		Standard_Boolean Bind (const Standard_Integer & K,const gp_Pnt2d & I);
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const Standard_Integer & K);
-		%feature("compactdefaultargs") UnBind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: bool
-") UnBind;
-		Standard_Boolean UnBind (const Standard_Integer & K);
-		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: gp_Pnt2d
-") Find;
-		const gp_Pnt2d  Find (const Standard_Integer & K);
-		%feature("compactdefaultargs") ChangeFind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: gp_Pnt2d
-") ChangeFind;
-		gp_Pnt2d  ChangeFind (const Standard_Integer & K);
-		%feature("compactdefaultargs") Find1;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Standard_Address
-") Find1;
-		Standard_Address Find1 (const Standard_Integer & K);
-		%feature("compactdefaultargs") ChangeFind1;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Standard_Address
-") ChangeFind1;
-		Standard_Address ChangeFind1 (const Standard_Integer & K);
-};
-
-
-%extend MAT2d_DataMapOfIntegerPnt2d {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapOfIntegerSequenceOfConnexion;
-class MAT2d_DataMapOfIntegerSequenceOfConnexion : public TCollection_BasicMap {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapOfIntegerSequenceOfConnexion;
-		%feature("autodoc", "	:param NbBuckets: default value is 1
-	:type NbBuckets: int
-	:rtype: None
-") MAT2d_DataMapOfIntegerSequenceOfConnexion;
-		 MAT2d_DataMapOfIntegerSequenceOfConnexion (const Standard_Integer NbBuckets = 1);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfIntegerSequenceOfConnexion &
-	:rtype: MAT2d_DataMapOfIntegerSequenceOfConnexion
-") Assign;
-		MAT2d_DataMapOfIntegerSequenceOfConnexion & Assign (const MAT2d_DataMapOfIntegerSequenceOfConnexion & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfIntegerSequenceOfConnexion &
-	:rtype: MAT2d_DataMapOfIntegerSequenceOfConnexion
-") operator =;
-		MAT2d_DataMapOfIntegerSequenceOfConnexion & operator = (const MAT2d_DataMapOfIntegerSequenceOfConnexion & Other);
-		%feature("compactdefaultargs") ReSize;
-		%feature("autodoc", "	:param NbBuckets:
-	:type NbBuckets: int
-	:rtype: None
-") ReSize;
-		void ReSize (const Standard_Integer NbBuckets);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:param I:
-	:type I: MAT2d_SequenceOfConnexion &
-	:rtype: bool
-") Bind;
-		Standard_Boolean Bind (const Standard_Integer & K,const MAT2d_SequenceOfConnexion & I);
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const Standard_Integer & K);
-		%feature("compactdefaultargs") UnBind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: bool
-") UnBind;
-		Standard_Boolean UnBind (const Standard_Integer & K);
-		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: MAT2d_SequenceOfConnexion
-") Find;
-		const MAT2d_SequenceOfConnexion & Find (const Standard_Integer & K);
-		%feature("compactdefaultargs") ChangeFind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: MAT2d_SequenceOfConnexion
-") ChangeFind;
-		MAT2d_SequenceOfConnexion & ChangeFind (const Standard_Integer & K);
-		%feature("compactdefaultargs") Find1;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Standard_Address
-") Find1;
-		Standard_Address Find1 (const Standard_Integer & K);
-		%feature("compactdefaultargs") ChangeFind1;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Standard_Address
-") ChangeFind1;
-		Standard_Address ChangeFind1 (const Standard_Integer & K);
-};
-
-
-%extend MAT2d_DataMapOfIntegerSequenceOfConnexion {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_DataMapOfIntegerVec2d;
-class MAT2d_DataMapOfIntegerVec2d : public TCollection_BasicMap {
-	public:
-		%feature("compactdefaultargs") MAT2d_DataMapOfIntegerVec2d;
-		%feature("autodoc", "	:param NbBuckets: default value is 1
-	:type NbBuckets: int
-	:rtype: None
-") MAT2d_DataMapOfIntegerVec2d;
-		 MAT2d_DataMapOfIntegerVec2d (const Standard_Integer NbBuckets = 1);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfIntegerVec2d &
-	:rtype: MAT2d_DataMapOfIntegerVec2d
-") Assign;
-		MAT2d_DataMapOfIntegerVec2d & Assign (const MAT2d_DataMapOfIntegerVec2d & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_DataMapOfIntegerVec2d &
-	:rtype: MAT2d_DataMapOfIntegerVec2d
-") operator =;
-		MAT2d_DataMapOfIntegerVec2d & operator = (const MAT2d_DataMapOfIntegerVec2d & Other);
-		%feature("compactdefaultargs") ReSize;
-		%feature("autodoc", "	:param NbBuckets:
-	:type NbBuckets: int
-	:rtype: None
-") ReSize;
-		void ReSize (const Standard_Integer NbBuckets);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:param I:
-	:type I: gp_Vec2d
-	:rtype: bool
-") Bind;
-		Standard_Boolean Bind (const Standard_Integer & K,const gp_Vec2d & I);
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const Standard_Integer & K);
-		%feature("compactdefaultargs") UnBind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: bool
-") UnBind;
-		Standard_Boolean UnBind (const Standard_Integer & K);
-		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: gp_Vec2d
-") Find;
-		const gp_Vec2d  Find (const Standard_Integer & K);
-		%feature("compactdefaultargs") ChangeFind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: gp_Vec2d
-") ChangeFind;
-		gp_Vec2d  ChangeFind (const Standard_Integer & K);
-		%feature("compactdefaultargs") Find1;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Standard_Address
-") Find1;
-		Standard_Address Find1 (const Standard_Integer & K);
-		%feature("compactdefaultargs") ChangeFind1;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Standard_Address
-") ChangeFind1;
-		Standard_Address ChangeFind1 (const Standard_Integer & K);
-};
-
-
-%extend MAT2d_DataMapOfIntegerVec2d {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
+/***********************
+* class MAT2d_CutCurve *
+***********************/
+/*****************************
+* class MAT2d_MapBiIntHasher *
+*****************************/
 class MAT2d_MapBiIntHasher {
 	public:
+		/****************** HashCode ******************/
+		/**** md5 signature: 2d93262f8aa010d2027358817cd87e99 ****/
 		%feature("compactdefaultargs") HashCode;
-		%feature("autodoc", "	:param Key1:
-	:type Key1: MAT2d_BiInt &
-	:param Upper:
-	:type Upper: int
-	:rtype: int
+		%feature("autodoc", "Computes a hash code for the given key, in the range [1, theupperbound] @param thekey the key which hash code is to be computed @param theupperbound the upper bound of the range a computing hash code must be within returns a computed hash code, in the range [1, theupperbound].
+
+Parameters
+----------
+theKey: MAT2d_BiInt
+theUpperBound: int
+
+Returns
+-------
+int
 ") HashCode;
-		static Standard_Integer HashCode (const MAT2d_BiInt & Key1,const Standard_Integer Upper);
+		static Standard_Integer HashCode(const MAT2d_BiInt & theKey, const Standard_Integer theUpperBound);
+
+		/****************** IsEqual ******************/
+		/**** md5 signature: 900a967a8cd8c34f415beccf506796f6 ****/
 		%feature("compactdefaultargs") IsEqual;
-		%feature("autodoc", "	:param Key1:
-	:type Key1: MAT2d_BiInt &
-	:param Key2:
-	:type Key2: MAT2d_BiInt &
-	:rtype: bool
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Key1: MAT2d_BiInt
+Key2: MAT2d_BiInt
+
+Returns
+-------
+bool
 ") IsEqual;
-		static Standard_Boolean IsEqual (const MAT2d_BiInt & Key1,const MAT2d_BiInt & Key2);
+		static Standard_Boolean IsEqual(const MAT2d_BiInt & Key1, const MAT2d_BiInt & Key2);
+
 };
 
 
@@ -1605,75 +824,135 @@ class MAT2d_MapBiIntHasher {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor MAT2d_Mat2d;
+
+/********************
+* class MAT2d_Mat2d *
+********************/
 class MAT2d_Mat2d {
 	public:
+		/****************** MAT2d_Mat2d ******************/
+		/**** md5 signature: f439b4b585960a22c06e7ea738efcbf9 ****/
 		%feature("compactdefaultargs") MAT2d_Mat2d;
-		%feature("autodoc", "	* Empty construtor.
+		%feature("autodoc", "Empty construtor.
 
-	:param IsOpenResult: default value is Standard_False
-	:type IsOpenResult: bool
-	:rtype: None
+Parameters
+----------
+IsOpenResult: bool,optional
+	default value is Standard_False
+
+Returns
+-------
+None
 ") MAT2d_Mat2d;
-		 MAT2d_Mat2d (const Standard_Boolean IsOpenResult = Standard_False);
-		%feature("compactdefaultargs") CreateMat;
-		%feature("autodoc", "	* Algoritm of computation of the bisecting locus.
+		 MAT2d_Mat2d(const Standard_Boolean IsOpenResult = Standard_False);
 
-	:param aTool:
-	:type aTool: MAT2d_Tool2d &
-	:rtype: None
-") CreateMat;
-		void CreateMat (MAT2d_Tool2d & aTool);
-		%feature("compactdefaultargs") CreateMatOpen;
-		%feature("autodoc", "	* Algoritm of computation of the bisecting locus for open wire.
-
-	:param aTool:
-	:type aTool: MAT2d_Tool2d &
-	:rtype: None
-") CreateMatOpen;
-		void CreateMatOpen (MAT2d_Tool2d & aTool);
-		%feature("compactdefaultargs") IsDone;
-		%feature("autodoc", "	* Returns <True> if CreateMat has succeeded.
-
-	:rtype: bool
-") IsDone;
-		Standard_Boolean IsDone ();
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	* Initialize an iterator on the set of the roots of the trees of bisectors.
-
-	:rtype: None
-") Init;
-		void Init ();
-		%feature("compactdefaultargs") More;
-		%feature("autodoc", "	* Return False if there is no more roots.
-
-	:rtype: bool
-") More;
-		Standard_Boolean More ();
-		%feature("compactdefaultargs") Next;
-		%feature("autodoc", "	* Move to the next root.
-
-	:rtype: None
-") Next;
-		void Next ();
+		/****************** Bisector ******************/
+		/**** md5 signature: 67b6ad5e7794a47e193cacc71d0ac1c6 ****/
 		%feature("compactdefaultargs") Bisector;
-		%feature("autodoc", "	* Returns the current root.
+		%feature("autodoc", "Returns the current root.
 
-	:rtype: Handle_MAT_Bisector
+Returns
+-------
+opencascade::handle<MAT_Bisector>
 ") Bisector;
-		Handle_MAT_Bisector Bisector ();
-		%feature("compactdefaultargs") SemiInfinite;
-		%feature("autodoc", "	* Returns True if there are semi_infinite bisectors. So there is a tree for each semi_infinte bisector.
+		opencascade::handle<MAT_Bisector> Bisector();
 
-	:rtype: bool
-") SemiInfinite;
-		Standard_Boolean SemiInfinite ();
+		/****************** CreateMat ******************/
+		/**** md5 signature: 717224e1f2d3269fea646a133206ad70 ****/
+		%feature("compactdefaultargs") CreateMat;
+		%feature("autodoc", "Algoritm of computation of the bisecting locus.
+
+Parameters
+----------
+aTool: MAT2d_Tool2d
+
+Returns
+-------
+None
+") CreateMat;
+		void CreateMat(MAT2d_Tool2d & aTool);
+
+		/****************** CreateMatOpen ******************/
+		/**** md5 signature: 79ad82fccb9da722fb02fd80f0334bde ****/
+		%feature("compactdefaultargs") CreateMatOpen;
+		%feature("autodoc", "Algoritm of computation of the bisecting locus for open wire.
+
+Parameters
+----------
+aTool: MAT2d_Tool2d
+
+Returns
+-------
+None
+") CreateMatOpen;
+		void CreateMatOpen(MAT2d_Tool2d & aTool);
+
+		/****************** Init ******************/
+		/**** md5 signature: 0de93ef32c53d091768788dca0e281fd ****/
+		%feature("compactdefaultargs") Init;
+		%feature("autodoc", "Initialize an iterator on the set of the roots of the trees of bisectors.
+
+Returns
+-------
+None
+") Init;
+		void Init();
+
+		/****************** IsDone ******************/
+		/**** md5 signature: ec0624071ec7da54b3d9dacc7bcb05f9 ****/
+		%feature("compactdefaultargs") IsDone;
+		%feature("autodoc", "Returns <true> if createmat has succeeded.
+
+Returns
+-------
+bool
+") IsDone;
+		Standard_Boolean IsDone();
+
+		/****************** More ******************/
+		/**** md5 signature: 6f6e915c9a3dca758c059d9e8af02dff ****/
+		%feature("compactdefaultargs") More;
+		%feature("autodoc", "Return false if there is no more roots.
+
+Returns
+-------
+bool
+") More;
+		Standard_Boolean More();
+
+		/****************** Next ******************/
+		/**** md5 signature: f35c0df5f1d7c877986db18081404532 ****/
+		%feature("compactdefaultargs") Next;
+		%feature("autodoc", "Move to the next root.
+
+Returns
+-------
+None
+") Next;
+		void Next();
+
+		/****************** NumberOfBisectors ******************/
+		/**** md5 signature: e52804b83739b49416ec49fd614e427c ****/
 		%feature("compactdefaultargs") NumberOfBisectors;
-		%feature("autodoc", "	* Returns the total number of bisectors.
+		%feature("autodoc", "Returns the total number of bisectors.
 
-	:rtype: int
+Returns
+-------
+int
 ") NumberOfBisectors;
-		Standard_Integer NumberOfBisectors ();
+		Standard_Integer NumberOfBisectors();
+
+		/****************** SemiInfinite ******************/
+		/**** md5 signature: 6c8f4adc9ba1520b1d74688cb6aff3fd ****/
+		%feature("compactdefaultargs") SemiInfinite;
+		%feature("autodoc", "Returns true if there are semi_infinite bisectors. so there is a tree for each semi_infinte bisector.
+
+Returns
+-------
+bool
+") SemiInfinite;
+		Standard_Boolean SemiInfinite();
+
 };
 
 
@@ -1682,69 +961,122 @@ class MAT2d_Mat2d {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor MAT2d_MiniPath;
+
+/***********************
+* class MAT2d_MiniPath *
+***********************/
 class MAT2d_MiniPath {
 	public:
+		/****************** MAT2d_MiniPath ******************/
+		/**** md5 signature: 9164c07248d1c0b69ed9710f1a89afad ****/
 		%feature("compactdefaultargs") MAT2d_MiniPath;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") MAT2d_MiniPath;
-		 MAT2d_MiniPath ();
-		%feature("compactdefaultargs") Perform;
-		%feature("autodoc", "	* Computes the path to link the lines in <Figure>. the path starts on the line of index <IndStart> <Sense> = True if the Circuit turns in the trigonometric sense.
+		 MAT2d_MiniPath();
 
-	:param Figure:
-	:type Figure: MAT2d_SequenceOfSequenceOfGeometry &
-	:param IndStart:
-	:type IndStart: int
-	:param Sense:
-	:type Sense: bool
-	:rtype: None
-") Perform;
-		void Perform (const MAT2d_SequenceOfSequenceOfGeometry & Figure,const Standard_Integer IndStart,const Standard_Boolean Sense);
-		%feature("compactdefaultargs") RunOnConnexions;
-		%feature("autodoc", "	* Run on the set of connexions to compute the path. the path is an exploration of the tree which contains the connexions and their reverses. if the tree of connexions is A / | B E / | | C D F //! the path is A->B, B->C, C->B, B->D, D->B, B->A, A->E, E->F, F->E, E->A.
-
-	:rtype: None
-") RunOnConnexions;
-		void RunOnConnexions ();
-		%feature("compactdefaultargs") Path;
-		%feature("autodoc", "	* Returns the sequence of connexions corresponding to the path.
-
-	:rtype: MAT2d_SequenceOfConnexion
-") Path;
-		const MAT2d_SequenceOfConnexion & Path ();
-		%feature("compactdefaultargs") IsConnexionsFrom;
-		%feature("autodoc", "	* Returns <True> if there is one Connexion which starts on line designed by <Index>.
-
-	:param Index:
-	:type Index: int
-	:rtype: bool
-") IsConnexionsFrom;
-		Standard_Boolean IsConnexionsFrom (const Standard_Integer Index);
+		/****************** ConnexionsFrom ******************/
+		/**** md5 signature: f1a567b01e2a9822ac854464cf7cb35b ****/
 		%feature("compactdefaultargs") ConnexionsFrom;
-		%feature("autodoc", "	* Returns the connexions which start on line designed by <Index>.
+		%feature("autodoc", "Returns the connexions which start on line designed by <index>.
 
-	:param Index:
-	:type Index: int
-	:rtype: MAT2d_SequenceOfConnexion
+Parameters
+----------
+Index: int
+
+Returns
+-------
+MAT2d_SequenceOfConnexion
 ") ConnexionsFrom;
-		MAT2d_SequenceOfConnexion & ConnexionsFrom (const Standard_Integer Index);
-		%feature("compactdefaultargs") IsRoot;
-		%feature("autodoc", "	* Returns <True> if the line designed by <Index> is the root.
+		MAT2d_SequenceOfConnexion & ConnexionsFrom(const Standard_Integer Index);
 
-	:param Index:
-	:type Index: int
-	:rtype: bool
-") IsRoot;
-		Standard_Boolean IsRoot (const Standard_Integer Index);
+		/****************** Father ******************/
+		/**** md5 signature: 05be18adc3333f3c132390d37e3dc45d ****/
 		%feature("compactdefaultargs") Father;
-		%feature("autodoc", "	* Returns the connexion which ends on line designed by <Index>.
+		%feature("autodoc", "Returns the connexion which ends on line designed by <index>.
 
-	:param Index:
-	:type Index: int
-	:rtype: Handle_MAT2d_Connexion
+Parameters
+----------
+Index: int
+
+Returns
+-------
+opencascade::handle<MAT2d_Connexion>
 ") Father;
-		Handle_MAT2d_Connexion Father (const Standard_Integer Index);
+		opencascade::handle<MAT2d_Connexion> Father(const Standard_Integer Index);
+
+		/****************** IsConnexionsFrom ******************/
+		/**** md5 signature: a3d643449bb4c30a5216154cc969d2aa ****/
+		%feature("compactdefaultargs") IsConnexionsFrom;
+		%feature("autodoc", "Returns <true> if there is one connexion which starts on line designed by <index>.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+bool
+") IsConnexionsFrom;
+		Standard_Boolean IsConnexionsFrom(const Standard_Integer Index);
+
+		/****************** IsRoot ******************/
+		/**** md5 signature: e2b828672c99106ed633e881d7c63192 ****/
+		%feature("compactdefaultargs") IsRoot;
+		%feature("autodoc", "Returns <true> if the line designed by <index> is the root.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+bool
+") IsRoot;
+		Standard_Boolean IsRoot(const Standard_Integer Index);
+
+		/****************** Path ******************/
+		/**** md5 signature: 28cbfa9e39501e27ab452cbdcdad0adb ****/
+		%feature("compactdefaultargs") Path;
+		%feature("autodoc", "Returns the sequence of connexions corresponding to the path.
+
+Returns
+-------
+MAT2d_SequenceOfConnexion
+") Path;
+		const MAT2d_SequenceOfConnexion & Path();
+
+		/****************** Perform ******************/
+		/**** md5 signature: c6cf1a0b596162a4c426828ee0aee684 ****/
+		%feature("compactdefaultargs") Perform;
+		%feature("autodoc", "Computes the path to link the lines in <figure>. the path starts on the line of index <indstart> <sense> = true if the circuit turns in the trigonometric sense.
+
+Parameters
+----------
+Figure: MAT2d_SequenceOfSequenceOfGeometry
+IndStart: int
+Sense: bool
+
+Returns
+-------
+None
+") Perform;
+		void Perform(const MAT2d_SequenceOfSequenceOfGeometry & Figure, const Standard_Integer IndStart, const Standard_Boolean Sense);
+
+		/****************** RunOnConnexions ******************/
+		/**** md5 signature: ee2ac7d20b87c24fc63fb1334502d079 ****/
+		%feature("compactdefaultargs") RunOnConnexions;
+		%feature("autodoc", "Run on the set of connexions to compute the path. the path is an exploration of the tree which contains the connexions and their reverses. if the tree of connexions is a / | b e / | | c d f //! the path is a->b, b->c, c->b, b->d, d->b, b->a, a->e, e->f, f->e, e->a.
+
+Returns
+-------
+None
+") RunOnConnexions;
+		void RunOnConnexions();
+
 };
 
 
@@ -1753,709 +1085,349 @@ class MAT2d_MiniPath {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor MAT2d_SequenceNodeOfSequenceOfConnexion;
-class MAT2d_SequenceNodeOfSequenceOfConnexion : public TCollection_SeqNode {
-	public:
-		%feature("compactdefaultargs") MAT2d_SequenceNodeOfSequenceOfConnexion;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_MAT2d_Connexion &
-	:param n:
-	:type n: TCollection_SeqNodePtr &
-	:param p:
-	:type p: TCollection_SeqNodePtr &
-	:rtype: None
-") MAT2d_SequenceNodeOfSequenceOfConnexion;
-		 MAT2d_SequenceNodeOfSequenceOfConnexion (const Handle_MAT2d_Connexion & I,const TCollection_SeqNodePtr & n,const TCollection_SeqNodePtr & p);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_MAT2d_Connexion
-") Value;
-		Handle_MAT2d_Connexion Value ();
-};
 
-
-%make_alias(MAT2d_SequenceNodeOfSequenceOfConnexion)
-
-%extend MAT2d_SequenceNodeOfSequenceOfConnexion {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_SequenceNodeOfSequenceOfSequenceOfCurve;
-class MAT2d_SequenceNodeOfSequenceOfSequenceOfCurve : public TCollection_SeqNode {
-	public:
-		%feature("compactdefaultargs") MAT2d_SequenceNodeOfSequenceOfSequenceOfCurve;
-		%feature("autodoc", "	:param I:
-	:type I: TColGeom2d_SequenceOfCurve &
-	:param n:
-	:type n: TCollection_SeqNodePtr &
-	:param p:
-	:type p: TCollection_SeqNodePtr &
-	:rtype: None
-") MAT2d_SequenceNodeOfSequenceOfSequenceOfCurve;
-		 MAT2d_SequenceNodeOfSequenceOfSequenceOfCurve (const TColGeom2d_SequenceOfCurve & I,const TCollection_SeqNodePtr & n,const TCollection_SeqNodePtr & p);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TColGeom2d_SequenceOfCurve
-") Value;
-		TColGeom2d_SequenceOfCurve & Value ();
-};
-
-
-%make_alias(MAT2d_SequenceNodeOfSequenceOfSequenceOfCurve)
-
-%extend MAT2d_SequenceNodeOfSequenceOfSequenceOfCurve {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_SequenceNodeOfSequenceOfSequenceOfGeometry;
-class MAT2d_SequenceNodeOfSequenceOfSequenceOfGeometry : public TCollection_SeqNode {
-	public:
-		%feature("compactdefaultargs") MAT2d_SequenceNodeOfSequenceOfSequenceOfGeometry;
-		%feature("autodoc", "	:param I:
-	:type I: TColGeom2d_SequenceOfGeometry &
-	:param n:
-	:type n: TCollection_SeqNodePtr &
-	:param p:
-	:type p: TCollection_SeqNodePtr &
-	:rtype: None
-") MAT2d_SequenceNodeOfSequenceOfSequenceOfGeometry;
-		 MAT2d_SequenceNodeOfSequenceOfSequenceOfGeometry (const TColGeom2d_SequenceOfGeometry & I,const TCollection_SeqNodePtr & n,const TCollection_SeqNodePtr & p);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TColGeom2d_SequenceOfGeometry
-") Value;
-		TColGeom2d_SequenceOfGeometry & Value ();
-};
-
-
-%make_alias(MAT2d_SequenceNodeOfSequenceOfSequenceOfGeometry)
-
-%extend MAT2d_SequenceNodeOfSequenceOfSequenceOfGeometry {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_SequenceOfConnexion;
-class MAT2d_SequenceOfConnexion : public TCollection_BaseSequence {
-	public:
-		%feature("compactdefaultargs") MAT2d_SequenceOfConnexion;
-		%feature("autodoc", "	:rtype: None
-") MAT2d_SequenceOfConnexion;
-		 MAT2d_SequenceOfConnexion ();
-		%feature("compactdefaultargs") MAT2d_SequenceOfConnexion;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_SequenceOfConnexion &
-	:rtype: None
-") MAT2d_SequenceOfConnexion;
-		 MAT2d_SequenceOfConnexion (const MAT2d_SequenceOfConnexion & Other);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_SequenceOfConnexion &
-	:rtype: MAT2d_SequenceOfConnexion
-") Assign;
-		const MAT2d_SequenceOfConnexion & Assign (const MAT2d_SequenceOfConnexion & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_SequenceOfConnexion &
-	:rtype: MAT2d_SequenceOfConnexion
-") operator =;
-		const MAT2d_SequenceOfConnexion & operator = (const MAT2d_SequenceOfConnexion & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param T:
-	:type T: Handle_MAT2d_Connexion &
-	:rtype: None
-") Append;
-		void Append (const Handle_MAT2d_Connexion & T);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param S:
-	:type S: MAT2d_SequenceOfConnexion &
-	:rtype: None
-") Append;
-		void Append (MAT2d_SequenceOfConnexion & S);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param T:
-	:type T: Handle_MAT2d_Connexion &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_MAT2d_Connexion & T);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param S:
-	:type S: MAT2d_SequenceOfConnexion &
-	:rtype: None
-") Prepend;
-		void Prepend (MAT2d_SequenceOfConnexion & S);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: Handle_MAT2d_Connexion &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,const Handle_MAT2d_Connexion & T);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: MAT2d_SequenceOfConnexion &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,MAT2d_SequenceOfConnexion & S);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: Handle_MAT2d_Connexion &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,const Handle_MAT2d_Connexion & T);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: MAT2d_SequenceOfConnexion &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,MAT2d_SequenceOfConnexion & S);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: Handle_MAT2d_Connexion
-") First;
-		Handle_MAT2d_Connexion First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: Handle_MAT2d_Connexion
-") Last;
-		Handle_MAT2d_Connexion Last ();
-		%feature("compactdefaultargs") Split;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param Sub:
-	:type Sub: MAT2d_SequenceOfConnexion &
-	:rtype: None
-") Split;
-		void Split (const Standard_Integer Index,MAT2d_SequenceOfConnexion & Sub);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Handle_MAT2d_Connexion
-") Value;
-		Handle_MAT2d_Connexion Value (const Standard_Integer Index);
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param I:
-	:type I: Handle_MAT2d_Connexion &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer Index,const Handle_MAT2d_Connexion & I);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Handle_MAT2d_Connexion
-") ChangeValue;
-		Handle_MAT2d_Connexion ChangeValue (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param FromIndex:
-	:type FromIndex: int
-	:param ToIndex:
-	:type ToIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer FromIndex,const Standard_Integer ToIndex);
-};
-
-
-%extend MAT2d_SequenceOfConnexion {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_SequenceOfSequenceOfCurve;
-class MAT2d_SequenceOfSequenceOfCurve : public TCollection_BaseSequence {
-	public:
-		%feature("compactdefaultargs") MAT2d_SequenceOfSequenceOfCurve;
-		%feature("autodoc", "	:rtype: None
-") MAT2d_SequenceOfSequenceOfCurve;
-		 MAT2d_SequenceOfSequenceOfCurve ();
-		%feature("compactdefaultargs") MAT2d_SequenceOfSequenceOfCurve;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_SequenceOfSequenceOfCurve &
-	:rtype: None
-") MAT2d_SequenceOfSequenceOfCurve;
-		 MAT2d_SequenceOfSequenceOfCurve (const MAT2d_SequenceOfSequenceOfCurve & Other);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_SequenceOfSequenceOfCurve &
-	:rtype: MAT2d_SequenceOfSequenceOfCurve
-") Assign;
-		const MAT2d_SequenceOfSequenceOfCurve & Assign (const MAT2d_SequenceOfSequenceOfCurve & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_SequenceOfSequenceOfCurve &
-	:rtype: MAT2d_SequenceOfSequenceOfCurve
-") operator =;
-		const MAT2d_SequenceOfSequenceOfCurve & operator = (const MAT2d_SequenceOfSequenceOfCurve & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param T:
-	:type T: TColGeom2d_SequenceOfCurve &
-	:rtype: None
-") Append;
-		void Append (const TColGeom2d_SequenceOfCurve & T);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param S:
-	:type S: MAT2d_SequenceOfSequenceOfCurve &
-	:rtype: None
-") Append;
-		void Append (MAT2d_SequenceOfSequenceOfCurve & S);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param T:
-	:type T: TColGeom2d_SequenceOfCurve &
-	:rtype: None
-") Prepend;
-		void Prepend (const TColGeom2d_SequenceOfCurve & T);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param S:
-	:type S: MAT2d_SequenceOfSequenceOfCurve &
-	:rtype: None
-") Prepend;
-		void Prepend (MAT2d_SequenceOfSequenceOfCurve & S);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: TColGeom2d_SequenceOfCurve &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,const TColGeom2d_SequenceOfCurve & T);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: MAT2d_SequenceOfSequenceOfCurve &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,MAT2d_SequenceOfSequenceOfCurve & S);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: TColGeom2d_SequenceOfCurve &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,const TColGeom2d_SequenceOfCurve & T);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: MAT2d_SequenceOfSequenceOfCurve &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,MAT2d_SequenceOfSequenceOfCurve & S);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: TColGeom2d_SequenceOfCurve
-") First;
-		const TColGeom2d_SequenceOfCurve & First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: TColGeom2d_SequenceOfCurve
-") Last;
-		const TColGeom2d_SequenceOfCurve & Last ();
-		%feature("compactdefaultargs") Split;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param Sub:
-	:type Sub: MAT2d_SequenceOfSequenceOfCurve &
-	:rtype: None
-") Split;
-		void Split (const Standard_Integer Index,MAT2d_SequenceOfSequenceOfCurve & Sub);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: TColGeom2d_SequenceOfCurve
-") Value;
-		const TColGeom2d_SequenceOfCurve & Value (const Standard_Integer Index);
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param I:
-	:type I: TColGeom2d_SequenceOfCurve &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer Index,const TColGeom2d_SequenceOfCurve & I);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: TColGeom2d_SequenceOfCurve
-") ChangeValue;
-		TColGeom2d_SequenceOfCurve & ChangeValue (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param FromIndex:
-	:type FromIndex: int
-	:param ToIndex:
-	:type ToIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer FromIndex,const Standard_Integer ToIndex);
-};
-
-
-%extend MAT2d_SequenceOfSequenceOfCurve {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_SequenceOfSequenceOfGeometry;
-class MAT2d_SequenceOfSequenceOfGeometry : public TCollection_BaseSequence {
-	public:
-		%feature("compactdefaultargs") MAT2d_SequenceOfSequenceOfGeometry;
-		%feature("autodoc", "	:rtype: None
-") MAT2d_SequenceOfSequenceOfGeometry;
-		 MAT2d_SequenceOfSequenceOfGeometry ();
-		%feature("compactdefaultargs") MAT2d_SequenceOfSequenceOfGeometry;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_SequenceOfSequenceOfGeometry &
-	:rtype: None
-") MAT2d_SequenceOfSequenceOfGeometry;
-		 MAT2d_SequenceOfSequenceOfGeometry (const MAT2d_SequenceOfSequenceOfGeometry & Other);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_SequenceOfSequenceOfGeometry &
-	:rtype: MAT2d_SequenceOfSequenceOfGeometry
-") Assign;
-		const MAT2d_SequenceOfSequenceOfGeometry & Assign (const MAT2d_SequenceOfSequenceOfGeometry & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: MAT2d_SequenceOfSequenceOfGeometry &
-	:rtype: MAT2d_SequenceOfSequenceOfGeometry
-") operator =;
-		const MAT2d_SequenceOfSequenceOfGeometry & operator = (const MAT2d_SequenceOfSequenceOfGeometry & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param T:
-	:type T: TColGeom2d_SequenceOfGeometry &
-	:rtype: None
-") Append;
-		void Append (const TColGeom2d_SequenceOfGeometry & T);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param S:
-	:type S: MAT2d_SequenceOfSequenceOfGeometry &
-	:rtype: None
-") Append;
-		void Append (MAT2d_SequenceOfSequenceOfGeometry & S);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param T:
-	:type T: TColGeom2d_SequenceOfGeometry &
-	:rtype: None
-") Prepend;
-		void Prepend (const TColGeom2d_SequenceOfGeometry & T);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param S:
-	:type S: MAT2d_SequenceOfSequenceOfGeometry &
-	:rtype: None
-") Prepend;
-		void Prepend (MAT2d_SequenceOfSequenceOfGeometry & S);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: TColGeom2d_SequenceOfGeometry &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,const TColGeom2d_SequenceOfGeometry & T);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: MAT2d_SequenceOfSequenceOfGeometry &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,MAT2d_SequenceOfSequenceOfGeometry & S);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: TColGeom2d_SequenceOfGeometry &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,const TColGeom2d_SequenceOfGeometry & T);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: MAT2d_SequenceOfSequenceOfGeometry &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,MAT2d_SequenceOfSequenceOfGeometry & S);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: TColGeom2d_SequenceOfGeometry
-") First;
-		const TColGeom2d_SequenceOfGeometry & First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: TColGeom2d_SequenceOfGeometry
-") Last;
-		const TColGeom2d_SequenceOfGeometry & Last ();
-		%feature("compactdefaultargs") Split;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param Sub:
-	:type Sub: MAT2d_SequenceOfSequenceOfGeometry &
-	:rtype: None
-") Split;
-		void Split (const Standard_Integer Index,MAT2d_SequenceOfSequenceOfGeometry & Sub);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: TColGeom2d_SequenceOfGeometry
-") Value;
-		const TColGeom2d_SequenceOfGeometry & Value (const Standard_Integer Index);
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param I:
-	:type I: TColGeom2d_SequenceOfGeometry &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer Index,const TColGeom2d_SequenceOfGeometry & I);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: TColGeom2d_SequenceOfGeometry
-") ChangeValue;
-		TColGeom2d_SequenceOfGeometry & ChangeValue (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param FromIndex:
-	:type FromIndex: int
-	:param ToIndex:
-	:type ToIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer FromIndex,const Standard_Integer ToIndex);
-};
-
-
-%extend MAT2d_SequenceOfSequenceOfGeometry {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor MAT2d_Tool2d;
+/*********************
+* class MAT2d_Tool2d *
+*********************/
 class MAT2d_Tool2d {
 	public:
+		/****************** MAT2d_Tool2d ******************/
+		/**** md5 signature: 40b373afb67e3235c19bb3bbc1b3741a ****/
 		%feature("compactdefaultargs") MAT2d_Tool2d;
-		%feature("autodoc", "	* Empty Constructor.
+		%feature("autodoc", "Empty constructor.
 
-	:rtype: None
+Returns
+-------
+None
 ") MAT2d_Tool2d;
-		 MAT2d_Tool2d ();
-		%feature("compactdefaultargs") Sense;
-		%feature("autodoc", "	* <aSide> defines the side of the computation of the map.
+		 MAT2d_Tool2d();
 
-	:param aside:
-	:type aside: MAT_Side
-	:rtype: None
-") Sense;
-		void Sense (const MAT_Side aside);
-		%feature("compactdefaultargs") SetJoinType;
-		%feature("autodoc", "	:param aJoinType:
-	:type aJoinType: GeomAbs_JoinType
-	:rtype: None
-") SetJoinType;
-		void SetJoinType (const GeomAbs_JoinType aJoinType);
-		%feature("compactdefaultargs") InitItems;
-		%feature("autodoc", "	* InitItems cuts the line in Items. this Items are the geometrics representations of the BasicElts from MAT.
-
-	:param aCircuit:
-	:type aCircuit: Handle_MAT2d_Circuit &
-	:rtype: None
-") InitItems;
-		void InitItems (const Handle_MAT2d_Circuit & aCircuit);
-		%feature("compactdefaultargs") NumberOfItems;
-		%feature("autodoc", "	* Returns the Number of Items .
-
-	:rtype: int
-") NumberOfItems;
-		Standard_Integer NumberOfItems ();
-		%feature("compactdefaultargs") ToleranceOfConfusion;
-		%feature("autodoc", "	* Returns tolerance to test the confusion of two points.
-
-	:rtype: float
-") ToleranceOfConfusion;
-		Standard_Real ToleranceOfConfusion ();
-		%feature("compactdefaultargs") FirstPoint;
-		%feature("autodoc", "	* Creates the point at the origin of the bisector between anitem and the previous item. dist is the distance from the FirstPoint to <anitem>. Returns the index of this point in <theGeomPnts>.
-
-	:param anitem:
-	:type anitem: int
-	:param dist:
-	:type dist: float &
-	:rtype: int
-") FirstPoint;
-		Standard_Integer FirstPoint (const Standard_Integer anitem,Standard_Real &OutValue);
-		%feature("compactdefaultargs") TangentBefore;
-		%feature("autodoc", "	* Creates the Tangent at the end of the Item defined by <anitem>. Returns the index of this vector in <theGeomVecs>
-
-	:param anitem:
-	:type anitem: int
-	:param IsOpenResult:
-	:type IsOpenResult: bool
-	:rtype: int
-") TangentBefore;
-		Standard_Integer TangentBefore (const Standard_Integer anitem,const Standard_Boolean IsOpenResult);
-		%feature("compactdefaultargs") TangentAfter;
-		%feature("autodoc", "	* Creates the Reversed Tangent at the origin of the Item defined by <anitem>. Returns the index of this vector in <theGeomVecs>
-
-	:param anitem:
-	:type anitem: int
-	:param IsOpenResult:
-	:type IsOpenResult: bool
-	:rtype: int
-") TangentAfter;
-		Standard_Integer TangentAfter (const Standard_Integer anitem,const Standard_Boolean IsOpenResult);
-		%feature("compactdefaultargs") Tangent;
-		%feature("autodoc", "	* Creates the Tangent at the end of the bisector defined by <bisector>. Returns the index of this vector in <theGeomVecs>
-
-	:param bisector:
-	:type bisector: int
-	:rtype: int
-") Tangent;
-		Standard_Integer Tangent (const Standard_Integer bisector);
-		%feature("compactdefaultargs") CreateBisector;
-		%feature("autodoc", "	* Creates the geometric bisector defined by <abisector>.
-
-	:param abisector:
-	:type abisector: Handle_MAT_Bisector &
-	:rtype: None
-") CreateBisector;
-		void CreateBisector (const Handle_MAT_Bisector & abisector);
-		%feature("compactdefaultargs") TrimBisector;
-		%feature("autodoc", "	* Trims the geometric bisector by the <firstparameter> of <abisector>. If the parameter is out of the bisector, Return False. else Return True.
-
-	:param abisector:
-	:type abisector: Handle_MAT_Bisector &
-	:rtype: bool
-") TrimBisector;
-		Standard_Boolean TrimBisector (const Handle_MAT_Bisector & abisector);
-		%feature("compactdefaultargs") TrimBisector;
-		%feature("autodoc", "	* Trims the geometric bisector by the point of index <apoint> in <theGeomPnts>. If the point is out of the bisector, Return False. else Return True.
-
-	:param abisector:
-	:type abisector: Handle_MAT_Bisector &
-	:param apoint:
-	:type apoint: int
-	:rtype: bool
-") TrimBisector;
-		Standard_Boolean TrimBisector (const Handle_MAT_Bisector & abisector,const Standard_Integer apoint);
-		%feature("compactdefaultargs") IntersectBisector;
-		%feature("autodoc", "	* Computes the point of intersection between the bisectors defined by <bisectorone> and <bisectortwo> . If this point exists, <intpnt> is its index in <theGeomPnts> and Return the distance of the point from the bisector else Return <RealLast>.
-
-	:param bisectorone:
-	:type bisectorone: Handle_MAT_Bisector &
-	:param bisectortwo:
-	:type bisectortwo: Handle_MAT_Bisector &
-	:param intpnt:
-	:type intpnt: int &
-	:rtype: float
-") IntersectBisector;
-		Standard_Real IntersectBisector (const Handle_MAT_Bisector & bisectorone,const Handle_MAT_Bisector & bisectortwo,Standard_Integer &OutValue);
-		%feature("compactdefaultargs") Distance;
-		%feature("autodoc", "	* Returns the distance between the two points designed by their parameters on <abisector>.
-
-	:param abisector:
-	:type abisector: Handle_MAT_Bisector &
-	:param param1:
-	:type param1: float
-	:param param2:
-	:type param2: float
-	:rtype: float
-") Distance;
-		Standard_Real Distance (const Handle_MAT_Bisector & abisector,const Standard_Real param1,const Standard_Real param2);
-		%feature("compactdefaultargs") Dump;
-		%feature("autodoc", "	* displays informations about the bisector defined by <bisector>.
-
-	:param bisector:
-	:type bisector: int
-	:param erease:
-	:type erease: int
-	:rtype: None
-") Dump;
-		void Dump (const Standard_Integer bisector,const Standard_Integer erease);
-		%feature("compactdefaultargs") GeomBis;
-		%feature("autodoc", "	* Returns the <Bisec> of index <Index> in <theGeomBisectors>.
-
-	:param Index:
-	:type Index: int
-	:rtype: Bisector_Bisec
-") GeomBis;
-		const Bisector_Bisec & GeomBis (const Standard_Integer Index);
-		%feature("compactdefaultargs") GeomElt;
-		%feature("autodoc", "	* Returns the Geometry of index <Index> in <theGeomElts>.
-
-	:param Index:
-	:type Index: int
-	:rtype: Handle_Geom2d_Geometry
-") GeomElt;
-		Handle_Geom2d_Geometry GeomElt (const Standard_Integer Index);
-		%feature("compactdefaultargs") GeomPnt;
-		%feature("autodoc", "	* Returns the point of index <Index> in the <theGeomPnts>.
-
-	:param Index:
-	:type Index: int
-	:rtype: gp_Pnt2d
-") GeomPnt;
-		const gp_Pnt2d  GeomPnt (const Standard_Integer Index);
-		%feature("compactdefaultargs") GeomVec;
-		%feature("autodoc", "	* Returns the vector of index <Index> in the <theGeomVecs>.
-
-	:param Index:
-	:type Index: int
-	:rtype: gp_Vec2d
-") GeomVec;
-		const gp_Vec2d  GeomVec (const Standard_Integer Index);
-		%feature("compactdefaultargs") Circuit;
-		%feature("autodoc", "	:rtype: Handle_MAT2d_Circuit
-") Circuit;
-		Handle_MAT2d_Circuit Circuit ();
+		/****************** BisecFusion ******************/
+		/**** md5 signature: b36ebe72707aecc8364523c4845ce15b ****/
 		%feature("compactdefaultargs") BisecFusion;
-		%feature("autodoc", "	:param Index1:
-	:type Index1: int
-	:param Index2:
-	:type Index2: int
-	:rtype: None
-") BisecFusion;
-		void BisecFusion (const Standard_Integer Index1,const Standard_Integer Index2);
-		%feature("compactdefaultargs") ChangeGeomBis;
-		%feature("autodoc", "	* Returns the <Bisec> of index <Index> in <theGeomBisectors>.
+		%feature("autodoc", "No available documentation.
 
-	:param Index:
-	:type Index: int
-	:rtype: Bisector_Bisec
+Parameters
+----------
+Index1: int
+Index2: int
+
+Returns
+-------
+None
+") BisecFusion;
+		void BisecFusion(const Standard_Integer Index1, const Standard_Integer Index2);
+
+		/****************** ChangeGeomBis ******************/
+		/**** md5 signature: 55a028194238717752a04f3fd4cce5e3 ****/
+		%feature("compactdefaultargs") ChangeGeomBis;
+		%feature("autodoc", "Returns the <bisec> of index <index> in <thegeombisectors>.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+Bisector_Bisec
 ") ChangeGeomBis;
-		Bisector_Bisec & ChangeGeomBis (const Standard_Integer Index);
+		Bisector_Bisec & ChangeGeomBis(const Standard_Integer Index);
+
+		/****************** Circuit ******************/
+		/**** md5 signature: 1e2ccb6c6c69d007d1b82b258a079b2c ****/
+		%feature("compactdefaultargs") Circuit;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<MAT2d_Circuit>
+") Circuit;
+		opencascade::handle<MAT2d_Circuit> Circuit();
+
+		/****************** CreateBisector ******************/
+		/**** md5 signature: 91533521b7368c9e2fe26d017383aa92 ****/
+		%feature("compactdefaultargs") CreateBisector;
+		%feature("autodoc", "Creates the geometric bisector defined by <abisector>.
+
+Parameters
+----------
+abisector: MAT_Bisector
+
+Returns
+-------
+None
+") CreateBisector;
+		void CreateBisector(const opencascade::handle<MAT_Bisector> & abisector);
+
+		/****************** Distance ******************/
+		/**** md5 signature: c4f9e7dff727fbcecb68acd556aec01c ****/
+		%feature("compactdefaultargs") Distance;
+		%feature("autodoc", "Returns the distance between the two points designed by their parameters on <abisector>.
+
+Parameters
+----------
+abisector: MAT_Bisector
+param1: float
+param2: float
+
+Returns
+-------
+float
+") Distance;
+		Standard_Real Distance(const opencascade::handle<MAT_Bisector> & abisector, const Standard_Real param1, const Standard_Real param2);
+
+		/****************** Dump ******************/
+		/**** md5 signature: ed8af339d2cda3e0556fbccf04ebaaea ****/
+		%feature("compactdefaultargs") Dump;
+		%feature("autodoc", "Displays informations about the bisector defined by <bisector>.
+
+Parameters
+----------
+bisector: int
+erease: int
+
+Returns
+-------
+None
+") Dump;
+		void Dump(const Standard_Integer bisector, const Standard_Integer erease);
+
+		/****************** FirstPoint ******************/
+		/**** md5 signature: af53facaedcf1602dca2af134e2a1e26 ****/
+		%feature("compactdefaultargs") FirstPoint;
+		%feature("autodoc", "Creates the point at the origin of the bisector between anitem and the previous item. dist is the distance from the firstpoint to <anitem>. returns the index of this point in <thegeompnts>.
+
+Parameters
+----------
+anitem: int
+
+Returns
+-------
+dist: float
+") FirstPoint;
+		Standard_Integer FirstPoint(const Standard_Integer anitem, Standard_Real &OutValue);
+
+		/****************** GeomBis ******************/
+		/**** md5 signature: 2669ea1ceaf32dffb2c030ef117a0c36 ****/
+		%feature("compactdefaultargs") GeomBis;
+		%feature("autodoc", "Returns the <bisec> of index <index> in <thegeombisectors>.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+Bisector_Bisec
+") GeomBis;
+		const Bisector_Bisec & GeomBis(const Standard_Integer Index);
+
+		/****************** GeomElt ******************/
+		/**** md5 signature: 1527f25e2caa069ccf56038ebf14fb6f ****/
+		%feature("compactdefaultargs") GeomElt;
+		%feature("autodoc", "Returns the geometry of index <index> in <thegeomelts>.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+opencascade::handle<Geom2d_Geometry>
+") GeomElt;
+		opencascade::handle<Geom2d_Geometry> GeomElt(const Standard_Integer Index);
+
+		/****************** GeomPnt ******************/
+		/**** md5 signature: eb6a4e9d73821fe2a124ecb7dd200dd9 ****/
+		%feature("compactdefaultargs") GeomPnt;
+		%feature("autodoc", "Returns the point of index <index> in the <thegeompnts>.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+gp_Pnt2d
+") GeomPnt;
+		const gp_Pnt2d GeomPnt(const Standard_Integer Index);
+
+		/****************** GeomVec ******************/
+		/**** md5 signature: fb4c975539824a5e046043581866e0a7 ****/
+		%feature("compactdefaultargs") GeomVec;
+		%feature("autodoc", "Returns the vector of index <index> in the <thegeomvecs>.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+gp_Vec2d
+") GeomVec;
+		const gp_Vec2d GeomVec(const Standard_Integer Index);
+
+		/****************** InitItems ******************/
+		/**** md5 signature: 710fae1c32a164ce6272271d003ecbb2 ****/
+		%feature("compactdefaultargs") InitItems;
+		%feature("autodoc", "Inititems cuts the line in items. this items are the geometrics representations of the basicelts from mat.
+
+Parameters
+----------
+aCircuit: MAT2d_Circuit
+
+Returns
+-------
+None
+") InitItems;
+		void InitItems(const opencascade::handle<MAT2d_Circuit> & aCircuit);
+
+		/****************** IntersectBisector ******************/
+		/**** md5 signature: 7c49aa3c8064249c2de081b0f6df8114 ****/
+		%feature("compactdefaultargs") IntersectBisector;
+		%feature("autodoc", "Computes the point of intersection between the bisectors defined by <bisectorone> and <bisectortwo> . if this point exists, <intpnt> is its index in <thegeompnts> and return the distance of the point from the bisector else return <reallast>.
+
+Parameters
+----------
+bisectorone: MAT_Bisector
+bisectortwo: MAT_Bisector
+
+Returns
+-------
+intpnt: int
+") IntersectBisector;
+		Standard_Real IntersectBisector(const opencascade::handle<MAT_Bisector> & bisectorone, const opencascade::handle<MAT_Bisector> & bisectortwo, Standard_Integer &OutValue);
+
+		/****************** NumberOfItems ******************/
+		/**** md5 signature: 6320550c1d233b98551d924e74a6ceb4 ****/
+		%feature("compactdefaultargs") NumberOfItems;
+		%feature("autodoc", "Returns the number of items .
+
+Returns
+-------
+int
+") NumberOfItems;
+		Standard_Integer NumberOfItems();
+
+		/****************** Sense ******************/
+		/**** md5 signature: 1a0b245e555341dbcd06115c68217691 ****/
+		%feature("compactdefaultargs") Sense;
+		%feature("autodoc", "<aside> defines the side of the computation of the map.
+
+Parameters
+----------
+aside: MAT_Side
+
+Returns
+-------
+None
+") Sense;
+		void Sense(const MAT_Side aside);
+
+		/****************** SetJoinType ******************/
+		/**** md5 signature: f42fabf7bf117604f0107e91d840719b ****/
+		%feature("compactdefaultargs") SetJoinType;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+aJoinType: GeomAbs_JoinType
+
+Returns
+-------
+None
+") SetJoinType;
+		void SetJoinType(const GeomAbs_JoinType aJoinType);
+
+		/****************** Tangent ******************/
+		/**** md5 signature: ab662854e61125c88be73685fae8988e ****/
+		%feature("compactdefaultargs") Tangent;
+		%feature("autodoc", "Creates the tangent at the end of the bisector defined by <bisector>. returns the index of this vector in <thegeomvecs>.
+
+Parameters
+----------
+bisector: int
+
+Returns
+-------
+int
+") Tangent;
+		Standard_Integer Tangent(const Standard_Integer bisector);
+
+		/****************** TangentAfter ******************/
+		/**** md5 signature: 18070da22791e48f1a9aa2ab9345bacf ****/
+		%feature("compactdefaultargs") TangentAfter;
+		%feature("autodoc", "Creates the reversed tangent at the origin of the item defined by <anitem>. returns the index of this vector in <thegeomvecs>.
+
+Parameters
+----------
+anitem: int
+IsOpenResult: bool
+
+Returns
+-------
+int
+") TangentAfter;
+		Standard_Integer TangentAfter(const Standard_Integer anitem, const Standard_Boolean IsOpenResult);
+
+		/****************** TangentBefore ******************/
+		/**** md5 signature: b181f50d015bb15af38052be8e4c2ce5 ****/
+		%feature("compactdefaultargs") TangentBefore;
+		%feature("autodoc", "Creates the tangent at the end of the item defined by <anitem>. returns the index of this vector in <thegeomvecs>.
+
+Parameters
+----------
+anitem: int
+IsOpenResult: bool
+
+Returns
+-------
+int
+") TangentBefore;
+		Standard_Integer TangentBefore(const Standard_Integer anitem, const Standard_Boolean IsOpenResult);
+
+		/****************** ToleranceOfConfusion ******************/
+		/**** md5 signature: 120f891c1d5a826cad7d45027f612828 ****/
+		%feature("compactdefaultargs") ToleranceOfConfusion;
+		%feature("autodoc", "Returns tolerance to test the confusion of two points.
+
+Returns
+-------
+float
+") ToleranceOfConfusion;
+		Standard_Real ToleranceOfConfusion();
+
+		/****************** TrimBisector ******************/
+		/**** md5 signature: 6c697b82711f48eb2a48c1a462be3bba ****/
+		%feature("compactdefaultargs") TrimBisector;
+		%feature("autodoc", "Trims the geometric bisector by the <firstparameter> of <abisector>. if the parameter is out of the bisector, return false. else return true.
+
+Parameters
+----------
+abisector: MAT_Bisector
+
+Returns
+-------
+bool
+") TrimBisector;
+		Standard_Boolean TrimBisector(const opencascade::handle<MAT_Bisector> & abisector);
+
+		/****************** TrimBisector ******************/
+		/**** md5 signature: ca420d516c26d6ab4100ae3c0e87448b ****/
+		%feature("compactdefaultargs") TrimBisector;
+		%feature("autodoc", "Trims the geometric bisector by the point of index <apoint> in <thegeompnts>. if the point is out of the bisector, return false. else return true.
+
+Parameters
+----------
+abisector: MAT_Bisector
+apoint: int
+
+Returns
+-------
+bool
+") TrimBisector;
+		Standard_Boolean TrimBisector(const opencascade::handle<MAT_Bisector> & abisector, const Standard_Integer apoint);
+
 };
 
 
@@ -2464,3 +1436,19 @@ class MAT2d_Tool2d {
 	__repr__ = _dumps_object
 	}
 };
+
+/* python proxy for excluded classes */
+%pythoncode {
+@classnotwrapped
+class MAT2d_SketchExplorer:
+	pass
+
+@classnotwrapped
+class MAT2d_CutCurve:
+	pass
+
+}
+/* end python proxy for excluded classes */
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */

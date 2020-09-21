@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,14 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define HATCHGENDOCSTRING
-""
+"HatchGen module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_hatchgen.html"
 %enddef
 %module (package="OCC.Core", docstring=HATCHGENDOCSTRING) HatchGen
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -37,10 +35,28 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/OccHandle.i
 
 
-%include HatchGen_headers.i
+%{
+#include<HatchGen_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<TopAbs_module.hxx>
+#include<IntRes2d_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+%import TopAbs.i
+%import IntRes2d.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 enum HatchGen_ErrorStatus {
@@ -60,115 +76,256 @@ enum HatchGen_IntersectionType {
 
 /* end public enums declaration */
 
-%wrap_handle(HatchGen_SequenceNodeOfDomains)
-%wrap_handle(HatchGen_SequenceNodeOfPointsOnElement)
-%wrap_handle(HatchGen_SequenceNodeOfPointsOnHatching)
+/* python proy classes for enums */
+%pythoncode {
 
-%nodefaultctor HatchGen_Domain;
+class HatchGen_ErrorStatus(IntEnum):
+	HatchGen_NoProblem = 0
+	HatchGen_TrimFailure = 1
+	HatchGen_TransitionFailure = 2
+	HatchGen_IncoherentParity = 3
+	HatchGen_IncompatibleStates = 4
+HatchGen_NoProblem = HatchGen_ErrorStatus.HatchGen_NoProblem
+HatchGen_TrimFailure = HatchGen_ErrorStatus.HatchGen_TrimFailure
+HatchGen_TransitionFailure = HatchGen_ErrorStatus.HatchGen_TransitionFailure
+HatchGen_IncoherentParity = HatchGen_ErrorStatus.HatchGen_IncoherentParity
+HatchGen_IncompatibleStates = HatchGen_ErrorStatus.HatchGen_IncompatibleStates
+
+class HatchGen_IntersectionType(IntEnum):
+	HatchGen_TRUE = 0
+	HatchGen_TOUCH = 1
+	HatchGen_TANGENT = 2
+	HatchGen_UNDETERMINED = 3
+HatchGen_TRUE = HatchGen_IntersectionType.HatchGen_TRUE
+HatchGen_TOUCH = HatchGen_IntersectionType.HatchGen_TOUCH
+HatchGen_TANGENT = HatchGen_IntersectionType.HatchGen_TANGENT
+HatchGen_UNDETERMINED = HatchGen_IntersectionType.HatchGen_UNDETERMINED
+};
+/* end python proxy for enums */
+
+/* handles */
+/* end handles declaration */
+
+/* templates */
+%template(HatchGen_Domains) NCollection_Sequence<HatchGen_Domain>;
+
+%extend NCollection_Sequence<HatchGen_Domain> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+%template(HatchGen_PointsOnElement) NCollection_Sequence<HatchGen_PointOnElement>;
+
+%extend NCollection_Sequence<HatchGen_PointOnElement> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+%template(HatchGen_PointsOnHatching) NCollection_Sequence<HatchGen_PointOnHatching>;
+
+%extend NCollection_Sequence<HatchGen_PointOnHatching> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+/* end templates declaration */
+
+/* typedefs */
+typedef NCollection_Sequence<HatchGen_Domain> HatchGen_Domains;
+typedef NCollection_Sequence<HatchGen_PointOnElement> HatchGen_PointsOnElement;
+typedef NCollection_Sequence<HatchGen_PointOnHatching> HatchGen_PointsOnHatching;
+/* end typedefs declaration */
+
+/************************
+* class HatchGen_Domain *
+************************/
 class HatchGen_Domain {
 	public:
+		/****************** HatchGen_Domain ******************/
+		/**** md5 signature: 002fed1e21ea4785e79e64200ace0a45 ****/
 		%feature("compactdefaultargs") HatchGen_Domain;
-		%feature("autodoc", "	* Creates an infinite domain.
+		%feature("autodoc", "Creates an infinite domain.
 
-	:rtype: None
+Returns
+-------
+None
 ") HatchGen_Domain;
-		 HatchGen_Domain ();
+		 HatchGen_Domain();
+
+		/****************** HatchGen_Domain ******************/
+		/**** md5 signature: d0f948cbe08580f151246fe4b42124d3 ****/
 		%feature("compactdefaultargs") HatchGen_Domain;
-		%feature("autodoc", "	* Creates a domain for the curve associated to a hatching.
+		%feature("autodoc", "Creates a domain for the curve associated to a hatching.
 
-	:param P1:
-	:type P1: HatchGen_PointOnHatching &
-	:param P2:
-	:type P2: HatchGen_PointOnHatching &
-	:rtype: None
+Parameters
+----------
+P1: HatchGen_PointOnHatching
+P2: HatchGen_PointOnHatching
+
+Returns
+-------
+None
 ") HatchGen_Domain;
-		 HatchGen_Domain (const HatchGen_PointOnHatching & P1,const HatchGen_PointOnHatching & P2);
+		 HatchGen_Domain(const HatchGen_PointOnHatching & P1, const HatchGen_PointOnHatching & P2);
+
+		/****************** HatchGen_Domain ******************/
+		/**** md5 signature: cd70456b6ebdffc7e658b05561e5caf4 ****/
 		%feature("compactdefaultargs") HatchGen_Domain;
-		%feature("autodoc", "	* Creates a semi-infinite domain for the curve associated to a hatching. The `First' flag means that the given point is the first one.
+		%feature("autodoc", "Creates a semi-infinite domain for the curve associated to a hatching. the `first' flag means that the given point is the first one.
 
-	:param P:
-	:type P: HatchGen_PointOnHatching &
-	:param First:
-	:type First: bool
-	:rtype: None
+Parameters
+----------
+P: HatchGen_PointOnHatching
+First: bool
+
+Returns
+-------
+None
 ") HatchGen_Domain;
-		 HatchGen_Domain (const HatchGen_PointOnHatching & P,const Standard_Boolean First);
-		%feature("compactdefaultargs") SetPoints;
-		%feature("autodoc", "	* Sets the first and the second points of the domain.
+		 HatchGen_Domain(const HatchGen_PointOnHatching & P, const Standard_Boolean First);
 
-	:param P1:
-	:type P1: HatchGen_PointOnHatching &
-	:param P2:
-	:type P2: HatchGen_PointOnHatching &
-	:rtype: None
-") SetPoints;
-		void SetPoints (const HatchGen_PointOnHatching & P1,const HatchGen_PointOnHatching & P2);
-		%feature("compactdefaultargs") SetPoints;
-		%feature("autodoc", "	* Sets the first and the second points of the domain as the infinite.
-
-	:rtype: None
-") SetPoints;
-		void SetPoints ();
-		%feature("compactdefaultargs") SetFirstPoint;
-		%feature("autodoc", "	* Sets the first point of the domain.
-
-	:param P:
-	:type P: HatchGen_PointOnHatching &
-	:rtype: None
-") SetFirstPoint;
-		void SetFirstPoint (const HatchGen_PointOnHatching & P);
-		%feature("compactdefaultargs") SetFirstPoint;
-		%feature("autodoc", "	* Sets the first point of the domain at the infinite.
-
-	:rtype: None
-") SetFirstPoint;
-		void SetFirstPoint ();
-		%feature("compactdefaultargs") SetSecondPoint;
-		%feature("autodoc", "	* Sets the second point of the domain.
-
-	:param P:
-	:type P: HatchGen_PointOnHatching &
-	:rtype: None
-") SetSecondPoint;
-		void SetSecondPoint (const HatchGen_PointOnHatching & P);
-		%feature("compactdefaultargs") SetSecondPoint;
-		%feature("autodoc", "	* Sets the second point of the domain at the infinite.
-
-	:rtype: None
-") SetSecondPoint;
-		void SetSecondPoint ();
-		%feature("compactdefaultargs") HasFirstPoint;
-		%feature("autodoc", "	* Returns True if the domain has a first point.
-
-	:rtype: bool
-") HasFirstPoint;
-		Standard_Boolean HasFirstPoint ();
-		%feature("compactdefaultargs") FirstPoint;
-		%feature("autodoc", "	* Returns the first point of the domain. The exception DomainError is raised if HasFirstPoint returns False.
-
-	:rtype: HatchGen_PointOnHatching
-") FirstPoint;
-		const HatchGen_PointOnHatching & FirstPoint ();
-		%feature("compactdefaultargs") HasSecondPoint;
-		%feature("autodoc", "	* Returns True if the domain has a second point.
-
-	:rtype: bool
-") HasSecondPoint;
-		Standard_Boolean HasSecondPoint ();
-		%feature("compactdefaultargs") SecondPoint;
-		%feature("autodoc", "	* Returns the second point of the domain. The exception DomainError is raised if HasSecondPoint returns False.
-
-	:rtype: HatchGen_PointOnHatching
-") SecondPoint;
-		const HatchGen_PointOnHatching & SecondPoint ();
+		/****************** Dump ******************/
+		/**** md5 signature: 01f7aa82c5ee0f23c3ae9a615ce67cdf ****/
 		%feature("compactdefaultargs") Dump;
-		%feature("autodoc", "	* Dump of the domain.
+		%feature("autodoc", "Dump of the domain.
 
-	:param Index: default value is 0
-	:type Index: int
-	:rtype: None
+Parameters
+----------
+Index: int,optional
+	default value is 0
+
+Returns
+-------
+None
 ") Dump;
-		void Dump (const Standard_Integer Index = 0);
+		void Dump(const Standard_Integer Index = 0);
+
+		/****************** FirstPoint ******************/
+		/**** md5 signature: be005e1bb3197123a3b75f67921aaeca ****/
+		%feature("compactdefaultargs") FirstPoint;
+		%feature("autodoc", "Returns the first point of the domain. the exception domainerror is raised if hasfirstpoint returns false.
+
+Returns
+-------
+HatchGen_PointOnHatching
+") FirstPoint;
+		const HatchGen_PointOnHatching & FirstPoint();
+
+		/****************** HasFirstPoint ******************/
+		/**** md5 signature: 76549d304d78c4a9c8d3c420139524d3 ****/
+		%feature("compactdefaultargs") HasFirstPoint;
+		%feature("autodoc", "Returns true if the domain has a first point.
+
+Returns
+-------
+bool
+") HasFirstPoint;
+		Standard_Boolean HasFirstPoint();
+
+		/****************** HasSecondPoint ******************/
+		/**** md5 signature: fec3c9db8715d3b740053f2b40e032e6 ****/
+		%feature("compactdefaultargs") HasSecondPoint;
+		%feature("autodoc", "Returns true if the domain has a second point.
+
+Returns
+-------
+bool
+") HasSecondPoint;
+		Standard_Boolean HasSecondPoint();
+
+		/****************** SecondPoint ******************/
+		/**** md5 signature: 63b2b16d6a3a3cea84f761a97c9e1c18 ****/
+		%feature("compactdefaultargs") SecondPoint;
+		%feature("autodoc", "Returns the second point of the domain. the exception domainerror is raised if hassecondpoint returns false.
+
+Returns
+-------
+HatchGen_PointOnHatching
+") SecondPoint;
+		const HatchGen_PointOnHatching & SecondPoint();
+
+		/****************** SetFirstPoint ******************/
+		/**** md5 signature: 0bd7019ad2595e1a58cb06d850e0212b ****/
+		%feature("compactdefaultargs") SetFirstPoint;
+		%feature("autodoc", "Sets the first point of the domain.
+
+Parameters
+----------
+P: HatchGen_PointOnHatching
+
+Returns
+-------
+None
+") SetFirstPoint;
+		void SetFirstPoint(const HatchGen_PointOnHatching & P);
+
+		/****************** SetFirstPoint ******************/
+		/**** md5 signature: cc2d0403a1116c0918b69f2b0e7859c1 ****/
+		%feature("compactdefaultargs") SetFirstPoint;
+		%feature("autodoc", "Sets the first point of the domain at the infinite.
+
+Returns
+-------
+None
+") SetFirstPoint;
+		void SetFirstPoint();
+
+		/****************** SetPoints ******************/
+		/**** md5 signature: b0e1deba6a6562a05b6a4c4c4e314c4d ****/
+		%feature("compactdefaultargs") SetPoints;
+		%feature("autodoc", "Sets the first and the second points of the domain.
+
+Parameters
+----------
+P1: HatchGen_PointOnHatching
+P2: HatchGen_PointOnHatching
+
+Returns
+-------
+None
+") SetPoints;
+		void SetPoints(const HatchGen_PointOnHatching & P1, const HatchGen_PointOnHatching & P2);
+
+		/****************** SetPoints ******************/
+		/**** md5 signature: 474d6964e8c5db9134bad493f91e9ea9 ****/
+		%feature("compactdefaultargs") SetPoints;
+		%feature("autodoc", "Sets the first and the second points of the domain as the infinite.
+
+Returns
+-------
+None
+") SetPoints;
+		void SetPoints();
+
+		/****************** SetSecondPoint ******************/
+		/**** md5 signature: d280223bcacdef93e0950ee090227bad ****/
+		%feature("compactdefaultargs") SetSecondPoint;
+		%feature("autodoc", "Sets the second point of the domain.
+
+Parameters
+----------
+P: HatchGen_PointOnHatching
+
+Returns
+-------
+None
+") SetSecondPoint;
+		void SetSecondPoint(const HatchGen_PointOnHatching & P);
+
+		/****************** SetSecondPoint ******************/
+		/**** md5 signature: 4e521cf34592df1547bcd8f78d3fcec8 ****/
+		%feature("compactdefaultargs") SetSecondPoint;
+		%feature("autodoc", "Sets the second point of the domain at the infinite.
+
+Returns
+-------
+None
+") SetSecondPoint;
+		void SetSecondPoint();
+
 };
 
 
@@ -177,258 +334,214 @@ class HatchGen_Domain {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor HatchGen_Domains;
-class HatchGen_Domains : public TCollection_BaseSequence {
-	public:
-		%feature("compactdefaultargs") HatchGen_Domains;
-		%feature("autodoc", "	:rtype: None
-") HatchGen_Domains;
-		 HatchGen_Domains ();
-		%feature("compactdefaultargs") HatchGen_Domains;
-		%feature("autodoc", "	:param Other:
-	:type Other: HatchGen_Domains &
-	:rtype: None
-") HatchGen_Domains;
-		 HatchGen_Domains (const HatchGen_Domains & Other);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: HatchGen_Domains &
-	:rtype: HatchGen_Domains
-") Assign;
-		const HatchGen_Domains & Assign (const HatchGen_Domains & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: HatchGen_Domains &
-	:rtype: HatchGen_Domains
-") operator =;
-		const HatchGen_Domains & operator = (const HatchGen_Domains & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param T:
-	:type T: HatchGen_Domain &
-	:rtype: None
-") Append;
-		void Append (const HatchGen_Domain & T);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param S:
-	:type S: HatchGen_Domains &
-	:rtype: None
-") Append;
-		void Append (HatchGen_Domains & S);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param T:
-	:type T: HatchGen_Domain &
-	:rtype: None
-") Prepend;
-		void Prepend (const HatchGen_Domain & T);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param S:
-	:type S: HatchGen_Domains &
-	:rtype: None
-") Prepend;
-		void Prepend (HatchGen_Domains & S);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: HatchGen_Domain &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,const HatchGen_Domain & T);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: HatchGen_Domains &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,HatchGen_Domains & S);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: HatchGen_Domain &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,const HatchGen_Domain & T);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: HatchGen_Domains &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,HatchGen_Domains & S);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: HatchGen_Domain
-") First;
-		const HatchGen_Domain & First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: HatchGen_Domain
-") Last;
-		const HatchGen_Domain & Last ();
-		%feature("compactdefaultargs") Split;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param Sub:
-	:type Sub: HatchGen_Domains &
-	:rtype: None
-") Split;
-		void Split (const Standard_Integer Index,HatchGen_Domains & Sub);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: HatchGen_Domain
-") Value;
-		const HatchGen_Domain & Value (const Standard_Integer Index);
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param I:
-	:type I: HatchGen_Domain &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer Index,const HatchGen_Domain & I);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: HatchGen_Domain
-") ChangeValue;
-		HatchGen_Domain & ChangeValue (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param FromIndex:
-	:type FromIndex: int
-	:param ToIndex:
-	:type ToIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer FromIndex,const Standard_Integer ToIndex);
-};
 
-
-%extend HatchGen_Domains {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
+/***********************************
+* class HatchGen_IntersectionPoint *
+***********************************/
 %nodefaultctor HatchGen_IntersectionPoint;
+%ignore HatchGen_IntersectionPoint::~HatchGen_IntersectionPoint();
 class HatchGen_IntersectionPoint {
 	public:
-		%feature("compactdefaultargs") SetIndex;
-		%feature("autodoc", "	* Sets the index of the supporting curve.
-
-	:param Index:
-	:type Index: int
-	:rtype: None
-") SetIndex;
-		void SetIndex (const Standard_Integer Index);
-		%feature("compactdefaultargs") Index;
-		%feature("autodoc", "	* Returns the index of the supporting curve.
-
-	:rtype: int
-") Index;
-		Standard_Integer Index ();
-		%feature("compactdefaultargs") SetParameter;
-		%feature("autodoc", "	* Sets the parameter on the curve.
-
-	:param Parameter:
-	:type Parameter: float
-	:rtype: None
-") SetParameter;
-		void SetParameter (const Standard_Real Parameter);
-		%feature("compactdefaultargs") Parameter;
-		%feature("autodoc", "	* Returns the parameter on the curve.
-
-	:rtype: float
-") Parameter;
-		Standard_Real Parameter ();
-		%feature("compactdefaultargs") SetPosition;
-		%feature("autodoc", "	* Sets the position of the point on the curve.
-
-	:param Position:
-	:type Position: TopAbs_Orientation
-	:rtype: None
-") SetPosition;
-		void SetPosition (const TopAbs_Orientation Position);
-		%feature("compactdefaultargs") Position;
-		%feature("autodoc", "	* Returns the position of the point on the curve.
-
-	:rtype: TopAbs_Orientation
-") Position;
-		TopAbs_Orientation Position ();
-		%feature("compactdefaultargs") SetStateBefore;
-		%feature("autodoc", "	* Sets the transition state before the intersection.
-
-	:param State:
-	:type State: TopAbs_State
-	:rtype: None
-") SetStateBefore;
-		void SetStateBefore (const TopAbs_State State);
-		%feature("compactdefaultargs") StateBefore;
-		%feature("autodoc", "	* Returns the transition state before the intersection.
-
-	:rtype: TopAbs_State
-") StateBefore;
-		TopAbs_State StateBefore ();
-		%feature("compactdefaultargs") SetStateAfter;
-		%feature("autodoc", "	* Sets the transition state after the intersection.
-
-	:param State:
-	:type State: TopAbs_State
-	:rtype: None
-") SetStateAfter;
-		void SetStateAfter (const TopAbs_State State);
-		%feature("compactdefaultargs") StateAfter;
-		%feature("autodoc", "	* Returns the transition state after of the intersection.
-
-	:rtype: TopAbs_State
-") StateAfter;
-		TopAbs_State StateAfter ();
-		%feature("compactdefaultargs") SetSegmentBeginning;
-		%feature("autodoc", "	* Sets the flag that the point is the beginning of a segment.
-
-	:param State: default value is Standard_True
-	:type State: bool
-	:rtype: None
-") SetSegmentBeginning;
-		void SetSegmentBeginning (const Standard_Boolean State = Standard_True);
-		%feature("compactdefaultargs") SegmentBeginning;
-		%feature("autodoc", "	* Returns the flag that the point is the beginning of a segment.
-
-	:rtype: bool
-") SegmentBeginning;
-		Standard_Boolean SegmentBeginning ();
-		%feature("compactdefaultargs") SetSegmentEnd;
-		%feature("autodoc", "	* Sets the flag that the point is the end of a segment.
-
-	:param State: default value is Standard_True
-	:type State: bool
-	:rtype: None
-") SetSegmentEnd;
-		void SetSegmentEnd (const Standard_Boolean State = Standard_True);
-		%feature("compactdefaultargs") SegmentEnd;
-		%feature("autodoc", "	* Returns the flag that the point is the end of a segment.
-
-	:rtype: bool
-") SegmentEnd;
-		Standard_Boolean SegmentEnd ();
+		/****************** Dump ******************/
+		/**** md5 signature: c2e6c174fa329d65759d90e615b3a8b4 ****/
 		%feature("compactdefaultargs") Dump;
-		%feature("autodoc", "	* Dump of the point on element.
+		%feature("autodoc", "Dump of the point on element.
 
-	:param Index: default value is 0
-	:type Index: int
-	:rtype: void
+Parameters
+----------
+Index: int,optional
+	default value is 0
+
+Returns
+-------
+None
 ") Dump;
-		virtual void Dump (const Standard_Integer Index = 0);
+		virtual void Dump(const Standard_Integer Index = 0);
+
+		/****************** Index ******************/
+		/**** md5 signature: 407d80ef3037d55996765198adea3908 ****/
+		%feature("compactdefaultargs") Index;
+		%feature("autodoc", "Returns the index of the supporting curve.
+
+Returns
+-------
+int
+") Index;
+		Standard_Integer Index();
+
+		/****************** Parameter ******************/
+		/**** md5 signature: ecccdeaeaa0deed24f47e61ad75d24f1 ****/
+		%feature("compactdefaultargs") Parameter;
+		%feature("autodoc", "Returns the parameter on the curve.
+
+Returns
+-------
+float
+") Parameter;
+		Standard_Real Parameter();
+
+		/****************** Position ******************/
+		/**** md5 signature: 12c62744b1270f847a2fb81f66b529c6 ****/
+		%feature("compactdefaultargs") Position;
+		%feature("autodoc", "Returns the position of the point on the curve.
+
+Returns
+-------
+TopAbs_Orientation
+") Position;
+		TopAbs_Orientation Position();
+
+		/****************** SegmentBeginning ******************/
+		/**** md5 signature: 33518940d865ec7d130ed1361f158dd3 ****/
+		%feature("compactdefaultargs") SegmentBeginning;
+		%feature("autodoc", "Returns the flag that the point is the beginning of a segment.
+
+Returns
+-------
+bool
+") SegmentBeginning;
+		Standard_Boolean SegmentBeginning();
+
+		/****************** SegmentEnd ******************/
+		/**** md5 signature: 1c2edeb2291ec54154aa4cc6c99573d9 ****/
+		%feature("compactdefaultargs") SegmentEnd;
+		%feature("autodoc", "Returns the flag that the point is the end of a segment.
+
+Returns
+-------
+bool
+") SegmentEnd;
+		Standard_Boolean SegmentEnd();
+
+		/****************** SetIndex ******************/
+		/**** md5 signature: d1ad8cf3e26528faa78cad1c3b0908d8 ****/
+		%feature("compactdefaultargs") SetIndex;
+		%feature("autodoc", "Sets the index of the supporting curve.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+None
+") SetIndex;
+		void SetIndex(const Standard_Integer Index);
+
+		/****************** SetParameter ******************/
+		/**** md5 signature: 4c7278262c066aac5546618fdac50953 ****/
+		%feature("compactdefaultargs") SetParameter;
+		%feature("autodoc", "Sets the parameter on the curve.
+
+Parameters
+----------
+Parameter: float
+
+Returns
+-------
+None
+") SetParameter;
+		void SetParameter(const Standard_Real Parameter);
+
+		/****************** SetPosition ******************/
+		/**** md5 signature: 378c44c908732d3c54529b6c924f349e ****/
+		%feature("compactdefaultargs") SetPosition;
+		%feature("autodoc", "Sets the position of the point on the curve.
+
+Parameters
+----------
+Position: TopAbs_Orientation
+
+Returns
+-------
+None
+") SetPosition;
+		void SetPosition(const TopAbs_Orientation Position);
+
+		/****************** SetSegmentBeginning ******************/
+		/**** md5 signature: 6126da9c07a508d174d264a7b4c6c810 ****/
+		%feature("compactdefaultargs") SetSegmentBeginning;
+		%feature("autodoc", "Sets the flag that the point is the beginning of a segment.
+
+Parameters
+----------
+State: bool,optional
+	default value is Standard_True
+
+Returns
+-------
+None
+") SetSegmentBeginning;
+		void SetSegmentBeginning(const Standard_Boolean State = Standard_True);
+
+		/****************** SetSegmentEnd ******************/
+		/**** md5 signature: 0de4db1f0bd8c99d2b1470fa9c3890f9 ****/
+		%feature("compactdefaultargs") SetSegmentEnd;
+		%feature("autodoc", "Sets the flag that the point is the end of a segment.
+
+Parameters
+----------
+State: bool,optional
+	default value is Standard_True
+
+Returns
+-------
+None
+") SetSegmentEnd;
+		void SetSegmentEnd(const Standard_Boolean State = Standard_True);
+
+		/****************** SetStateAfter ******************/
+		/**** md5 signature: 51a316fa868f60e3690027200ebd7cd1 ****/
+		%feature("compactdefaultargs") SetStateAfter;
+		%feature("autodoc", "Sets the transition state after the intersection.
+
+Parameters
+----------
+State: TopAbs_State
+
+Returns
+-------
+None
+") SetStateAfter;
+		void SetStateAfter(const TopAbs_State State);
+
+		/****************** SetStateBefore ******************/
+		/**** md5 signature: b9f8e081ae836884e3d4d5fe83c9d377 ****/
+		%feature("compactdefaultargs") SetStateBefore;
+		%feature("autodoc", "Sets the transition state before the intersection.
+
+Parameters
+----------
+State: TopAbs_State
+
+Returns
+-------
+None
+") SetStateBefore;
+		void SetStateBefore(const TopAbs_State State);
+
+		/****************** StateAfter ******************/
+		/**** md5 signature: 00cc234f23b0e06606bd1ce121c9c7ae ****/
+		%feature("compactdefaultargs") StateAfter;
+		%feature("autodoc", "Returns the transition state after of the intersection.
+
+Returns
+-------
+TopAbs_State
+") StateAfter;
+		TopAbs_State StateAfter();
+
+		/****************** StateBefore ******************/
+		/**** md5 signature: 76fbbf983aacdcf0487328d9ca214104 ****/
+		%feature("compactdefaultargs") StateBefore;
+		%feature("autodoc", "Returns the transition state before the intersection.
+
+Returns
+-------
+TopAbs_State
+") StateBefore;
+		TopAbs_State StateBefore();
+
 };
 
 
@@ -437,440 +550,127 @@ class HatchGen_IntersectionPoint {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor HatchGen_PointsOnElement;
-class HatchGen_PointsOnElement : public TCollection_BaseSequence {
-	public:
-		%feature("compactdefaultargs") HatchGen_PointsOnElement;
-		%feature("autodoc", "	:rtype: None
-") HatchGen_PointsOnElement;
-		 HatchGen_PointsOnElement ();
-		%feature("compactdefaultargs") HatchGen_PointsOnElement;
-		%feature("autodoc", "	:param Other:
-	:type Other: HatchGen_PointsOnElement &
-	:rtype: None
-") HatchGen_PointsOnElement;
-		 HatchGen_PointsOnElement (const HatchGen_PointsOnElement & Other);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: HatchGen_PointsOnElement &
-	:rtype: HatchGen_PointsOnElement
-") Assign;
-		const HatchGen_PointsOnElement & Assign (const HatchGen_PointsOnElement & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: HatchGen_PointsOnElement &
-	:rtype: HatchGen_PointsOnElement
-") operator =;
-		const HatchGen_PointsOnElement & operator = (const HatchGen_PointsOnElement & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param T:
-	:type T: HatchGen_PointOnElement &
-	:rtype: None
-") Append;
-		void Append (const HatchGen_PointOnElement & T);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param S:
-	:type S: HatchGen_PointsOnElement &
-	:rtype: None
-") Append;
-		void Append (HatchGen_PointsOnElement & S);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param T:
-	:type T: HatchGen_PointOnElement &
-	:rtype: None
-") Prepend;
-		void Prepend (const HatchGen_PointOnElement & T);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param S:
-	:type S: HatchGen_PointsOnElement &
-	:rtype: None
-") Prepend;
-		void Prepend (HatchGen_PointsOnElement & S);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: HatchGen_PointOnElement &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,const HatchGen_PointOnElement & T);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: HatchGen_PointsOnElement &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,HatchGen_PointsOnElement & S);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: HatchGen_PointOnElement &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,const HatchGen_PointOnElement & T);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: HatchGen_PointsOnElement &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,HatchGen_PointsOnElement & S);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: HatchGen_PointOnElement
-") First;
-		const HatchGen_PointOnElement & First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: HatchGen_PointOnElement
-") Last;
-		const HatchGen_PointOnElement & Last ();
-		%feature("compactdefaultargs") Split;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param Sub:
-	:type Sub: HatchGen_PointsOnElement &
-	:rtype: None
-") Split;
-		void Split (const Standard_Integer Index,HatchGen_PointsOnElement & Sub);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: HatchGen_PointOnElement
-") Value;
-		const HatchGen_PointOnElement & Value (const Standard_Integer Index);
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param I:
-	:type I: HatchGen_PointOnElement &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer Index,const HatchGen_PointOnElement & I);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: HatchGen_PointOnElement
-") ChangeValue;
-		HatchGen_PointOnElement & ChangeValue (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param FromIndex:
-	:type FromIndex: int
-	:param ToIndex:
-	:type ToIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer FromIndex,const Standard_Integer ToIndex);
-};
 
-
-%extend HatchGen_PointsOnElement {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor HatchGen_PointsOnHatching;
-class HatchGen_PointsOnHatching : public TCollection_BaseSequence {
-	public:
-		%feature("compactdefaultargs") HatchGen_PointsOnHatching;
-		%feature("autodoc", "	:rtype: None
-") HatchGen_PointsOnHatching;
-		 HatchGen_PointsOnHatching ();
-		%feature("compactdefaultargs") HatchGen_PointsOnHatching;
-		%feature("autodoc", "	:param Other:
-	:type Other: HatchGen_PointsOnHatching &
-	:rtype: None
-") HatchGen_PointsOnHatching;
-		 HatchGen_PointsOnHatching (const HatchGen_PointsOnHatching & Other);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: HatchGen_PointsOnHatching &
-	:rtype: HatchGen_PointsOnHatching
-") Assign;
-		const HatchGen_PointsOnHatching & Assign (const HatchGen_PointsOnHatching & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: HatchGen_PointsOnHatching &
-	:rtype: HatchGen_PointsOnHatching
-") operator =;
-		const HatchGen_PointsOnHatching & operator = (const HatchGen_PointsOnHatching & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param T:
-	:type T: HatchGen_PointOnHatching &
-	:rtype: None
-") Append;
-		void Append (const HatchGen_PointOnHatching & T);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param S:
-	:type S: HatchGen_PointsOnHatching &
-	:rtype: None
-") Append;
-		void Append (HatchGen_PointsOnHatching & S);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param T:
-	:type T: HatchGen_PointOnHatching &
-	:rtype: None
-") Prepend;
-		void Prepend (const HatchGen_PointOnHatching & T);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param S:
-	:type S: HatchGen_PointsOnHatching &
-	:rtype: None
-") Prepend;
-		void Prepend (HatchGen_PointsOnHatching & S);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: HatchGen_PointOnHatching &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,const HatchGen_PointOnHatching & T);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: HatchGen_PointsOnHatching &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,HatchGen_PointsOnHatching & S);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: HatchGen_PointOnHatching &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,const HatchGen_PointOnHatching & T);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: HatchGen_PointsOnHatching &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,HatchGen_PointsOnHatching & S);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: HatchGen_PointOnHatching
-") First;
-		const HatchGen_PointOnHatching & First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: HatchGen_PointOnHatching
-") Last;
-		const HatchGen_PointOnHatching & Last ();
-		%feature("compactdefaultargs") Split;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param Sub:
-	:type Sub: HatchGen_PointsOnHatching &
-	:rtype: None
-") Split;
-		void Split (const Standard_Integer Index,HatchGen_PointsOnHatching & Sub);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: HatchGen_PointOnHatching
-") Value;
-		const HatchGen_PointOnHatching & Value (const Standard_Integer Index);
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param I:
-	:type I: HatchGen_PointOnHatching &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer Index,const HatchGen_PointOnHatching & I);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: HatchGen_PointOnHatching
-") ChangeValue;
-		HatchGen_PointOnHatching & ChangeValue (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param FromIndex:
-	:type FromIndex: int
-	:param ToIndex:
-	:type ToIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer FromIndex,const Standard_Integer ToIndex);
-};
-
-
-%extend HatchGen_PointsOnHatching {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor HatchGen_SequenceNodeOfDomains;
-class HatchGen_SequenceNodeOfDomains : public TCollection_SeqNode {
-	public:
-		%feature("compactdefaultargs") HatchGen_SequenceNodeOfDomains;
-		%feature("autodoc", "	:param I:
-	:type I: HatchGen_Domain &
-	:param n:
-	:type n: TCollection_SeqNodePtr &
-	:param p:
-	:type p: TCollection_SeqNodePtr &
-	:rtype: None
-") HatchGen_SequenceNodeOfDomains;
-		 HatchGen_SequenceNodeOfDomains (const HatchGen_Domain & I,const TCollection_SeqNodePtr & n,const TCollection_SeqNodePtr & p);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: HatchGen_Domain
-") Value;
-		HatchGen_Domain & Value ();
-};
-
-
-%make_alias(HatchGen_SequenceNodeOfDomains)
-
-%extend HatchGen_SequenceNodeOfDomains {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor HatchGen_SequenceNodeOfPointsOnElement;
-class HatchGen_SequenceNodeOfPointsOnElement : public TCollection_SeqNode {
-	public:
-		%feature("compactdefaultargs") HatchGen_SequenceNodeOfPointsOnElement;
-		%feature("autodoc", "	:param I:
-	:type I: HatchGen_PointOnElement &
-	:param n:
-	:type n: TCollection_SeqNodePtr &
-	:param p:
-	:type p: TCollection_SeqNodePtr &
-	:rtype: None
-") HatchGen_SequenceNodeOfPointsOnElement;
-		 HatchGen_SequenceNodeOfPointsOnElement (const HatchGen_PointOnElement & I,const TCollection_SeqNodePtr & n,const TCollection_SeqNodePtr & p);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: HatchGen_PointOnElement
-") Value;
-		HatchGen_PointOnElement & Value ();
-};
-
-
-%make_alias(HatchGen_SequenceNodeOfPointsOnElement)
-
-%extend HatchGen_SequenceNodeOfPointsOnElement {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor HatchGen_SequenceNodeOfPointsOnHatching;
-class HatchGen_SequenceNodeOfPointsOnHatching : public TCollection_SeqNode {
-	public:
-		%feature("compactdefaultargs") HatchGen_SequenceNodeOfPointsOnHatching;
-		%feature("autodoc", "	:param I:
-	:type I: HatchGen_PointOnHatching &
-	:param n:
-	:type n: TCollection_SeqNodePtr &
-	:param p:
-	:type p: TCollection_SeqNodePtr &
-	:rtype: None
-") HatchGen_SequenceNodeOfPointsOnHatching;
-		 HatchGen_SequenceNodeOfPointsOnHatching (const HatchGen_PointOnHatching & I,const TCollection_SeqNodePtr & n,const TCollection_SeqNodePtr & p);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: HatchGen_PointOnHatching
-") Value;
-		HatchGen_PointOnHatching & Value ();
-};
-
-
-%make_alias(HatchGen_SequenceNodeOfPointsOnHatching)
-
-%extend HatchGen_SequenceNodeOfPointsOnHatching {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor HatchGen_PointOnElement;
+/********************************
+* class HatchGen_PointOnElement *
+********************************/
 class HatchGen_PointOnElement : public HatchGen_IntersectionPoint {
 	public:
+		/****************** HatchGen_PointOnElement ******************/
+		/**** md5 signature: 487cbbe6d9c40f71545667c5a186b2b6 ****/
 		%feature("compactdefaultargs") HatchGen_PointOnElement;
-		%feature("autodoc", "	* ---Purpose; Creates an empty point on element
+		%feature("autodoc", "---purpose; creates an empty point on element.
 
-	:rtype: None
+Returns
+-------
+None
 ") HatchGen_PointOnElement;
-		 HatchGen_PointOnElement ();
+		 HatchGen_PointOnElement();
+
+		/****************** HatchGen_PointOnElement ******************/
+		/**** md5 signature: 5f90d0090208df1badc086f95b2cd438 ****/
 		%feature("compactdefaultargs") HatchGen_PointOnElement;
-		%feature("autodoc", "	* Creates a point from an other.
+		%feature("autodoc", "Creates a point from an other.
 
-	:param Point:
-	:type Point: HatchGen_PointOnElement &
-	:rtype: None
+Parameters
+----------
+Point: HatchGen_PointOnElement
+
+Returns
+-------
+None
 ") HatchGen_PointOnElement;
-		 HatchGen_PointOnElement (const HatchGen_PointOnElement & Point);
+		 HatchGen_PointOnElement(const HatchGen_PointOnElement & Point);
+
+		/****************** HatchGen_PointOnElement ******************/
+		/**** md5 signature: 0b19450c5960b9438bdefe885e950d9c ****/
 		%feature("compactdefaultargs") HatchGen_PointOnElement;
-		%feature("autodoc", "	* Creates a point from an intersection point.
+		%feature("autodoc", "Creates a point from an intersection point.
 
-	:param Point:
-	:type Point: IntRes2d_IntersectionPoint &
-	:rtype: None
+Parameters
+----------
+Point: IntRes2d_IntersectionPoint
+
+Returns
+-------
+None
 ") HatchGen_PointOnElement;
-		 HatchGen_PointOnElement (const IntRes2d_IntersectionPoint & Point);
-		%feature("compactdefaultargs") SetIntersectionType;
-		%feature("autodoc", "	* Sets the intersection type at this point.
+		 HatchGen_PointOnElement(const IntRes2d_IntersectionPoint & Point);
 
-	:param Type:
-	:type Type: HatchGen_IntersectionType
-	:rtype: None
-") SetIntersectionType;
-		void SetIntersectionType (const HatchGen_IntersectionType Type);
-		%feature("compactdefaultargs") IntersectionType;
-		%feature("autodoc", "	* Returns the intersection type at this point.
-
-	:rtype: HatchGen_IntersectionType
-") IntersectionType;
-		HatchGen_IntersectionType IntersectionType ();
-		%feature("compactdefaultargs") IsIdentical;
-		%feature("autodoc", "	* Tests if the point is identical to an other. That is to say : P1.myIndex = P2.myIndex Abs (P1.myParam - P2.myParam) <= Confusion P1.myPosit = P2.myPosit P1.myBefore = P2.myBefore P1.myAfter = P2.myAfter P1.mySegBeg = P2.mySegBeg P1.mySegEnd = P2.mySegEnd P1.myType = P2.myType
-
-	:param Point:
-	:type Point: HatchGen_PointOnElement &
-	:param Confusion:
-	:type Confusion: float
-	:rtype: bool
-") IsIdentical;
-		Standard_Boolean IsIdentical (const HatchGen_PointOnElement & Point,const Standard_Real Confusion);
-		%feature("compactdefaultargs") IsDifferent;
-		%feature("autodoc", "	* Tests if the point is different from an other.
-
-	:param Point:
-	:type Point: HatchGen_PointOnElement &
-	:param Confusion:
-	:type Confusion: float
-	:rtype: bool
-") IsDifferent;
-		Standard_Boolean IsDifferent (const HatchGen_PointOnElement & Point,const Standard_Real Confusion);
+		/****************** Dump ******************/
+		/**** md5 signature: 01f7aa82c5ee0f23c3ae9a615ce67cdf ****/
 		%feature("compactdefaultargs") Dump;
-		%feature("autodoc", "	* Dump of the point on element.
+		%feature("autodoc", "Dump of the point on element.
 
-	:param Index: default value is 0
-	:type Index: int
-	:rtype: None
+Parameters
+----------
+Index: int,optional
+	default value is 0
+
+Returns
+-------
+None
 ") Dump;
-		void Dump (const Standard_Integer Index = 0);
+		void Dump(const Standard_Integer Index = 0);
+
+		/****************** IntersectionType ******************/
+		/**** md5 signature: 206db412c05d4cba1af058c245450cd6 ****/
+		%feature("compactdefaultargs") IntersectionType;
+		%feature("autodoc", "Returns the intersection type at this point.
+
+Returns
+-------
+HatchGen_IntersectionType
+") IntersectionType;
+		HatchGen_IntersectionType IntersectionType();
+
+		/****************** IsDifferent ******************/
+		/**** md5 signature: 9ddc9e5fda5c5c24dff1014855e0ed98 ****/
+		%feature("compactdefaultargs") IsDifferent;
+		%feature("autodoc", "Tests if the point is different from an other.
+
+Parameters
+----------
+Point: HatchGen_PointOnElement
+Confusion: float
+
+Returns
+-------
+bool
+") IsDifferent;
+		Standard_Boolean IsDifferent(const HatchGen_PointOnElement & Point, const Standard_Real Confusion);
+
+		/****************** IsIdentical ******************/
+		/**** md5 signature: 249a8bc6e8608b97a1fa0479f3d0a5dc ****/
+		%feature("compactdefaultargs") IsIdentical;
+		%feature("autodoc", "Tests if the point is identical to an other. that is to say : p1.myindex = p2.myindex abs (p1.myparam - p2.myparam) <= confusion p1.myposit = p2.myposit p1.mybefore = p2.mybefore p1.myafter = p2.myafter p1.mysegbeg = p2.mysegbeg p1.mysegend = p2.mysegend p1.mytype = p2.mytype.
+
+Parameters
+----------
+Point: HatchGen_PointOnElement
+Confusion: float
+
+Returns
+-------
+bool
+") IsIdentical;
+		Standard_Boolean IsIdentical(const HatchGen_PointOnElement & Point, const Standard_Real Confusion);
+
+		/****************** SetIntersectionType ******************/
+		/**** md5 signature: 003e8404b81f3387812eae64dab1ac55 ****/
+		%feature("compactdefaultargs") SetIntersectionType;
+		%feature("autodoc", "Sets the intersection type at this point.
+
+Parameters
+----------
+Type: HatchGen_IntersectionType
+
+Returns
+-------
+None
+") SetIntersectionType;
+		void SetIntersectionType(const HatchGen_IntersectionType Type);
+
 };
 
 
@@ -879,107 +679,185 @@ class HatchGen_PointOnElement : public HatchGen_IntersectionPoint {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor HatchGen_PointOnHatching;
+
+/*********************************
+* class HatchGen_PointOnHatching *
+*********************************/
 class HatchGen_PointOnHatching : public HatchGen_IntersectionPoint {
 	public:
+		/****************** HatchGen_PointOnHatching ******************/
+		/**** md5 signature: e1ad16e2d71a24cdb1b1a938cb0400de ****/
 		%feature("compactdefaultargs") HatchGen_PointOnHatching;
-		%feature("autodoc", "	* Creates an empty point.
+		%feature("autodoc", "Creates an empty point.
 
-	:rtype: None
+Returns
+-------
+None
 ") HatchGen_PointOnHatching;
-		 HatchGen_PointOnHatching ();
+		 HatchGen_PointOnHatching();
+
+		/****************** HatchGen_PointOnHatching ******************/
+		/**** md5 signature: 6c7c0ec97a8317703f64880c6023f17c ****/
 		%feature("compactdefaultargs") HatchGen_PointOnHatching;
-		%feature("autodoc", "	* Creates a point from an other.
+		%feature("autodoc", "Creates a point from an other.
 
-	:param Point:
-	:type Point: HatchGen_PointOnHatching &
-	:rtype: None
+Parameters
+----------
+Point: HatchGen_PointOnHatching
+
+Returns
+-------
+None
 ") HatchGen_PointOnHatching;
-		 HatchGen_PointOnHatching (const HatchGen_PointOnHatching & Point);
+		 HatchGen_PointOnHatching(const HatchGen_PointOnHatching & Point);
+
+		/****************** HatchGen_PointOnHatching ******************/
+		/**** md5 signature: 2d49efd88e5038a0b441348c0349938f ****/
 		%feature("compactdefaultargs") HatchGen_PointOnHatching;
-		%feature("autodoc", "	* Creates a point from an intersection point.
+		%feature("autodoc", "Creates a point from an intersection point.
 
-	:param Point:
-	:type Point: IntRes2d_IntersectionPoint &
-	:rtype: None
+Parameters
+----------
+Point: IntRes2d_IntersectionPoint
+
+Returns
+-------
+None
 ") HatchGen_PointOnHatching;
-		 HatchGen_PointOnHatching (const IntRes2d_IntersectionPoint & Point);
+		 HatchGen_PointOnHatching(const IntRes2d_IntersectionPoint & Point);
+
+		/****************** AddPoint ******************/
+		/**** md5 signature: e53cdbffd3ac5fad578a153d2585eb32 ****/
 		%feature("compactdefaultargs") AddPoint;
-		%feature("autodoc", "	* Adds a point on element to the point.
+		%feature("autodoc", "Adds a point on element to the point.
 
-	:param Point:
-	:type Point: HatchGen_PointOnElement &
-	:param Confusion:
-	:type Confusion: float
-	:rtype: None
+Parameters
+----------
+Point: HatchGen_PointOnElement
+Confusion: float
+
+Returns
+-------
+None
 ") AddPoint;
-		void AddPoint (const HatchGen_PointOnElement & Point,const Standard_Real Confusion);
-		%feature("compactdefaultargs") NbPoints;
-		%feature("autodoc", "	* Returns the number of elements intersecting the hatching at this point.
+		void AddPoint(const HatchGen_PointOnElement & Point, const Standard_Real Confusion);
 
-	:rtype: int
-") NbPoints;
-		Standard_Integer NbPoints ();
-		%feature("compactdefaultargs") Point;
-		%feature("autodoc", "	* Returns the Index-th point on element of the point. The exception OutOfRange is raised if Index > NbPoints.
-
-	:param Index:
-	:type Index: int
-	:rtype: HatchGen_PointOnElement
-") Point;
-		const HatchGen_PointOnElement & Point (const Standard_Integer Index);
-		%feature("compactdefaultargs") RemPoint;
-		%feature("autodoc", "	* Removes the Index-th point on element of the point. The exception OutOfRange is raised if Index > NbPoints.
-
-	:param Index:
-	:type Index: int
-	:rtype: None
-") RemPoint;
-		void RemPoint (const Standard_Integer Index);
+		/****************** ClrPoints ******************/
+		/**** md5 signature: e99750252922662025bcc4d5f2030893 ****/
 		%feature("compactdefaultargs") ClrPoints;
-		%feature("autodoc", "	* Removes all the points on element of the point.
+		%feature("autodoc", "Removes all the points on element of the point.
 
-	:rtype: None
+Returns
+-------
+None
 ") ClrPoints;
-		void ClrPoints ();
-		%feature("compactdefaultargs") IsLower;
-		%feature("autodoc", "	* Tests if the point is lower than an other. A point on hatching P1 is said to be lower than an other P2 if : P2.myParam - P1.myParam > Confusion
+		void ClrPoints();
 
-	:param Point:
-	:type Point: HatchGen_PointOnHatching &
-	:param Confusion:
-	:type Confusion: float
-	:rtype: bool
-") IsLower;
-		Standard_Boolean IsLower (const HatchGen_PointOnHatching & Point,const Standard_Real Confusion);
-		%feature("compactdefaultargs") IsEqual;
-		%feature("autodoc", "	* Tests if the point is equal to an other. A point on hatching P1 is said to be equal to an other P2 if : | P2.myParam - P1.myParam | <= Confusion
-
-	:param Point:
-	:type Point: HatchGen_PointOnHatching &
-	:param Confusion:
-	:type Confusion: float
-	:rtype: bool
-") IsEqual;
-		Standard_Boolean IsEqual (const HatchGen_PointOnHatching & Point,const Standard_Real Confusion);
-		%feature("compactdefaultargs") IsGreater;
-		%feature("autodoc", "	* Tests if the point is greater than an other. A point on hatching P1 is said to be greater than an other P2 if : P1.myParam - P2.myParam > Confusion
-
-	:param Point:
-	:type Point: HatchGen_PointOnHatching &
-	:param Confusion:
-	:type Confusion: float
-	:rtype: bool
-") IsGreater;
-		Standard_Boolean IsGreater (const HatchGen_PointOnHatching & Point,const Standard_Real Confusion);
+		/****************** Dump ******************/
+		/**** md5 signature: 01f7aa82c5ee0f23c3ae9a615ce67cdf ****/
 		%feature("compactdefaultargs") Dump;
-		%feature("autodoc", "	* Dump of the point.
+		%feature("autodoc", "Dump of the point.
 
-	:param Index: default value is 0
-	:type Index: int
-	:rtype: None
+Parameters
+----------
+Index: int,optional
+	default value is 0
+
+Returns
+-------
+None
 ") Dump;
-		void Dump (const Standard_Integer Index = 0);
+		void Dump(const Standard_Integer Index = 0);
+
+		/****************** IsEqual ******************/
+		/**** md5 signature: 60fa71f986970515c0815d2c52387b57 ****/
+		%feature("compactdefaultargs") IsEqual;
+		%feature("autodoc", "Tests if the point is equal to an other. a point on hatching p1 is said to be equal to an other p2 if : | p2.myparam - p1.myparam | <= confusion.
+
+Parameters
+----------
+Point: HatchGen_PointOnHatching
+Confusion: float
+
+Returns
+-------
+bool
+") IsEqual;
+		Standard_Boolean IsEqual(const HatchGen_PointOnHatching & Point, const Standard_Real Confusion);
+
+		/****************** IsGreater ******************/
+		/**** md5 signature: 486804c0120ac020dc22168fccc2e69a ****/
+		%feature("compactdefaultargs") IsGreater;
+		%feature("autodoc", "Tests if the point is greater than an other. a point on hatching p1 is said to be greater than an other p2 if : p1.myparam - p2.myparam > confusion.
+
+Parameters
+----------
+Point: HatchGen_PointOnHatching
+Confusion: float
+
+Returns
+-------
+bool
+") IsGreater;
+		Standard_Boolean IsGreater(const HatchGen_PointOnHatching & Point, const Standard_Real Confusion);
+
+		/****************** IsLower ******************/
+		/**** md5 signature: dbb6c53255219626df26daf2b8dee300 ****/
+		%feature("compactdefaultargs") IsLower;
+		%feature("autodoc", "Tests if the point is lower than an other. a point on hatching p1 is said to be lower than an other p2 if : p2.myparam - p1.myparam > confusion.
+
+Parameters
+----------
+Point: HatchGen_PointOnHatching
+Confusion: float
+
+Returns
+-------
+bool
+") IsLower;
+		Standard_Boolean IsLower(const HatchGen_PointOnHatching & Point, const Standard_Real Confusion);
+
+		/****************** NbPoints ******************/
+		/**** md5 signature: 1d4bbbd7c4dda4f1e56c00ae994bedbe ****/
+		%feature("compactdefaultargs") NbPoints;
+		%feature("autodoc", "Returns the number of elements intersecting the hatching at this point.
+
+Returns
+-------
+int
+") NbPoints;
+		Standard_Integer NbPoints();
+
+		/****************** Point ******************/
+		/**** md5 signature: bedf9b4015a68bdab4ffaa2ecfa26bf9 ****/
+		%feature("compactdefaultargs") Point;
+		%feature("autodoc", "Returns the index-th point on element of the point. the exception outofrange is raised if index > nbpoints.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+HatchGen_PointOnElement
+") Point;
+		const HatchGen_PointOnElement & Point(const Standard_Integer Index);
+
+		/****************** RemPoint ******************/
+		/**** md5 signature: 4fd025fee44e20642cf1dc77eaa95334 ****/
+		%feature("compactdefaultargs") RemPoint;
+		%feature("autodoc", "Removes the index-th point on element of the point. the exception outofrange is raised if index > nbpoints.
+
+Parameters
+----------
+Index: int
+
+Returns
+-------
+None
+") RemPoint;
+		void RemPoint(const Standard_Integer Index);
+
 };
 
 
@@ -988,3 +866,7 @@ class HatchGen_PointOnHatching : public HatchGen_IntersectionPoint {
 	__repr__ = _dumps_object
 	}
 };
+
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */

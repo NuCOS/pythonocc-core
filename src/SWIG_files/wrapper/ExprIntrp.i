@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,17 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define EXPRINTRPDOCSTRING
-"Describes an interpreter for GeneralExpressions,
-GeneralFunctions, and GeneralRelations defined in
-package Expr.
-"
+"ExprIntrp module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_exprintrp.html"
 %enddef
 %module (package="OCC.Core", docstring=EXPRINTRPDOCSTRING) ExprIntrp
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -40,26 +35,105 @@ package Expr.
 %include ../common/OccHandle.i
 
 
-%include ExprIntrp_headers.i
+%{
+#include<ExprIntrp_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<Expr_module.hxx>
+#include<TCollection_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+%import Expr.i
+%import TCollection.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 /* end public enums declaration */
 
+/* python proy classes for enums */
+%pythoncode {
+};
+/* end python proxy for enums */
+
+/* handles */
 %wrap_handle(ExprIntrp_Generator)
-%wrap_handle(ExprIntrp_ListNodeOfStackOfGeneralExpression)
-%wrap_handle(ExprIntrp_ListNodeOfStackOfGeneralFunction)
-%wrap_handle(ExprIntrp_ListNodeOfStackOfGeneralRelation)
-%wrap_handle(ExprIntrp_SequenceNodeOfSequenceOfNamedExpression)
-%wrap_handle(ExprIntrp_SequenceNodeOfSequenceOfNamedFunction)
 %wrap_handle(ExprIntrp_GenExp)
 %wrap_handle(ExprIntrp_GenFct)
 %wrap_handle(ExprIntrp_GenRel)
+/* end handles declaration */
 
+/* templates */
+%template(ExprIntrp_ListIteratorOfStackOfGeneralExpression) NCollection_TListIterator<opencascade::handle<Expr_GeneralExpression>>;
+%template(ExprIntrp_ListIteratorOfStackOfGeneralFunction) NCollection_TListIterator<opencascade::handle<Expr_GeneralFunction>>;
+%template(ExprIntrp_ListIteratorOfStackOfGeneralRelation) NCollection_TListIterator<opencascade::handle<Expr_GeneralRelation>>;
+%template(ExprIntrp_SequenceOfNamedExpression) NCollection_Sequence<opencascade::handle<Expr_NamedExpression>>;
+
+%extend NCollection_Sequence<opencascade::handle<Expr_NamedExpression>> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+%template(ExprIntrp_SequenceOfNamedFunction) NCollection_Sequence<opencascade::handle<Expr_NamedFunction>>;
+
+%extend NCollection_Sequence<opencascade::handle<Expr_NamedFunction>> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+%template(ExprIntrp_StackOfGeneralExpression) NCollection_List<opencascade::handle<Expr_GeneralExpression>>;
+
+%extend NCollection_List<opencascade::handle<Expr_GeneralExpression>> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+%template(ExprIntrp_StackOfGeneralFunction) NCollection_List<opencascade::handle<Expr_GeneralFunction>>;
+
+%extend NCollection_List<opencascade::handle<Expr_GeneralFunction>> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+%template(ExprIntrp_StackOfGeneralRelation) NCollection_List<opencascade::handle<Expr_GeneralRelation>>;
+
+%extend NCollection_List<opencascade::handle<Expr_GeneralRelation>> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+/* end templates declaration */
+
+/* typedefs */
+typedef NCollection_List<opencascade::handle<Expr_GeneralExpression>>::Iterator ExprIntrp_ListIteratorOfStackOfGeneralExpression;
+typedef NCollection_List<opencascade::handle<Expr_GeneralFunction>>::Iterator ExprIntrp_ListIteratorOfStackOfGeneralFunction;
+typedef NCollection_List<opencascade::handle<Expr_GeneralRelation>>::Iterator ExprIntrp_ListIteratorOfStackOfGeneralRelation;
+typedef NCollection_Sequence<opencascade::handle<Expr_NamedExpression>> ExprIntrp_SequenceOfNamedExpression;
+typedef NCollection_Sequence<opencascade::handle<Expr_NamedFunction>> ExprIntrp_SequenceOfNamedFunction;
+typedef NCollection_List<opencascade::handle<Expr_GeneralExpression>> ExprIntrp_StackOfGeneralExpression;
+typedef NCollection_List<opencascade::handle<Expr_GeneralFunction>> ExprIntrp_StackOfGeneralFunction;
+typedef NCollection_List<opencascade::handle<Expr_GeneralRelation>> ExprIntrp_StackOfGeneralRelation;
+/* end typedefs declaration */
+
+/******************
+* class ExprIntrp *
+******************/
 %rename(exprintrp) ExprIntrp;
-%nodefaultctor ExprIntrp;
 class ExprIntrp {
 	public:
 };
@@ -70,105 +144,261 @@ class ExprIntrp {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor ExprIntrp_Analysis;
+
+/***************************
+* class ExprIntrp_Analysis *
+***************************/
 class ExprIntrp_Analysis {
 	public:
+		/****************** ExprIntrp_Analysis ******************/
+		/**** md5 signature: 63bd222fa4cea1588438569c07374eb0 ****/
 		%feature("compactdefaultargs") ExprIntrp_Analysis;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") ExprIntrp_Analysis;
-		 ExprIntrp_Analysis ();
-		%feature("compactdefaultargs") SetMaster;
-		%feature("autodoc", "	:param agen:
-	:type agen: Handle_ExprIntrp_Generator &
-	:rtype: None
-") SetMaster;
-		void SetMaster (const Handle_ExprIntrp_Generator & agen);
-		%feature("compactdefaultargs") Push;
-		%feature("autodoc", "	:param exp:
-	:type exp: Handle_Expr_GeneralExpression &
-	:rtype: None
-") Push;
-		void Push (const Handle_Expr_GeneralExpression & exp);
-		%feature("compactdefaultargs") PushRelation;
-		%feature("autodoc", "	:param rel:
-	:type rel: Handle_Expr_GeneralRelation &
-	:rtype: None
-") PushRelation;
-		void PushRelation (const Handle_Expr_GeneralRelation & rel);
-		%feature("compactdefaultargs") PushName;
-		%feature("autodoc", "	:param name:
-	:type name: TCollection_AsciiString &
-	:rtype: None
-") PushName;
-		void PushName (const TCollection_AsciiString & name);
-		%feature("compactdefaultargs") PushValue;
-		%feature("autodoc", "	:param degree:
-	:type degree: int
-	:rtype: None
-") PushValue;
-		void PushValue (const Standard_Integer degree);
-		%feature("compactdefaultargs") PushFunction;
-		%feature("autodoc", "	:param func:
-	:type func: Handle_Expr_GeneralFunction &
-	:rtype: None
-") PushFunction;
-		void PushFunction (const Handle_Expr_GeneralFunction & func);
-		%feature("compactdefaultargs") Pop;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralExpression
-") Pop;
-		Handle_Expr_GeneralExpression Pop ();
-		%feature("compactdefaultargs") PopRelation;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralRelation
-") PopRelation;
-		Handle_Expr_GeneralRelation PopRelation ();
-		%feature("compactdefaultargs") PopName;
-		%feature("autodoc", "	:rtype: TCollection_AsciiString
-") PopName;
-		TCollection_AsciiString PopName ();
-		%feature("compactdefaultargs") PopValue;
-		%feature("autodoc", "	:rtype: int
-") PopValue;
-		Standard_Integer PopValue ();
-		%feature("compactdefaultargs") PopFunction;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralFunction
-") PopFunction;
-		Handle_Expr_GeneralFunction PopFunction ();
-		%feature("compactdefaultargs") IsExpStackEmpty;
-		%feature("autodoc", "	:rtype: bool
-") IsExpStackEmpty;
-		Standard_Boolean IsExpStackEmpty ();
-		%feature("compactdefaultargs") IsRelStackEmpty;
-		%feature("autodoc", "	:rtype: bool
-") IsRelStackEmpty;
-		Standard_Boolean IsRelStackEmpty ();
-		%feature("compactdefaultargs") ResetAll;
-		%feature("autodoc", "	:rtype: None
-") ResetAll;
-		void ResetAll ();
-		%feature("compactdefaultargs") Use;
-		%feature("autodoc", "	:param func:
-	:type func: Handle_Expr_NamedFunction &
-	:rtype: None
-") Use;
-		void Use (const Handle_Expr_NamedFunction & func);
-		%feature("compactdefaultargs") Use;
-		%feature("autodoc", "	:param named:
-	:type named: Handle_Expr_NamedExpression &
-	:rtype: None
-") Use;
-		void Use (const Handle_Expr_NamedExpression & named);
-		%feature("compactdefaultargs") GetNamed;
-		%feature("autodoc", "	:param name:
-	:type name: TCollection_AsciiString &
-	:rtype: Handle_Expr_NamedExpression
-") GetNamed;
-		Handle_Expr_NamedExpression GetNamed (const TCollection_AsciiString & name);
+		 ExprIntrp_Analysis();
+
+		/****************** GetFunction ******************/
+		/**** md5 signature: 81e49aa24337271a2b3b9b892a2cb480 ****/
 		%feature("compactdefaultargs") GetFunction;
-		%feature("autodoc", "	:param name:
-	:type name: TCollection_AsciiString &
-	:rtype: Handle_Expr_NamedFunction
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+name: TCollection_AsciiString
+
+Returns
+-------
+opencascade::handle<Expr_NamedFunction>
 ") GetFunction;
-		Handle_Expr_NamedFunction GetFunction (const TCollection_AsciiString & name);
+		opencascade::handle<Expr_NamedFunction> GetFunction(const TCollection_AsciiString & name);
+
+		/****************** GetNamed ******************/
+		/**** md5 signature: 00571fc8f55255c5f9636b8e9080c78f ****/
+		%feature("compactdefaultargs") GetNamed;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+name: TCollection_AsciiString
+
+Returns
+-------
+opencascade::handle<Expr_NamedExpression>
+") GetNamed;
+		opencascade::handle<Expr_NamedExpression> GetNamed(const TCollection_AsciiString & name);
+
+		/****************** IsExpStackEmpty ******************/
+		/**** md5 signature: 441f3f4e29c508b02f95a8a90083cf7b ****/
+		%feature("compactdefaultargs") IsExpStackEmpty;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+bool
+") IsExpStackEmpty;
+		Standard_Boolean IsExpStackEmpty();
+
+		/****************** IsRelStackEmpty ******************/
+		/**** md5 signature: dc9af98784fdc93ad746f753442ce942 ****/
+		%feature("compactdefaultargs") IsRelStackEmpty;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+bool
+") IsRelStackEmpty;
+		Standard_Boolean IsRelStackEmpty();
+
+		/****************** Pop ******************/
+		/**** md5 signature: 2ea9701aa4fe74c67960fa47364e6480 ****/
+		%feature("compactdefaultargs") Pop;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<Expr_GeneralExpression>
+") Pop;
+		opencascade::handle<Expr_GeneralExpression> Pop();
+
+		/****************** PopFunction ******************/
+		/**** md5 signature: 6233fe1e807f5fe431ca96ebc2bce5e8 ****/
+		%feature("compactdefaultargs") PopFunction;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<Expr_GeneralFunction>
+") PopFunction;
+		opencascade::handle<Expr_GeneralFunction> PopFunction();
+
+		/****************** PopName ******************/
+		/**** md5 signature: 0582f7478d9d5b890373932fe4e6ee3d ****/
+		%feature("compactdefaultargs") PopName;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+TCollection_AsciiString
+") PopName;
+		TCollection_AsciiString PopName();
+
+		/****************** PopRelation ******************/
+		/**** md5 signature: 8cebb58e41621afe2f8efba2a5837f2d ****/
+		%feature("compactdefaultargs") PopRelation;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<Expr_GeneralRelation>
+") PopRelation;
+		opencascade::handle<Expr_GeneralRelation> PopRelation();
+
+		/****************** PopValue ******************/
+		/**** md5 signature: cd2300a5330c28bfb6074204a08ac12d ****/
+		%feature("compactdefaultargs") PopValue;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
+") PopValue;
+		Standard_Integer PopValue();
+
+		/****************** Push ******************/
+		/**** md5 signature: 34423e005c9b5345a9135a7d1e529ada ****/
+		%feature("compactdefaultargs") Push;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+exp: Expr_GeneralExpression
+
+Returns
+-------
+None
+") Push;
+		void Push(const opencascade::handle<Expr_GeneralExpression> & exp);
+
+		/****************** PushFunction ******************/
+		/**** md5 signature: 0bd316d823d99f15ef432bbe7a68d3ce ****/
+		%feature("compactdefaultargs") PushFunction;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+func: Expr_GeneralFunction
+
+Returns
+-------
+None
+") PushFunction;
+		void PushFunction(const opencascade::handle<Expr_GeneralFunction> & func);
+
+		/****************** PushName ******************/
+		/**** md5 signature: af1688ea01f971c713042a477627cd92 ****/
+		%feature("compactdefaultargs") PushName;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+name: TCollection_AsciiString
+
+Returns
+-------
+None
+") PushName;
+		void PushName(const TCollection_AsciiString & name);
+
+		/****************** PushRelation ******************/
+		/**** md5 signature: 47853072625b744e73e4deeaa2a7c796 ****/
+		%feature("compactdefaultargs") PushRelation;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+rel: Expr_GeneralRelation
+
+Returns
+-------
+None
+") PushRelation;
+		void PushRelation(const opencascade::handle<Expr_GeneralRelation> & rel);
+
+		/****************** PushValue ******************/
+		/**** md5 signature: a0fc16b3fc2c0d895bd7d5cf1f7af890 ****/
+		%feature("compactdefaultargs") PushValue;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+degree: int
+
+Returns
+-------
+None
+") PushValue;
+		void PushValue(const Standard_Integer degree);
+
+		/****************** ResetAll ******************/
+		/**** md5 signature: 76dcab9f08e5bea32f0ad3fdba331a81 ****/
+		%feature("compactdefaultargs") ResetAll;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
+") ResetAll;
+		void ResetAll();
+
+		/****************** SetMaster ******************/
+		/**** md5 signature: 02d66cfefb1ced08408efa2579cf867d ****/
+		%feature("compactdefaultargs") SetMaster;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+agen: ExprIntrp_Generator
+
+Returns
+-------
+None
+") SetMaster;
+		void SetMaster(const opencascade::handle<ExprIntrp_Generator> & agen);
+
+		/****************** Use ******************/
+		/**** md5 signature: bad91b0967a130b4629c7d0c7a8e578e ****/
+		%feature("compactdefaultargs") Use;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+func: Expr_NamedFunction
+
+Returns
+-------
+None
+") Use;
+		void Use(const opencascade::handle<Expr_NamedFunction> & func);
+
+		/****************** Use ******************/
+		/**** md5 signature: 828b264ad92f447ca21b884ec71153dc ****/
+		%feature("compactdefaultargs") Use;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+named: Expr_NamedExpression
+
+Returns
+-------
+None
+") Use;
+		void Use(const opencascade::handle<Expr_NamedExpression> & named);
+
 };
 
 
@@ -177,45 +407,95 @@ class ExprIntrp_Analysis {
 	__repr__ = _dumps_object
 	}
 };
+
+/****************************
+* class ExprIntrp_Generator *
+****************************/
 %nodefaultctor ExprIntrp_Generator;
-class ExprIntrp_Generator : public MMgt_TShared {
+class ExprIntrp_Generator : public Standard_Transient {
 	public:
-		%feature("compactdefaultargs") Use;
-		%feature("autodoc", "	:param func:
-	:type func: Handle_Expr_NamedFunction &
-	:rtype: None
-") Use;
-		void Use (const Handle_Expr_NamedFunction & func);
-		%feature("compactdefaultargs") Use;
-		%feature("autodoc", "	:param named:
-	:type named: Handle_Expr_NamedExpression &
-	:rtype: None
-") Use;
-		void Use (const Handle_Expr_NamedExpression & named);
-		%feature("compactdefaultargs") GetNamed;
-		%feature("autodoc", "	:rtype: ExprIntrp_SequenceOfNamedExpression
-") GetNamed;
-		const ExprIntrp_SequenceOfNamedExpression & GetNamed ();
-		%feature("compactdefaultargs") GetFunctions;
-		%feature("autodoc", "	:rtype: ExprIntrp_SequenceOfNamedFunction
-") GetFunctions;
-		const ExprIntrp_SequenceOfNamedFunction & GetFunctions ();
-		%feature("compactdefaultargs") GetNamed;
-		%feature("autodoc", "	* Returns NamedExpression with name <name> already interpreted if it exists. Returns a null handle if not.
-
-	:param name:
-	:type name: TCollection_AsciiString &
-	:rtype: Handle_Expr_NamedExpression
-") GetNamed;
-		Handle_Expr_NamedExpression GetNamed (const TCollection_AsciiString & name);
+		/****************** GetFunction ******************/
+		/**** md5 signature: 11698abf447e25022cce69121967dd1b ****/
 		%feature("compactdefaultargs") GetFunction;
-		%feature("autodoc", "	* Returns NamedFunction with name <name> already interpreted if it exists. Returns a null handle if not.
+		%feature("autodoc", "Returns namedfunction with name <name> already interpreted if it exists. returns a null handle if not.
 
-	:param name:
-	:type name: TCollection_AsciiString &
-	:rtype: Handle_Expr_NamedFunction
+Parameters
+----------
+name: TCollection_AsciiString
+
+Returns
+-------
+opencascade::handle<Expr_NamedFunction>
 ") GetFunction;
-		Handle_Expr_NamedFunction GetFunction (const TCollection_AsciiString & name);
+		opencascade::handle<Expr_NamedFunction> GetFunction(const TCollection_AsciiString & name);
+
+		/****************** GetFunctions ******************/
+		/**** md5 signature: ea7b11f8c2ec952b91fcef512794779f ****/
+		%feature("compactdefaultargs") GetFunctions;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+ExprIntrp_SequenceOfNamedFunction
+") GetFunctions;
+		const ExprIntrp_SequenceOfNamedFunction & GetFunctions();
+
+		/****************** GetNamed ******************/
+		/**** md5 signature: d4af2a91b9f29c78bc170c193b08b541 ****/
+		%feature("compactdefaultargs") GetNamed;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+ExprIntrp_SequenceOfNamedExpression
+") GetNamed;
+		const ExprIntrp_SequenceOfNamedExpression & GetNamed();
+
+		/****************** GetNamed ******************/
+		/**** md5 signature: f135368bc026ec37dda3220c9c49de62 ****/
+		%feature("compactdefaultargs") GetNamed;
+		%feature("autodoc", "Returns namedexpression with name <name> already interpreted if it exists. returns a null handle if not.
+
+Parameters
+----------
+name: TCollection_AsciiString
+
+Returns
+-------
+opencascade::handle<Expr_NamedExpression>
+") GetNamed;
+		opencascade::handle<Expr_NamedExpression> GetNamed(const TCollection_AsciiString & name);
+
+		/****************** Use ******************/
+		/**** md5 signature: bad91b0967a130b4629c7d0c7a8e578e ****/
+		%feature("compactdefaultargs") Use;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+func: Expr_NamedFunction
+
+Returns
+-------
+None
+") Use;
+		void Use(const opencascade::handle<Expr_NamedFunction> & func);
+
+		/****************** Use ******************/
+		/**** md5 signature: 828b264ad92f447ca21b884ec71153dc ****/
+		%feature("compactdefaultargs") Use;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+named: Expr_NamedExpression
+
+Returns
+-------
+None
+") Use;
+		void Use(const opencascade::handle<Expr_NamedExpression> & named);
+
 };
 
 
@@ -226,970 +506,61 @@ class ExprIntrp_Generator : public MMgt_TShared {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor ExprIntrp_ListIteratorOfStackOfGeneralExpression;
-class ExprIntrp_ListIteratorOfStackOfGeneralExpression {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_ListIteratorOfStackOfGeneralExpression;
-		%feature("autodoc", "	:rtype: None
-") ExprIntrp_ListIteratorOfStackOfGeneralExpression;
-		 ExprIntrp_ListIteratorOfStackOfGeneralExpression ();
-		%feature("compactdefaultargs") ExprIntrp_ListIteratorOfStackOfGeneralExpression;
-		%feature("autodoc", "	:param L:
-	:type L: ExprIntrp_StackOfGeneralExpression &
-	:rtype: None
-") ExprIntrp_ListIteratorOfStackOfGeneralExpression;
-		 ExprIntrp_ListIteratorOfStackOfGeneralExpression (const ExprIntrp_StackOfGeneralExpression & L);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param L:
-	:type L: ExprIntrp_StackOfGeneralExpression &
-	:rtype: None
-") Initialize;
-		void Initialize (const ExprIntrp_StackOfGeneralExpression & L);
-		%feature("compactdefaultargs") More;
-		%feature("autodoc", "	:rtype: bool
-") More;
-		Standard_Boolean More ();
-		%feature("compactdefaultargs") Next;
-		%feature("autodoc", "	:rtype: None
-") Next;
-		void Next ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralExpression
-") Value;
-		Handle_Expr_GeneralExpression Value ();
-};
 
-
-%extend ExprIntrp_ListIteratorOfStackOfGeneralExpression {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ExprIntrp_ListIteratorOfStackOfGeneralFunction;
-class ExprIntrp_ListIteratorOfStackOfGeneralFunction {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_ListIteratorOfStackOfGeneralFunction;
-		%feature("autodoc", "	:rtype: None
-") ExprIntrp_ListIteratorOfStackOfGeneralFunction;
-		 ExprIntrp_ListIteratorOfStackOfGeneralFunction ();
-		%feature("compactdefaultargs") ExprIntrp_ListIteratorOfStackOfGeneralFunction;
-		%feature("autodoc", "	:param L:
-	:type L: ExprIntrp_StackOfGeneralFunction &
-	:rtype: None
-") ExprIntrp_ListIteratorOfStackOfGeneralFunction;
-		 ExprIntrp_ListIteratorOfStackOfGeneralFunction (const ExprIntrp_StackOfGeneralFunction & L);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param L:
-	:type L: ExprIntrp_StackOfGeneralFunction &
-	:rtype: None
-") Initialize;
-		void Initialize (const ExprIntrp_StackOfGeneralFunction & L);
-		%feature("compactdefaultargs") More;
-		%feature("autodoc", "	:rtype: bool
-") More;
-		Standard_Boolean More ();
-		%feature("compactdefaultargs") Next;
-		%feature("autodoc", "	:rtype: None
-") Next;
-		void Next ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralFunction
-") Value;
-		Handle_Expr_GeneralFunction Value ();
-};
-
-
-%extend ExprIntrp_ListIteratorOfStackOfGeneralFunction {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ExprIntrp_ListIteratorOfStackOfGeneralRelation;
-class ExprIntrp_ListIteratorOfStackOfGeneralRelation {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_ListIteratorOfStackOfGeneralRelation;
-		%feature("autodoc", "	:rtype: None
-") ExprIntrp_ListIteratorOfStackOfGeneralRelation;
-		 ExprIntrp_ListIteratorOfStackOfGeneralRelation ();
-		%feature("compactdefaultargs") ExprIntrp_ListIteratorOfStackOfGeneralRelation;
-		%feature("autodoc", "	:param L:
-	:type L: ExprIntrp_StackOfGeneralRelation &
-	:rtype: None
-") ExprIntrp_ListIteratorOfStackOfGeneralRelation;
-		 ExprIntrp_ListIteratorOfStackOfGeneralRelation (const ExprIntrp_StackOfGeneralRelation & L);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param L:
-	:type L: ExprIntrp_StackOfGeneralRelation &
-	:rtype: None
-") Initialize;
-		void Initialize (const ExprIntrp_StackOfGeneralRelation & L);
-		%feature("compactdefaultargs") More;
-		%feature("autodoc", "	:rtype: bool
-") More;
-		Standard_Boolean More ();
-		%feature("compactdefaultargs") Next;
-		%feature("autodoc", "	:rtype: None
-") Next;
-		void Next ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralRelation
-") Value;
-		Handle_Expr_GeneralRelation Value ();
-};
-
-
-%extend ExprIntrp_ListIteratorOfStackOfGeneralRelation {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ExprIntrp_ListNodeOfStackOfGeneralExpression;
-class ExprIntrp_ListNodeOfStackOfGeneralExpression : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_ListNodeOfStackOfGeneralExpression;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralExpression &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") ExprIntrp_ListNodeOfStackOfGeneralExpression;
-		 ExprIntrp_ListNodeOfStackOfGeneralExpression (const Handle_Expr_GeneralExpression & I,const TCollection_MapNodePtr & n);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralExpression
-") Value;
-		Handle_Expr_GeneralExpression Value ();
-};
-
-
-%make_alias(ExprIntrp_ListNodeOfStackOfGeneralExpression)
-
-%extend ExprIntrp_ListNodeOfStackOfGeneralExpression {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ExprIntrp_ListNodeOfStackOfGeneralFunction;
-class ExprIntrp_ListNodeOfStackOfGeneralFunction : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_ListNodeOfStackOfGeneralFunction;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralFunction &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") ExprIntrp_ListNodeOfStackOfGeneralFunction;
-		 ExprIntrp_ListNodeOfStackOfGeneralFunction (const Handle_Expr_GeneralFunction & I,const TCollection_MapNodePtr & n);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralFunction
-") Value;
-		Handle_Expr_GeneralFunction Value ();
-};
-
-
-%make_alias(ExprIntrp_ListNodeOfStackOfGeneralFunction)
-
-%extend ExprIntrp_ListNodeOfStackOfGeneralFunction {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ExprIntrp_ListNodeOfStackOfGeneralRelation;
-class ExprIntrp_ListNodeOfStackOfGeneralRelation : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_ListNodeOfStackOfGeneralRelation;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralRelation &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") ExprIntrp_ListNodeOfStackOfGeneralRelation;
-		 ExprIntrp_ListNodeOfStackOfGeneralRelation (const Handle_Expr_GeneralRelation & I,const TCollection_MapNodePtr & n);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralRelation
-") Value;
-		Handle_Expr_GeneralRelation Value ();
-};
-
-
-%make_alias(ExprIntrp_ListNodeOfStackOfGeneralRelation)
-
-%extend ExprIntrp_ListNodeOfStackOfGeneralRelation {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ExprIntrp_SequenceNodeOfSequenceOfNamedExpression;
-class ExprIntrp_SequenceNodeOfSequenceOfNamedExpression : public TCollection_SeqNode {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_SequenceNodeOfSequenceOfNamedExpression;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_NamedExpression &
-	:param n:
-	:type n: TCollection_SeqNodePtr &
-	:param p:
-	:type p: TCollection_SeqNodePtr &
-	:rtype: None
-") ExprIntrp_SequenceNodeOfSequenceOfNamedExpression;
-		 ExprIntrp_SequenceNodeOfSequenceOfNamedExpression (const Handle_Expr_NamedExpression & I,const TCollection_SeqNodePtr & n,const TCollection_SeqNodePtr & p);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_Expr_NamedExpression
-") Value;
-		Handle_Expr_NamedExpression Value ();
-};
-
-
-%make_alias(ExprIntrp_SequenceNodeOfSequenceOfNamedExpression)
-
-%extend ExprIntrp_SequenceNodeOfSequenceOfNamedExpression {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ExprIntrp_SequenceNodeOfSequenceOfNamedFunction;
-class ExprIntrp_SequenceNodeOfSequenceOfNamedFunction : public TCollection_SeqNode {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_SequenceNodeOfSequenceOfNamedFunction;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_NamedFunction &
-	:param n:
-	:type n: TCollection_SeqNodePtr &
-	:param p:
-	:type p: TCollection_SeqNodePtr &
-	:rtype: None
-") ExprIntrp_SequenceNodeOfSequenceOfNamedFunction;
-		 ExprIntrp_SequenceNodeOfSequenceOfNamedFunction (const Handle_Expr_NamedFunction & I,const TCollection_SeqNodePtr & n,const TCollection_SeqNodePtr & p);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_Expr_NamedFunction
-") Value;
-		Handle_Expr_NamedFunction Value ();
-};
-
-
-%make_alias(ExprIntrp_SequenceNodeOfSequenceOfNamedFunction)
-
-%extend ExprIntrp_SequenceNodeOfSequenceOfNamedFunction {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ExprIntrp_SequenceOfNamedExpression;
-class ExprIntrp_SequenceOfNamedExpression : public TCollection_BaseSequence {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_SequenceOfNamedExpression;
-		%feature("autodoc", "	:rtype: None
-") ExprIntrp_SequenceOfNamedExpression;
-		 ExprIntrp_SequenceOfNamedExpression ();
-		%feature("compactdefaultargs") ExprIntrp_SequenceOfNamedExpression;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_SequenceOfNamedExpression &
-	:rtype: None
-") ExprIntrp_SequenceOfNamedExpression;
-		 ExprIntrp_SequenceOfNamedExpression (const ExprIntrp_SequenceOfNamedExpression & Other);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_SequenceOfNamedExpression &
-	:rtype: ExprIntrp_SequenceOfNamedExpression
-") Assign;
-		const ExprIntrp_SequenceOfNamedExpression & Assign (const ExprIntrp_SequenceOfNamedExpression & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_SequenceOfNamedExpression &
-	:rtype: ExprIntrp_SequenceOfNamedExpression
-") operator =;
-		const ExprIntrp_SequenceOfNamedExpression & operator = (const ExprIntrp_SequenceOfNamedExpression & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param T:
-	:type T: Handle_Expr_NamedExpression &
-	:rtype: None
-") Append;
-		void Append (const Handle_Expr_NamedExpression & T);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param S:
-	:type S: ExprIntrp_SequenceOfNamedExpression &
-	:rtype: None
-") Append;
-		void Append (ExprIntrp_SequenceOfNamedExpression & S);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param T:
-	:type T: Handle_Expr_NamedExpression &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_Expr_NamedExpression & T);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param S:
-	:type S: ExprIntrp_SequenceOfNamedExpression &
-	:rtype: None
-") Prepend;
-		void Prepend (ExprIntrp_SequenceOfNamedExpression & S);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: Handle_Expr_NamedExpression &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,const Handle_Expr_NamedExpression & T);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: ExprIntrp_SequenceOfNamedExpression &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,ExprIntrp_SequenceOfNamedExpression & S);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: Handle_Expr_NamedExpression &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,const Handle_Expr_NamedExpression & T);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: ExprIntrp_SequenceOfNamedExpression &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,ExprIntrp_SequenceOfNamedExpression & S);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: Handle_Expr_NamedExpression
-") First;
-		Handle_Expr_NamedExpression First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: Handle_Expr_NamedExpression
-") Last;
-		Handle_Expr_NamedExpression Last ();
-		%feature("compactdefaultargs") Split;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param Sub:
-	:type Sub: ExprIntrp_SequenceOfNamedExpression &
-	:rtype: None
-") Split;
-		void Split (const Standard_Integer Index,ExprIntrp_SequenceOfNamedExpression & Sub);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Handle_Expr_NamedExpression
-") Value;
-		Handle_Expr_NamedExpression Value (const Standard_Integer Index);
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param I:
-	:type I: Handle_Expr_NamedExpression &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer Index,const Handle_Expr_NamedExpression & I);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Handle_Expr_NamedExpression
-") ChangeValue;
-		Handle_Expr_NamedExpression ChangeValue (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param FromIndex:
-	:type FromIndex: int
-	:param ToIndex:
-	:type ToIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer FromIndex,const Standard_Integer ToIndex);
-};
-
-
-%extend ExprIntrp_SequenceOfNamedExpression {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ExprIntrp_SequenceOfNamedFunction;
-class ExprIntrp_SequenceOfNamedFunction : public TCollection_BaseSequence {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_SequenceOfNamedFunction;
-		%feature("autodoc", "	:rtype: None
-") ExprIntrp_SequenceOfNamedFunction;
-		 ExprIntrp_SequenceOfNamedFunction ();
-		%feature("compactdefaultargs") ExprIntrp_SequenceOfNamedFunction;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_SequenceOfNamedFunction &
-	:rtype: None
-") ExprIntrp_SequenceOfNamedFunction;
-		 ExprIntrp_SequenceOfNamedFunction (const ExprIntrp_SequenceOfNamedFunction & Other);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_SequenceOfNamedFunction &
-	:rtype: ExprIntrp_SequenceOfNamedFunction
-") Assign;
-		const ExprIntrp_SequenceOfNamedFunction & Assign (const ExprIntrp_SequenceOfNamedFunction & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_SequenceOfNamedFunction &
-	:rtype: ExprIntrp_SequenceOfNamedFunction
-") operator =;
-		const ExprIntrp_SequenceOfNamedFunction & operator = (const ExprIntrp_SequenceOfNamedFunction & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param T:
-	:type T: Handle_Expr_NamedFunction &
-	:rtype: None
-") Append;
-		void Append (const Handle_Expr_NamedFunction & T);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param S:
-	:type S: ExprIntrp_SequenceOfNamedFunction &
-	:rtype: None
-") Append;
-		void Append (ExprIntrp_SequenceOfNamedFunction & S);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param T:
-	:type T: Handle_Expr_NamedFunction &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_Expr_NamedFunction & T);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param S:
-	:type S: ExprIntrp_SequenceOfNamedFunction &
-	:rtype: None
-") Prepend;
-		void Prepend (ExprIntrp_SequenceOfNamedFunction & S);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: Handle_Expr_NamedFunction &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,const Handle_Expr_NamedFunction & T);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: ExprIntrp_SequenceOfNamedFunction &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,ExprIntrp_SequenceOfNamedFunction & S);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: Handle_Expr_NamedFunction &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,const Handle_Expr_NamedFunction & T);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: ExprIntrp_SequenceOfNamedFunction &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,ExprIntrp_SequenceOfNamedFunction & S);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: Handle_Expr_NamedFunction
-") First;
-		Handle_Expr_NamedFunction First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: Handle_Expr_NamedFunction
-") Last;
-		Handle_Expr_NamedFunction Last ();
-		%feature("compactdefaultargs") Split;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param Sub:
-	:type Sub: ExprIntrp_SequenceOfNamedFunction &
-	:rtype: None
-") Split;
-		void Split (const Standard_Integer Index,ExprIntrp_SequenceOfNamedFunction & Sub);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Handle_Expr_NamedFunction
-") Value;
-		Handle_Expr_NamedFunction Value (const Standard_Integer Index);
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param I:
-	:type I: Handle_Expr_NamedFunction &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer Index,const Handle_Expr_NamedFunction & I);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Handle_Expr_NamedFunction
-") ChangeValue;
-		Handle_Expr_NamedFunction ChangeValue (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param FromIndex:
-	:type FromIndex: int
-	:param ToIndex:
-	:type ToIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer FromIndex,const Standard_Integer ToIndex);
-};
-
-
-%extend ExprIntrp_SequenceOfNamedFunction {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ExprIntrp_StackOfGeneralExpression;
-class ExprIntrp_StackOfGeneralExpression {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_StackOfGeneralExpression;
-		%feature("autodoc", "	:rtype: None
-") ExprIntrp_StackOfGeneralExpression;
-		 ExprIntrp_StackOfGeneralExpression ();
-		%feature("compactdefaultargs") ExprIntrp_StackOfGeneralExpression;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralExpression &
-	:rtype: None
-") ExprIntrp_StackOfGeneralExpression;
-		 ExprIntrp_StackOfGeneralExpression (const ExprIntrp_StackOfGeneralExpression & Other);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralExpression &
-	:rtype: None
-") Assign;
-		void Assign (const ExprIntrp_StackOfGeneralExpression & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralExpression &
-	:rtype: None
-") operator =;
-		void operator = (const ExprIntrp_StackOfGeneralExpression & Other);
-		%feature("compactdefaultargs") Extent;
-		%feature("autodoc", "	:rtype: int
-") Extent;
-		Standard_Integer Extent ();
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") IsEmpty;
-		%feature("autodoc", "	:rtype: bool
-") IsEmpty;
-		Standard_Boolean IsEmpty ();
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralExpression &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_Expr_GeneralExpression & I);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralExpression &
-	:param theIt:
-	:type theIt: ExprIntrp_ListIteratorOfStackOfGeneralExpression &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_Expr_GeneralExpression & I,ExprIntrp_ListIteratorOfStackOfGeneralExpression & theIt);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralExpression &
-	:rtype: None
-") Prepend;
-		void Prepend (ExprIntrp_StackOfGeneralExpression & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralExpression &
-	:rtype: None
-") Append;
-		void Append (const Handle_Expr_GeneralExpression & I);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralExpression &
-	:param theIt:
-	:type theIt: ExprIntrp_ListIteratorOfStackOfGeneralExpression &
-	:rtype: None
-") Append;
-		void Append (const Handle_Expr_GeneralExpression & I,ExprIntrp_ListIteratorOfStackOfGeneralExpression & theIt);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralExpression &
-	:rtype: None
-") Append;
-		void Append (ExprIntrp_StackOfGeneralExpression & Other);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralExpression
-") First;
-		Handle_Expr_GeneralExpression First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralExpression
-") Last;
-		Handle_Expr_GeneralExpression Last ();
-		%feature("compactdefaultargs") RemoveFirst;
-		%feature("autodoc", "	:rtype: None
-") RemoveFirst;
-		void RemoveFirst ();
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralExpression &
-	:rtype: None
-") Remove;
-		void Remove (ExprIntrp_ListIteratorOfStackOfGeneralExpression & It);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralExpression &
-	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralExpression &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Handle_Expr_GeneralExpression & I,ExprIntrp_ListIteratorOfStackOfGeneralExpression & It);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralExpression &
-	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralExpression &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (ExprIntrp_StackOfGeneralExpression & Other,ExprIntrp_ListIteratorOfStackOfGeneralExpression & It);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralExpression &
-	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralExpression &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Handle_Expr_GeneralExpression & I,ExprIntrp_ListIteratorOfStackOfGeneralExpression & It);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralExpression &
-	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralExpression &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (ExprIntrp_StackOfGeneralExpression & Other,ExprIntrp_ListIteratorOfStackOfGeneralExpression & It);
-};
-
-
-%extend ExprIntrp_StackOfGeneralExpression {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ExprIntrp_StackOfGeneralFunction;
-class ExprIntrp_StackOfGeneralFunction {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_StackOfGeneralFunction;
-		%feature("autodoc", "	:rtype: None
-") ExprIntrp_StackOfGeneralFunction;
-		 ExprIntrp_StackOfGeneralFunction ();
-		%feature("compactdefaultargs") ExprIntrp_StackOfGeneralFunction;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralFunction &
-	:rtype: None
-") ExprIntrp_StackOfGeneralFunction;
-		 ExprIntrp_StackOfGeneralFunction (const ExprIntrp_StackOfGeneralFunction & Other);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralFunction &
-	:rtype: None
-") Assign;
-		void Assign (const ExprIntrp_StackOfGeneralFunction & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralFunction &
-	:rtype: None
-") operator =;
-		void operator = (const ExprIntrp_StackOfGeneralFunction & Other);
-		%feature("compactdefaultargs") Extent;
-		%feature("autodoc", "	:rtype: int
-") Extent;
-		Standard_Integer Extent ();
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") IsEmpty;
-		%feature("autodoc", "	:rtype: bool
-") IsEmpty;
-		Standard_Boolean IsEmpty ();
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralFunction &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_Expr_GeneralFunction & I);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralFunction &
-	:param theIt:
-	:type theIt: ExprIntrp_ListIteratorOfStackOfGeneralFunction &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_Expr_GeneralFunction & I,ExprIntrp_ListIteratorOfStackOfGeneralFunction & theIt);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralFunction &
-	:rtype: None
-") Prepend;
-		void Prepend (ExprIntrp_StackOfGeneralFunction & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralFunction &
-	:rtype: None
-") Append;
-		void Append (const Handle_Expr_GeneralFunction & I);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralFunction &
-	:param theIt:
-	:type theIt: ExprIntrp_ListIteratorOfStackOfGeneralFunction &
-	:rtype: None
-") Append;
-		void Append (const Handle_Expr_GeneralFunction & I,ExprIntrp_ListIteratorOfStackOfGeneralFunction & theIt);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralFunction &
-	:rtype: None
-") Append;
-		void Append (ExprIntrp_StackOfGeneralFunction & Other);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralFunction
-") First;
-		Handle_Expr_GeneralFunction First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralFunction
-") Last;
-		Handle_Expr_GeneralFunction Last ();
-		%feature("compactdefaultargs") RemoveFirst;
-		%feature("autodoc", "	:rtype: None
-") RemoveFirst;
-		void RemoveFirst ();
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralFunction &
-	:rtype: None
-") Remove;
-		void Remove (ExprIntrp_ListIteratorOfStackOfGeneralFunction & It);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralFunction &
-	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralFunction &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Handle_Expr_GeneralFunction & I,ExprIntrp_ListIteratorOfStackOfGeneralFunction & It);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralFunction &
-	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralFunction &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (ExprIntrp_StackOfGeneralFunction & Other,ExprIntrp_ListIteratorOfStackOfGeneralFunction & It);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralFunction &
-	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralFunction &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Handle_Expr_GeneralFunction & I,ExprIntrp_ListIteratorOfStackOfGeneralFunction & It);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralFunction &
-	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralFunction &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (ExprIntrp_StackOfGeneralFunction & Other,ExprIntrp_ListIteratorOfStackOfGeneralFunction & It);
-};
-
-
-%extend ExprIntrp_StackOfGeneralFunction {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ExprIntrp_StackOfGeneralRelation;
-class ExprIntrp_StackOfGeneralRelation {
-	public:
-		%feature("compactdefaultargs") ExprIntrp_StackOfGeneralRelation;
-		%feature("autodoc", "	:rtype: None
-") ExprIntrp_StackOfGeneralRelation;
-		 ExprIntrp_StackOfGeneralRelation ();
-		%feature("compactdefaultargs") ExprIntrp_StackOfGeneralRelation;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralRelation &
-	:rtype: None
-") ExprIntrp_StackOfGeneralRelation;
-		 ExprIntrp_StackOfGeneralRelation (const ExprIntrp_StackOfGeneralRelation & Other);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralRelation &
-	:rtype: None
-") Assign;
-		void Assign (const ExprIntrp_StackOfGeneralRelation & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralRelation &
-	:rtype: None
-") operator =;
-		void operator = (const ExprIntrp_StackOfGeneralRelation & Other);
-		%feature("compactdefaultargs") Extent;
-		%feature("autodoc", "	:rtype: int
-") Extent;
-		Standard_Integer Extent ();
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") IsEmpty;
-		%feature("autodoc", "	:rtype: bool
-") IsEmpty;
-		Standard_Boolean IsEmpty ();
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralRelation &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_Expr_GeneralRelation & I);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralRelation &
-	:param theIt:
-	:type theIt: ExprIntrp_ListIteratorOfStackOfGeneralRelation &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_Expr_GeneralRelation & I,ExprIntrp_ListIteratorOfStackOfGeneralRelation & theIt);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralRelation &
-	:rtype: None
-") Prepend;
-		void Prepend (ExprIntrp_StackOfGeneralRelation & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralRelation &
-	:rtype: None
-") Append;
-		void Append (const Handle_Expr_GeneralRelation & I);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralRelation &
-	:param theIt:
-	:type theIt: ExprIntrp_ListIteratorOfStackOfGeneralRelation &
-	:rtype: None
-") Append;
-		void Append (const Handle_Expr_GeneralRelation & I,ExprIntrp_ListIteratorOfStackOfGeneralRelation & theIt);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralRelation &
-	:rtype: None
-") Append;
-		void Append (ExprIntrp_StackOfGeneralRelation & Other);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralRelation
-") First;
-		Handle_Expr_GeneralRelation First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: Handle_Expr_GeneralRelation
-") Last;
-		Handle_Expr_GeneralRelation Last ();
-		%feature("compactdefaultargs") RemoveFirst;
-		%feature("autodoc", "	:rtype: None
-") RemoveFirst;
-		void RemoveFirst ();
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralRelation &
-	:rtype: None
-") Remove;
-		void Remove (ExprIntrp_ListIteratorOfStackOfGeneralRelation & It);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralRelation &
-	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralRelation &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Handle_Expr_GeneralRelation & I,ExprIntrp_ListIteratorOfStackOfGeneralRelation & It);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralRelation &
-	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralRelation &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (ExprIntrp_StackOfGeneralRelation & Other,ExprIntrp_ListIteratorOfStackOfGeneralRelation & It);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_Expr_GeneralRelation &
-	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralRelation &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Handle_Expr_GeneralRelation & I,ExprIntrp_ListIteratorOfStackOfGeneralRelation & It);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Other:
-	:type Other: ExprIntrp_StackOfGeneralRelation &
-	:param It:
-	:type It: ExprIntrp_ListIteratorOfStackOfGeneralRelation &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (ExprIntrp_StackOfGeneralRelation & Other,ExprIntrp_ListIteratorOfStackOfGeneralRelation & It);
-};
-
-
-%extend ExprIntrp_StackOfGeneralRelation {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
+/*************************
+* class ExprIntrp_GenExp *
+*************************/
 %nodefaultctor ExprIntrp_GenExp;
 class ExprIntrp_GenExp : public ExprIntrp_Generator {
 	public:
+		/****************** Create ******************/
+		/**** md5 signature: 4e4134de3b1b6f47befbbbc717889d24 ****/
 		%feature("compactdefaultargs") Create;
-		%feature("autodoc", "	:rtype: Handle_ExprIntrp_GenExp
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<ExprIntrp_GenExp>
 ") Create;
-		static Handle_ExprIntrp_GenExp Create ();
-		%feature("compactdefaultargs") Process;
-		%feature("autodoc", "	* Processes given string.
+		static opencascade::handle<ExprIntrp_GenExp> Create();
 
-	:param str:
-	:type str: TCollection_AsciiString &
-	:rtype: None
-") Process;
-		void Process (const TCollection_AsciiString & str);
-		%feature("compactdefaultargs") IsDone;
-		%feature("autodoc", "	* Returns false if any syntax error has occurred during process.
-
-	:rtype: bool
-") IsDone;
-		Standard_Boolean IsDone ();
+		/****************** Expression ******************/
+		/**** md5 signature: 5ca63dd06176a0c3c49989c229b9fbf6 ****/
 		%feature("compactdefaultargs") Expression;
-		%feature("autodoc", "	* Returns expression generated. Raises an exception if IsDone answers false.
+		%feature("autodoc", "Returns expression generated. raises an exception if isdone answers false.
 
-	:rtype: Handle_Expr_GeneralExpression
+Returns
+-------
+opencascade::handle<Expr_GeneralExpression>
 ") Expression;
-		Handle_Expr_GeneralExpression Expression ();
+		opencascade::handle<Expr_GeneralExpression> Expression();
+
+		/****************** IsDone ******************/
+		/**** md5 signature: ec0624071ec7da54b3d9dacc7bcb05f9 ****/
+		%feature("compactdefaultargs") IsDone;
+		%feature("autodoc", "Returns false if any syntax error has occurred during process.
+
+Returns
+-------
+bool
+") IsDone;
+		Standard_Boolean IsDone();
+
+		/****************** Process ******************/
+		/**** md5 signature: 2b36655805fcdcb65bd9dff1fce15e9f ****/
+		%feature("compactdefaultargs") Process;
+		%feature("autodoc", "Processes given string.
+
+Parameters
+----------
+str: TCollection_AsciiString
+
+Returns
+-------
+None
+") Process;
+		void Process(const TCollection_AsciiString & str);
+
 };
 
 
@@ -1200,23 +571,50 @@ class ExprIntrp_GenExp : public ExprIntrp_Generator {
 	__repr__ = _dumps_object
 	}
 };
+
+/*************************
+* class ExprIntrp_GenFct *
+*************************/
 %nodefaultctor ExprIntrp_GenFct;
 class ExprIntrp_GenFct : public ExprIntrp_Generator {
 	public:
+		/****************** Create ******************/
+		/**** md5 signature: cf205d2f50784e4cf485a2da9c614be9 ****/
 		%feature("compactdefaultargs") Create;
-		%feature("autodoc", "	:rtype: Handle_ExprIntrp_GenFct
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<ExprIntrp_GenFct>
 ") Create;
-		static Handle_ExprIntrp_GenFct Create ();
-		%feature("compactdefaultargs") Process;
-		%feature("autodoc", "	:param str:
-	:type str: TCollection_AsciiString &
-	:rtype: None
-") Process;
-		void Process (const TCollection_AsciiString & str);
+		static opencascade::handle<ExprIntrp_GenFct> Create();
+
+		/****************** IsDone ******************/
+		/**** md5 signature: ec0624071ec7da54b3d9dacc7bcb05f9 ****/
 		%feature("compactdefaultargs") IsDone;
-		%feature("autodoc", "	:rtype: bool
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+bool
 ") IsDone;
-		Standard_Boolean IsDone ();
+		Standard_Boolean IsDone();
+
+		/****************** Process ******************/
+		/**** md5 signature: 2b36655805fcdcb65bd9dff1fce15e9f ****/
+		%feature("compactdefaultargs") Process;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+str: TCollection_AsciiString
+
+Returns
+-------
+None
+") Process;
+		void Process(const TCollection_AsciiString & str);
+
 };
 
 
@@ -1227,33 +625,61 @@ class ExprIntrp_GenFct : public ExprIntrp_Generator {
 	__repr__ = _dumps_object
 	}
 };
+
+/*************************
+* class ExprIntrp_GenRel *
+*************************/
 %nodefaultctor ExprIntrp_GenRel;
 class ExprIntrp_GenRel : public ExprIntrp_Generator {
 	public:
+		/****************** Create ******************/
+		/**** md5 signature: 327818c4a46de7831a3006ad0fa5284e ****/
 		%feature("compactdefaultargs") Create;
-		%feature("autodoc", "	:rtype: Handle_ExprIntrp_GenRel
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<ExprIntrp_GenRel>
 ") Create;
-		static Handle_ExprIntrp_GenRel Create ();
-		%feature("compactdefaultargs") Process;
-		%feature("autodoc", "	* Processes given string.
+		static opencascade::handle<ExprIntrp_GenRel> Create();
 
-	:param str:
-	:type str: TCollection_AsciiString &
-	:rtype: None
-") Process;
-		void Process (const TCollection_AsciiString & str);
+		/****************** IsDone ******************/
+		/**** md5 signature: ec0624071ec7da54b3d9dacc7bcb05f9 ****/
 		%feature("compactdefaultargs") IsDone;
-		%feature("autodoc", "	* Returns false if any syntax error has occurred during process.
+		%feature("autodoc", "Returns false if any syntax error has occurred during process.
 
-	:rtype: bool
+Returns
+-------
+bool
 ") IsDone;
-		Standard_Boolean IsDone ();
-		%feature("compactdefaultargs") Relation;
-		%feature("autodoc", "	* Returns relation generated. Raises an exception if IsDone answers false.
+		Standard_Boolean IsDone();
 
-	:rtype: Handle_Expr_GeneralRelation
+		/****************** Process ******************/
+		/**** md5 signature: 2b36655805fcdcb65bd9dff1fce15e9f ****/
+		%feature("compactdefaultargs") Process;
+		%feature("autodoc", "Processes given string.
+
+Parameters
+----------
+str: TCollection_AsciiString
+
+Returns
+-------
+None
+") Process;
+		void Process(const TCollection_AsciiString & str);
+
+		/****************** Relation ******************/
+		/**** md5 signature: 27e77b80110b2821273b98db328e0f1b ****/
+		%feature("compactdefaultargs") Relation;
+		%feature("autodoc", "Returns relation generated. raises an exception if isdone answers false.
+
+Returns
+-------
+opencascade::handle<Expr_GeneralRelation>
 ") Relation;
-		Handle_Expr_GeneralRelation Relation ();
+		opencascade::handle<Expr_GeneralRelation> Relation();
+
 };
 
 
@@ -1264,3 +690,7 @@ class ExprIntrp_GenRel : public ExprIntrp_Generator {
 	__repr__ = _dumps_object
 	}
 };
+
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */

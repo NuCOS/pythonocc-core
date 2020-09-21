@@ -20,12 +20,15 @@
 #if !defined __Addons__
 #define __Addons__
 
-#include <TCollection_HAsciiString.hxx>
-#include <Font_BRepFont.hxx>
+#include <Font_BRepTextBuilder.hxx>
 #include <Font_FontMgr.hxx>
+#include <TCollection_AsciiString.hxx>
 
-TopoDS_Shape text_to_brep(char *text_to_render, char* aFontName, Font_FontAspect aFontAspect, Standard_Real aSize, Standard_Boolean isCompositeCurve);
-void display_available_fonts();
-void register_font(char* aFontPath);
-
+TopoDS_Shape text_to_brep(const char* aText,
+                          const char* aName,
+                          Font_FontAspect aFontAspect,
+                          float aSize,
+                          bool anIsCompositeCurve);
+//void display_available_fonts();
+void register_font(char* aFontPath, Font_FontAspect aFontAspect=Font_FontAspect_UNDEFINED);
 #endif
