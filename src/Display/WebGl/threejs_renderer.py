@@ -1,4 +1,4 @@
-##Copyright 2011-2017 Thomas Paviot (tpaviot@gmail.com)
+##Copyright 2011-2019 Thomas Paviot (tpaviot@gmail.com)
 ##
 ##This file is part of pythonOCC.
 ##
@@ -15,8 +15,6 @@
 ##You should have received a copy of the GNU Lesser General Public License
 ##along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import print_function, absolute_import
-
 import os
 import sys
 import tempfile
@@ -24,13 +22,13 @@ import uuid
 import json
 
 from OCC.Core.gp import gp_Vec
-from OCC.Core.Visualization import Tesselator
+from OCC.Core.Tesselator import ShapeTesselator
 from OCC import VERSION as OCC_VERSION
 
 from OCC.Extend.TopologyUtils import is_edge, is_wire, discretize_edge, discretize_wire
 from OCC.Display.WebGl.simple_server import start_server
 
-THREEJS_RELEASE = "r100"
+THREEJS_RELEASE = "r113"
 
 def spinning_cursor():
     while True:
@@ -80,7 +78,7 @@ HEADER = """
     <meta name='Author' content='Thomas Paviot - tpaviot@gmail.com'>
     <meta name='Keywords' content='WebGl,pythonocc'>
     <meta charset="utf-8">
-    <style type="text/css">
+    <style>
         body {
             background: linear-gradient(@bg_gradient_color1@, @bg_gradient_color2@);
             margin: 0px;
@@ -142,9 +140,9 @@ BODY_PART0 = """
     <b>g</b> view/hide grid<br>
     <b>a</b> view/hide axis<br>
     </div>
-    <script type="text/javascript" src="https://rawcdn.githack.com/mrdoob/three.js/%s/build/three.min.js"></script>
-    <script type="text/javascript" src="https://rawcdn.githack.com/mrdoob/three.js/%s/examples/js/controls/TrackballControls.js"></script>
-    <script type="text/javascript" src="https://rawcdn.githack.com/mrdoob/three.js/%s/examples/js/libs/stats.min.js"></script>
+    <script src="https://rawcdn.githack.com/mrdoob/three.js/%s/build/three.min.js"></script>
+    <script src="https://rawcdn.githack.com/mrdoob/three.js/%s/examples/js/controls/TrackballControls.js"></script>
+    <script src="https://rawcdn.githack.com/mrdoob/three.js/%s/examples/js/libs/stats.min.js"></script>
 
 """ % (THREEJS_RELEASE, THREEJS_RELEASE, THREEJS_RELEASE, THREEJS_RELEASE)
 
@@ -343,7 +341,7 @@ BODY_PART2 = """
 """
 
 
-class HTMLHeader(object):
+class HTMLHeader:
     def __init__(self, bg_gradient_color1="#ced7de", bg_gradient_color2="#808080"):
         self._bg_gradient_color1 = bg_gradient_color1
         self._bg_gradient_color2 = bg_gradient_color2
@@ -355,7 +353,7 @@ class HTMLHeader(object):
         return header_str
 
 
-class HTMLBody_Part1(object):
+class HTMLBody_Part1:
     def __init__(self, vertex_shader=None, fragment_shader=None, uniforms=None):
         self._vertex_shader = vertex_shader
         self._fragment_shader = fragment_shader
@@ -398,7 +396,7 @@ class HTMLBody_Part1(object):
         return body_str
 
 
-class ThreejsRenderer(object):
+class ThreejsRenderer:
     def __init__(self, path=None):
         if not path:
             self._path = tempfile.mkdtemp()
@@ -418,7 +416,7 @@ class ThreejsRenderer(object):
                      shininess=0.9,
                      transparency=0.,
                      line_color=(0, 0., 0.),
-                     line_width=2.,
+                     line_width=1.,
                      mesh_quality=1.):
         # if the shape is an edge or a wire, use the related functions
         if is_edge(shape):
@@ -446,10 +444,9 @@ class ThreejsRenderer(object):
         shape_uuid = uuid.uuid4().hex
         shape_hash = "shp%s" % shape_uuid
         # tesselate
-        tess = Tesselator(shape)
+        tess = ShapeTesselator(shape)
         tess.Compute(compute_edges=export_edges,
                      mesh_quality=mesh_quality,
-                     uv_coords=False,
                      parallel=True)
         # update spinning cursor
         sys.stdout.write("\r%s mesh shape %s, %i triangles     " % (next(self.spinning_cursor),
@@ -485,7 +482,7 @@ class ThreejsRenderer(object):
                 with open(edge_full_path, "w") as edge_file:
                     edge_file.write(str_to_write)
                 # store this edge hash, with black color
-                self._3js_edges[hash] = [(0, 0, 0), line_width]
+                self._3js_edges[edge_hash] = [(0, 0, 0), line_width]
         return self._3js_shapes, self._3js_edges
 
 
@@ -507,6 +504,8 @@ class ThreejsRenderer(object):
             shape_string_list.append('color:%s,' % color_to_hex(color))
             shape_string_list.append('specular:%s,' % color_to_hex(specular_color))
             shape_string_list.append('shininess:%g,' % shininess)
+            # force double side rendering, see issue #645
+            shape_string_list.append('side: THREE.DoubleSide,')
             if transparency > 0.:
                 shape_string_list.append('transparent: true, premultipliedAlpha: true, opacity:%g,' % transparency)
             #var line_material = new THREE.LineBasicMaterial({color: 0x000000, linewidth: 2});
@@ -537,8 +536,8 @@ class ThreejsRenderer(object):
             edge_string_list.append("\t});\n")
         # write the string for the shape
         with open(self._html_filename, "w") as fp:
-            fp.write("<!DOCTYPE HTML>")
-            fp.write('<html>')
+            fp.write("<!DOCTYPE HTML>\n")
+            fp.write("<html lang='en'>")
             # header
             fp.write(HTMLHeader().get_str())
             # body
@@ -551,13 +550,13 @@ class ThreejsRenderer(object):
             fp.write(BODY_PART2)
             fp.write("</html>\n")
 
-    def render(self, server_port=8080, open_webbrowser=False):
+    def render(self, addr="localhost", server_port=8080, open_webbrowser=False):
         ''' render the scene into the browser.
         '''
         # generate HTML file
         self.generate_html_file()
         # then create a simple web server
-        start_server(server_port, self._path, open_webbrowser)
+        start_server(addr, server_port, self._path, open_webbrowser)
 
 if __name__ == "__main__":
     from OCC.Core.BRepPrimAPI import BRepPrimAPI_MakeBox, BRepPrimAPI_MakeTorus

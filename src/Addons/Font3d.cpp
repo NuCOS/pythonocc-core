@@ -19,48 +19,59 @@
 
 #include "Addons.h"
 
-// converts text to brep
-TopoDS_Shape text_to_brep(char *text_to_render, char* aFontName, Font_FontAspect aFontAspect, Standard_Real aSize, Standard_Boolean isCompositeCurve) { 
-  Font_BRepFont    aFont;
-  aFont.SetCompositeCurveMode(isCompositeCurve);
-  if (aFont.Init (aFontName, aFontAspect, aSize))
+TopoDS_Shape text_to_brep(const char* aText,
+                          const char* aName,
+                          Font_FontAspect aFontAspect,
+                          float aSize,
+                          bool anIsCompositeCurve)
+{
+
+  Font_BRepFont           aFont;
+  TCollection_AsciiString aFontName (aName);
+  gp_Ax3                  aPenAx3    (gp::XOY());
+  gp_Dir                  aNormal    (0.0, 0.0, 1.0);
+  gp_Dir                  aDirection (1.0, 0.0, 0.0);
+  gp_Pnt                  aPenLoc;
+
+  Graphic3d_HorizontalTextAlignment aHJustification = Graphic3d_HTA_LEFT;
+  Graphic3d_VerticalTextAlignment   aVJustification = Graphic3d_VTA_BOTTOM;
+  Font_StrictLevel aStrictLevel = Font_StrictLevel_Any;
+  
+
+  aFont.SetCompositeCurveMode (anIsCompositeCurve);
+  if (!aFont.FindAndInit (aFontName.ToCString(), aFontAspect, aSize, aStrictLevel))
   {
-    std::cout << "Font " << aFontName << " succesffuly initialized.\n";
+    std::cout << "Error: unable to load Font\n";
+    return TopoDS_Shape();
   }
-  else {
-    std::cerr << "Font " << aFontName << " initialization failed.\n";
-  }
-  return aFont.RenderText(text_to_render);
+
+  aPenAx3 = gp_Ax3 (aPenLoc, aNormal, aDirection);
+
+  Font_BRepTextBuilder aBuilder;
+  return aBuilder.Perform (aFont, aText, aPenAx3, aHJustification, aVJustification);
 }
 
-// display_available_fonts
-void display_available_fonts() {
+void register_font(char* aFontPath, Font_FontAspect aFontAspect) {
   Handle(Font_FontMgr) aMgr = Font_FontMgr::GetInstance();
-  for (Font_NListOfSystemFont::Iterator anIter (aMgr->GetAvailableFonts());
-         anIter.More(); anIter.Next())
-    {
-      const Handle(Font_SystemFont)& aFont = anIter.Value();
-      std::cout << (aFont->FontName()->String()).ToCString()
-            << " " << aFont->FontAspect()
-            << " " << (aFont->FontPath()->String()).ToCString() << "_\n";
-    }
-  }
-
-// register a new font given the font path
-// returns the font name
-void register_font(char* aFontPath) {
-  Handle(Font_FontMgr) aMgr = Font_FontMgr::GetInstance();
-  Font_FontAspect  aFontAspect;
   Handle(Font_SystemFont) aFont = aMgr->CheckFont (aFontPath);
-  if (aFont.IsNull())
-    {
+  if (aFont.IsNull()) {
       std::cerr << "Error: font '" << aFontPath << "' is not found!\n";
-    }
+  }
   else {
-      aFontAspect = aFont->FontAspect();
-      Handle(TCollection_HAsciiString) aName = aFont->FontName();
-      aFont = new Font_SystemFont (aName, aFontAspect, new TCollection_HAsciiString (aFontPath));
-      aMgr->RegisterFont (aFont, Standard_True);
-      std::cout << "Font name:" << aName->String() << ", Aspect:" << aFontAspect << " successfully registered.\n";
+    TCollection_AsciiString aName = aFont->FontName();
+    Handle(Font_SystemFont) aFont2 = new Font_SystemFont(aName);
+    aFont2 = new Font_SystemFont (aName);
+        
+    if (aFontAspect != Font_FontAspect_UNDEFINED) {
+        aFont2->SetFontPath (aFontAspect, aFontPath);
+    }
+    else {
+        for (int anAspectIter = 0; anAspectIter < Font_FontAspect_NB; ++anAspectIter) {
+            aFont2->SetFontPath ((Font_FontAspect )anAspectIter, aFont->FontPath ((Font_FontAspect )anAspectIter));
+        }
+    }
+    aFont = aFont2;
+    aMgr->RegisterFont (aFont, Standard_True);
+    std::cout << "Font loaded :" << aFont->ToString();
   }
 }

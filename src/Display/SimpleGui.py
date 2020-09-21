@@ -20,6 +20,7 @@
 import logging
 import os
 import sys
+from typing import Any, Callable, List, Optional, Tuple
 
 from OCC import VERSION
 from OCC.Display.backend import load_backend, get_qt_modules
@@ -28,12 +29,16 @@ from OCC.Display.OCCViewer import OffscreenRenderer
 log = logging.getLogger(__name__)
 
 
-def check_callable(_callable):
+def check_callable(_callable: Callable) -> None:
     if not callable(_callable):
         raise AssertionError("The function supplied is not callable")
 
 
-def init_display(backend_str=None, size=(1024, 768)):
+def init_display(backend_str: Optional[str]=None,
+                 size: Optional[Tuple[int, int]]=(1024, 768),
+                 display_triedron: Optional[bool]=True,
+                 background_gradient_color1: Optional[List[int]]=[206, 215, 222],
+                 background_gradient_color2: Optional[List[int]]=[128, 128, 128]):
     """ This function loads and initialize a GUI using either wx, pyq4, pyqt5 or pyside.
     If ever the environment variable PYTHONOCC_OFFSCREEN_RENDERER, then the GUI is simply
     ignored and an offscreen renderer is returned.
@@ -49,17 +54,20 @@ def init_display(backend_str=None, size=(1024, 768)):
 
     Note : the offscreen renderer is used on the travis side.
     """
+    if size is None:  # prevent size to being None (mypy)
+        raise AssertionError("window size cannot be None")
+
     if os.getenv("PYTHONOCC_OFFSCREEN_RENDERER") == "1":
         # create the offscreen renderer
         offscreen_renderer = OffscreenRenderer()
 
-        def do_nothing(*kargs, **kwargs):
+        def do_nothing(*kargs: Any, **kwargs: Any) -> None:
             """ takes as many parameters as you want,
             ans does nothing
             """
             pass
 
-        def call_function(s, func):
+        def call_function(s, func: Callable) -> None:
             """ A function that calls another function.
             Helpfull to bypass add_function_to_menu. s should be a string
             """
@@ -87,13 +95,13 @@ def init_display(backend_str=None, size=(1024, 768)):
                 self._menus = {}
                 self._menu_methods = {}
 
-            def add_menu(self, menu_name):
+            def add_menu(self, menu_name: str) -> None:
                 _menu = wx.Menu()
                 self.menuBar.Append(_menu, "&" + menu_name)
                 self.SetMenuBar(self.menuBar)
                 self._menus[menu_name] = _menu
 
-            def add_function_to_menu(self, menu_name, _callable):
+            def add_function_to_menu(self, menu_name: str, _callable: Callable) -> None:
                 # point on curve
                 _id = wx.NewId()
                 check_callable(_callable)
@@ -111,19 +119,14 @@ def init_display(backend_str=None, size=(1024, 768)):
         win.canva.InitDriver()
         app.SetTopWindow(win)
         display = win.canva._display
-        # background gradient
-        display.set_bg_gradient_color(206, 215, 222, 128, 128, 128)
-        # display black trihedron
-        display.display_trihedron()
 
-
-        def add_menu(*args, **kwargs):
+        def add_menu(*args, **kwargs) -> None:
             win.add_menu(*args, **kwargs)
 
-        def add_function_to_menu(*args, **kwargs):
+        def add_function_to_menu(*args, **kwargs) -> None:
             win.add_function_to_menu(*args, **kwargs)
 
-        def start_display():
+        def start_display() -> None:
             app.MainLoop()
 
     # Qt based simple GUI
@@ -133,7 +136,7 @@ def init_display(backend_str=None, size=(1024, 768)):
 
         class MainWindow(QtWidgets.QMainWindow):
 
-            def __init__(self, *args):
+            def __init__(self, *args: Any) -> None:
                 QtWidgets.QMainWindow.__init__(self, *args)
                 self.canva = qtViewer3d(self)
                 self.setWindowTitle("pythonOCC-%s 3d viewer ('%s' backend)" % (VERSION, used_backend))
@@ -155,18 +158,18 @@ def init_display(backend_str=None, size=(1024, 768)):
                 # screen size
                 self.centerOnScreen()
 
-            def centerOnScreen(self):
+            def centerOnScreen(self) -> None:
                 '''Centers the window on the screen.'''
                 resolution = QtWidgets.QApplication.desktop().screenGeometry()
                 x = (resolution.width() - self.frameSize().width()) / 2
                 y = (resolution.height() - self.frameSize().height()) / 2
                 self.move(x, y)
 
-            def add_menu(self, menu_name):
+            def add_menu(self, menu_name: str) -> None:
                 _menu = self.menu_bar.addMenu("&" + menu_name)
                 self._menus[menu_name] = _menu
 
-            def add_function_to_menu(self, menu_name, _callable):
+            def add_function_to_menu(self, menu_name: str, _callable: Callable) -> None:
                 check_callable(_callable)
                 try:
                     _action = QtWidgets.QAction(_callable.__name__.replace('_', ' ').lower(), self)
@@ -183,44 +186,29 @@ def init_display(backend_str=None, size=(1024, 768)):
         if not app:  # create QApplication if it doesnt exist
             app = QtWidgets.QApplication(sys.argv)
         win = MainWindow()
+        win.resize(size[0] -1, size[1] -1)
         win.show()
-        win.resize(size[0], size[1])
         win.centerOnScreen()
         win.canva.InitDriver()
+        win.resize(size[0], size[1])
         win.canva.qApp = app
         display = win.canva._display
-        # background gradient
-        display.set_bg_gradient_color(206, 215, 222, 128, 128, 128)
-        # display black trihedron
-        display.display_trihedron()
 
-        def add_menu(*args, **kwargs):
+        def add_menu(*args, **kwargs) -> None:
             win.add_menu(*args, **kwargs)
 
-        def add_function_to_menu(*args, **kwargs):
+        def add_function_to_menu(*args, **kwargs) -> None:
             win.add_function_to_menu(*args, **kwargs)
 
-        def start_display():
+        def start_display() -> None:
             win.raise_()  # make the application float to the top
             app.exec_()
+
+    if display_triedron:
+        display.display_triedron()
+
+    if background_gradient_color1 and background_gradient_color2:
+    # background gradient
+        display.set_bg_gradient_color(background_gradient_color1, background_gradient_color2)
+
     return display, start_display, add_menu, add_function_to_menu
-
-
-if __name__ == '__main__':
-    display, start_display, add_menu, add_function_to_menu = init_display("qt-pyqt5")
-    from OCC.Core.BRepPrimAPI import BRepPrimAPI_MakeSphere, BRepPrimAPI_MakeBox
-
-    def sphere(event=None):
-        display.DisplayShape(BRepPrimAPI_MakeSphere(100).Shape(), update=True)
-
-    def cube(event=None):
-        display.DisplayShape(BRepPrimAPI_MakeBox(1, 1, 1).Shape(), update=True)
-
-    def quit(event=None):
-        sys.exit()
-
-    add_menu('primitives')
-    add_function_to_menu('primitives', sphere)
-    add_function_to_menu('primitives', cube)
-    add_function_to_menu('primitives', quit)
-    start_display()

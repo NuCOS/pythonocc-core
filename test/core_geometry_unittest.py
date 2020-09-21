@@ -17,8 +17,6 @@
 ##You should have received a copy of the GNU Lesser General Public License
 ##along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import print_function
-
 import unittest
 
 from OCC.Core.gp import (gp_Pnt, gp_Pnt2d, gp_Ax3, gp_Vec, gp_Pln,
@@ -140,7 +138,7 @@ class TestGeometry(unittest.TestCase):
         self.assertIsInstance(N, gp_Pnt)
         NbResults = PPC.NbPoints()
         edg = make_edge(C)
-        self.assertFalse(edg.IsNull())
+        self.assertFalse(edg is None)
 
         if NbResults > 0:
             for i in range(1, NbResults+1):
@@ -184,6 +182,7 @@ class TestGeometry(unittest.TestCase):
                 Q = PPS.Point(i)
                 distance = PPS.Distance(i)
                 pstring = "Q" + repr(i) + ": at Distance :" + repr(PPS.Distance(i))
+                print(pstring)
 
     def test_points_from_intersection(self):
         '''Test: points from intersection'''
@@ -200,7 +199,7 @@ class TestGeometry(unittest.TestCase):
         aPlane = GC_MakePlane(PL).Value()
         aSurface = Geom_RectangularTrimmedSurface(aPlane, - 8., 8., - 12., 12., True, True)
         self.assertIsNotNone(aSurface)
-        self.assertFalse(aSurface.IsNull())
+        self.assertFalse(aSurface is None)
         anEllips = GC_MakeEllipse(EL).Value()
         self.assertIsInstance(anEllips, Geom_Ellipse)
         if ICQ.IsDone():
@@ -225,7 +224,7 @@ class TestGeometry(unittest.TestCase):
         self.assertIsInstance(gParabola, Geom2d_Parabola)
         aTrimmedCurve = Geom2d_TrimmedCurve(gParabola, -100, 100, True)
         self.assertIsNotNone(aTrimmedCurve)
-        self.assertFalse(aTrimmedCurve.IsNull())
+        self.assertFalse(aTrimmedCurve is None)
 
     def test_axis(self):
         '''Test: axis'''
@@ -237,7 +236,7 @@ class TestGeometry(unittest.TestCase):
         AXDirection = A.XDirection()
         self.assertIsInstance(AXDirection, gp_Dir)
         AYDirection = A.YDirection()
-        self.assertIsInstance(AXDirection, gp_Dir)
+        self.assertIsInstance(AYDirection, gp_Dir)
         P2 = gp_Pnt(5, 3, 4)
         A2 = gp_Ax3(P2, D)
         A2.YReverse()
@@ -520,7 +519,6 @@ class TestGeometry(unittest.TestCase):
 
         BZ1, BZ2, BZ3, BZ4 = map(Geom_BezierSurface, [array1, array2,
                                                       array3, array4])
-
         bezierarray = TColGeom_Array2OfBezierSurface(1, 2, 1, 2)
         bezierarray.SetValue(1, 1, BZ1)
         bezierarray.SetValue(1, 2, BZ2)
@@ -588,9 +586,9 @@ class TestGeometry(unittest.TestCase):
         aCurve = GeomAPI_PointsToBSpline(point_list_to_TColgp_Array1OfPnt(array)).Curve()
         SOR = Geom_SurfaceOfRevolution(aCurve, gp_OX())
         edge = make_edge(aCurve)
-        self.assertFalse(edge.IsNull())
+        self.assertFalse(edge is None)
         face = make_face(SOR)
-        self.assertFalse(face.IsNull())
+        self.assertFalse(face is None)
 
     def test_distances(self):
         '''Test: distances'''
@@ -645,8 +643,8 @@ class TestGeometry(unittest.TestCase):
         aSurf2 = GeomAPI_PointsToBSplineSurface(array3).Surface()
         ESS = GeomAPI_ExtremaSurfaceSurface(aSurf1, aSurf2)
         dist = ESS.LowerDistance()
-        self.assertGreater(dist, 1.25)
-        self.assertLess(dist, 1.26)
+        self.assertGreater(dist, 1.20)
+        self.assertLess(dist, 1.25)
         a, b = gp_Pnt(), gp_Pnt()
         ESS.NearestPoints(a, b)
 

@@ -1,50 +1,42 @@
-# change the version number to "0.17.1" or "0.18" in case of a release build
+{% set version = "7.4.0" %}
+
 package:
   name: pythonocc-core
-  version: 0.18.2
+  version: {{ version }}
 
 source:
   path: ../..
 
 
 build:
-  script_env:
-    - CC
-    - CXX
-
   number: {{ GIT_DESCRIBE_NUMBER }}
   binary_relocation: false [osx]
-  features:
-    - vc9               [win and py27]
-    - vc14              [win and py35]
-    - vc14              [win and py36]
 
 requirements:
   build:
-    - python
-    - oce ==0.18.3
-    - tbb ==2018_20171205
-    - cmake ==3.12.2
-    - ninja ==1.8.2
-    - swig ==3.0.12
-    - freetype ==2.9.1
-    - smesh ==6.7.6
+    - {{ compiler('cxx') }}
+    - {{ cdt('libx11-devel') }}         # [linux]
+    - {{ cdt('xorg-x11-proto-devel') }} # [linux]
+    - {{ cdt('mesa-libgl-devel') }}     # [linux]
+    - ninja
+    - cmake
+    - swig >=3.0.11
+
+  host:
+    - python {{ python }}
+    - opencascade ==7.4.0
 
   run:
-    - oce ==0.18.3
+    - opencascade ==7.4.0
     - python
-    - tbb >=2018_20171205
-    - freetype >=2.7
-    - smesh ==6.7.6
-    - six
 
 test:
+  imports:
+    - OCC
+    - OCC.Core.BRepPrimAPI
   requires:
-    - numpy
-    - wxpython          [py27]
-    - pyside            [py27]
     - pyqt >=5
-    - smesh ==6.7.6
+    - mypy
 
 about:
   home: https://github.com/tpaviot/pythonocc-core

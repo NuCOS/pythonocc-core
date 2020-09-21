@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,21 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define CHFIKPARTDOCSTRING
-"Fonctions de remplissage pour une SurfData, dans
-les cas particulers de conges/chanfreins suivants :
-- cylindre/plan entre 2 surfaces planes,
-- tore/sphere/cone entre un plan et un cylindre othogonal,
-- tore/sphere/cone entre un plan et un cone othogonal,
-- tore/sphere/cone entre un plan et un tore othogonal,
-- tore/cone entre un plan et une sphere.
-"
+"ChFiKPart module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_chfikpart.html"
 %enddef
 %module (package="OCC.Core", docstring=CHFIKPARTDOCSTRING) ChFiKPart
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -44,130 +35,200 @@ les cas particulers de conges/chanfreins suivants :
 %include ../common/OccHandle.i
 
 
-%include ChFiKPart_headers.i
+%{
+#include<ChFiKPart_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<Adaptor2d_module.hxx>
+#include<TopOpeBRepDS_module.hxx>
+#include<ChFiDS_module.hxx>
+#include<Adaptor3d_module.hxx>
+#include<TopAbs_module.hxx>
+#include<gp_module.hxx>
+#include<Geom_module.hxx>
+#include<Geom2d_module.hxx>
+#include<GeomAdaptor_module.hxx>
+#include<TopTools_module.hxx>
+#include<TColStd_module.hxx>
+#include<TColgp_module.hxx>
+#include<BRepAdaptor_module.hxx>
+#include<Geom_module.hxx>
+#include<Bnd_module.hxx>
+#include<BRepClass3d_module.hxx>
+#include<TopoDS_module.hxx>
+#include<gp_module.hxx>
+#include<TopLoc_module.hxx>
+#include<Message_module.hxx>
+#include<Intf_module.hxx>
+#include<IntSurf_module.hxx>
+#include<TopOpeBRepTool_module.hxx>
+#include<Law_module.hxx>
+#include<Extrema_module.hxx>
+#include<IntCurveSurface_module.hxx>
+#include<Geom2dAdaptor_module.hxx>
+#include<Adaptor2d_module.hxx>
+#include<Adaptor3d_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+%import Adaptor2d.i
+%import TopOpeBRepDS.i
+%import ChFiDS.i
+%import Adaptor3d.i
+%import TopAbs.i
+%import gp.i
+%import Geom.i
+%import Geom2d.i
+%import GeomAdaptor.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 /* end public enums declaration */
 
-%wrap_handle(ChFiKPart_DataMapNodeOfRstMap)
+/* python proy classes for enums */
+%pythoncode {
+};
+/* end python proxy for enums */
 
+/* handles */
+/* end handles declaration */
+
+/* templates */
+%template(ChFiKPart_RstMap) NCollection_DataMap<Standard_Integer,opencascade::handle<Adaptor2d_HCurve2d>,TColStd_MapIntegerHasher>;
+
+%extend NCollection_DataMap<Standard_Integer,opencascade::handle<Adaptor2d_HCurve2d>,TColStd_MapIntegerHasher> {
+    PyObject* Keys() {
+        PyObject *l=PyList_New(0);
+        for (ChFiKPart_RstMap::Iterator anIt1(*self); anIt1.More(); anIt1.Next()) {
+          PyObject *o = PyLong_FromLong(anIt1.Key());
+          PyList_Append(l, o);
+          Py_DECREF(o);
+        }
+    return l;
+    }
+};
+/* end templates declaration */
+
+/* typedefs */
+typedef NCollection_DataMap<Standard_Integer, opencascade::handle<Adaptor2d_HCurve2d>, TColStd_MapIntegerHasher>::Iterator ChFiKPart_DataMapIteratorOfRstMap;
+typedef NCollection_DataMap<Standard_Integer, opencascade::handle<Adaptor2d_HCurve2d>, TColStd_MapIntegerHasher> ChFiKPart_RstMap;
+/* end typedefs declaration */
+
+/******************************
+* class ChFiKPart_ComputeData *
+******************************/
 class ChFiKPart_ComputeData {
 	public:
+		/****************** Compute ******************/
+		/**** md5 signature: 1167d77608a1449aee3092d8a823be80 ****/
 		%feature("compactdefaultargs") Compute;
-		%feature("autodoc", "	* Computes a simple fillet in several particular cases.
+		%feature("autodoc", "Computes a simple fillet in several particular cases.
 
-	:param DStr:
-	:type DStr: TopOpeBRepDS_DataStructure &
-	:param Data:
-	:type Data: Handle_ChFiDS_SurfData &
-	:param S1:
-	:type S1: Handle_Adaptor3d_HSurface &
-	:param S2:
-	:type S2: Handle_Adaptor3d_HSurface &
-	:param Or1:
-	:type Or1: TopAbs_Orientation
-	:param Or2:
-	:type Or2: TopAbs_Orientation
-	:param Sp:
-	:type Sp: Handle_ChFiDS_Spine &
-	:param Iedge:
-	:type Iedge: int
-	:rtype: bool
+Parameters
+----------
+DStr: TopOpeBRepDS_DataStructure
+Data: ChFiDS_SurfData
+S1: Adaptor3d_HSurface
+S2: Adaptor3d_HSurface
+Or1: TopAbs_Orientation
+Or2: TopAbs_Orientation
+Sp: ChFiDS_Spine
+Iedge: int
+
+Returns
+-------
+bool
 ") Compute;
-		static Standard_Boolean Compute (TopOpeBRepDS_DataStructure & DStr,Handle_ChFiDS_SurfData & Data,const Handle_Adaptor3d_HSurface & S1,const Handle_Adaptor3d_HSurface & S2,const TopAbs_Orientation Or1,const TopAbs_Orientation Or2,const Handle_ChFiDS_Spine & Sp,const Standard_Integer Iedge);
-		%feature("compactdefaultargs") ComputeCorner;
-		%feature("autodoc", "	* Computes a toric or spheric corner fillet.
+		static Standard_Boolean Compute(TopOpeBRepDS_DataStructure & DStr, opencascade::handle<ChFiDS_SurfData> & Data, const opencascade::handle<Adaptor3d_HSurface> & S1, const opencascade::handle<Adaptor3d_HSurface> & S2, const TopAbs_Orientation Or1, const TopAbs_Orientation Or2, const opencascade::handle<ChFiDS_Spine> & Sp, const Standard_Integer Iedge);
 
-	:param DStr:
-	:type DStr: TopOpeBRepDS_DataStructure &
-	:param Data:
-	:type Data: Handle_ChFiDS_SurfData &
-	:param S1:
-	:type S1: Handle_Adaptor3d_HSurface &
-	:param S2:
-	:type S2: Handle_Adaptor3d_HSurface &
-	:param OrFace1:
-	:type OrFace1: TopAbs_Orientation
-	:param OrFace2:
-	:type OrFace2: TopAbs_Orientation
-	:param Or1:
-	:type Or1: TopAbs_Orientation
-	:param Or2:
-	:type Or2: TopAbs_Orientation
-	:param minRad:
-	:type minRad: float
-	:param majRad:
-	:type majRad: float
-	:param P1S1:
-	:type P1S1: gp_Pnt2d
-	:param P2S1:
-	:type P2S1: gp_Pnt2d
-	:param P1S2:
-	:type P1S2: gp_Pnt2d
-	:param P2S2:
-	:type P2S2: gp_Pnt2d
-	:rtype: bool
-") ComputeCorner;
-		static Standard_Boolean ComputeCorner (TopOpeBRepDS_DataStructure & DStr,const Handle_ChFiDS_SurfData & Data,const Handle_Adaptor3d_HSurface & S1,const Handle_Adaptor3d_HSurface & S2,const TopAbs_Orientation OrFace1,const TopAbs_Orientation OrFace2,const TopAbs_Orientation Or1,const TopAbs_Orientation Or2,const Standard_Real minRad,const Standard_Real majRad,const gp_Pnt2d & P1S1,const gp_Pnt2d & P2S1,const gp_Pnt2d & P1S2,const gp_Pnt2d & P2S2);
+		/****************** ComputeCorner ******************/
+		/**** md5 signature: 4e661a9eb2006f7b6d6fb9b7c223ee31 ****/
 		%feature("compactdefaultargs") ComputeCorner;
-		%feature("autodoc", "	* Computes spheric corner fillet with non iso pcurve on S2.
+		%feature("autodoc", "Computes a toric or spheric corner fillet.
 
-	:param DStr:
-	:type DStr: TopOpeBRepDS_DataStructure &
-	:param Data:
-	:type Data: Handle_ChFiDS_SurfData &
-	:param S1:
-	:type S1: Handle_Adaptor3d_HSurface &
-	:param S2:
-	:type S2: Handle_Adaptor3d_HSurface &
-	:param OrFace1:
-	:type OrFace1: TopAbs_Orientation
-	:param OrFace2:
-	:type OrFace2: TopAbs_Orientation
-	:param Or1:
-	:type Or1: TopAbs_Orientation
-	:param Or2:
-	:type Or2: TopAbs_Orientation
-	:param Rad:
-	:type Rad: float
-	:param PS1:
-	:type PS1: gp_Pnt2d
-	:param P1S2:
-	:type P1S2: gp_Pnt2d
-	:param P2S2:
-	:type P2S2: gp_Pnt2d
-	:rtype: bool
+Parameters
+----------
+DStr: TopOpeBRepDS_DataStructure
+Data: ChFiDS_SurfData
+S1: Adaptor3d_HSurface
+S2: Adaptor3d_HSurface
+OrFace1: TopAbs_Orientation
+OrFace2: TopAbs_Orientation
+Or1: TopAbs_Orientation
+Or2: TopAbs_Orientation
+minRad: float
+majRad: float
+P1S1: gp_Pnt2d
+P2S1: gp_Pnt2d
+P1S2: gp_Pnt2d
+P2S2: gp_Pnt2d
+
+Returns
+-------
+bool
 ") ComputeCorner;
-		static Standard_Boolean ComputeCorner (TopOpeBRepDS_DataStructure & DStr,const Handle_ChFiDS_SurfData & Data,const Handle_Adaptor3d_HSurface & S1,const Handle_Adaptor3d_HSurface & S2,const TopAbs_Orientation OrFace1,const TopAbs_Orientation OrFace2,const TopAbs_Orientation Or1,const TopAbs_Orientation Or2,const Standard_Real Rad,const gp_Pnt2d & PS1,const gp_Pnt2d & P1S2,const gp_Pnt2d & P2S2);
+		static Standard_Boolean ComputeCorner(TopOpeBRepDS_DataStructure & DStr, const opencascade::handle<ChFiDS_SurfData> & Data, const opencascade::handle<Adaptor3d_HSurface> & S1, const opencascade::handle<Adaptor3d_HSurface> & S2, const TopAbs_Orientation OrFace1, const TopAbs_Orientation OrFace2, const TopAbs_Orientation Or1, const TopAbs_Orientation Or2, const Standard_Real minRad, const Standard_Real majRad, const gp_Pnt2d & P1S1, const gp_Pnt2d & P2S1, const gp_Pnt2d & P1S2, const gp_Pnt2d & P2S2);
+
+		/****************** ComputeCorner ******************/
+		/**** md5 signature: 7e17d6233f97f8c3d7241e4c6005f843 ****/
 		%feature("compactdefaultargs") ComputeCorner;
-		%feature("autodoc", "	* Computes a toric corner rotule.
+		%feature("autodoc", "Computes spheric corner fillet with non iso pcurve on s2.
 
-	:param DStr:
-	:type DStr: TopOpeBRepDS_DataStructure &
-	:param Data:
-	:type Data: Handle_ChFiDS_SurfData &
-	:param S:
-	:type S: Handle_Adaptor3d_HSurface &
-	:param S1:
-	:type S1: Handle_Adaptor3d_HSurface &
-	:param S2:
-	:type S2: Handle_Adaptor3d_HSurface &
-	:param OfS:
-	:type OfS: TopAbs_Orientation
-	:param OS:
-	:type OS: TopAbs_Orientation
-	:param OS1:
-	:type OS1: TopAbs_Orientation
-	:param OS2:
-	:type OS2: TopAbs_Orientation
-	:param Radius:
-	:type Radius: float
-	:rtype: bool
+Parameters
+----------
+DStr: TopOpeBRepDS_DataStructure
+Data: ChFiDS_SurfData
+S1: Adaptor3d_HSurface
+S2: Adaptor3d_HSurface
+OrFace1: TopAbs_Orientation
+OrFace2: TopAbs_Orientation
+Or1: TopAbs_Orientation
+Or2: TopAbs_Orientation
+Rad: float
+PS1: gp_Pnt2d
+P1S2: gp_Pnt2d
+P2S2: gp_Pnt2d
+
+Returns
+-------
+bool
 ") ComputeCorner;
-		static Standard_Boolean ComputeCorner (TopOpeBRepDS_DataStructure & DStr,const Handle_ChFiDS_SurfData & Data,const Handle_Adaptor3d_HSurface & S,const Handle_Adaptor3d_HSurface & S1,const Handle_Adaptor3d_HSurface & S2,const TopAbs_Orientation OfS,const TopAbs_Orientation OS,const TopAbs_Orientation OS1,const TopAbs_Orientation OS2,const Standard_Real Radius);
+		static Standard_Boolean ComputeCorner(TopOpeBRepDS_DataStructure & DStr, const opencascade::handle<ChFiDS_SurfData> & Data, const opencascade::handle<Adaptor3d_HSurface> & S1, const opencascade::handle<Adaptor3d_HSurface> & S2, const TopAbs_Orientation OrFace1, const TopAbs_Orientation OrFace2, const TopAbs_Orientation Or1, const TopAbs_Orientation Or2, const Standard_Real Rad, const gp_Pnt2d & PS1, const gp_Pnt2d & P1S2, const gp_Pnt2d & P2S2);
+
+		/****************** ComputeCorner ******************/
+		/**** md5 signature: cbc142609e66adc363ea0e77e7b9cf21 ****/
+		%feature("compactdefaultargs") ComputeCorner;
+		%feature("autodoc", "Computes a toric corner rotule.
+
+Parameters
+----------
+DStr: TopOpeBRepDS_DataStructure
+Data: ChFiDS_SurfData
+S: Adaptor3d_HSurface
+S1: Adaptor3d_HSurface
+S2: Adaptor3d_HSurface
+OfS: TopAbs_Orientation
+OS: TopAbs_Orientation
+OS1: TopAbs_Orientation
+OS2: TopAbs_Orientation
+Radius: float
+
+Returns
+-------
+bool
+") ComputeCorner;
+		static Standard_Boolean ComputeCorner(TopOpeBRepDS_DataStructure & DStr, const opencascade::handle<ChFiDS_SurfData> & Data, const opencascade::handle<Adaptor3d_HSurface> & S, const opencascade::handle<Adaptor3d_HSurface> & S1, const opencascade::handle<Adaptor3d_HSurface> & S2, const TopAbs_Orientation OfS, const TopAbs_Orientation OS, const TopAbs_Orientation OS1, const TopAbs_Orientation OS2, const Standard_Real Radius);
+
 };
 
 
@@ -176,161 +237,7 @@ class ChFiKPart_ComputeData {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor ChFiKPart_DataMapIteratorOfRstMap;
-class ChFiKPart_DataMapIteratorOfRstMap : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") ChFiKPart_DataMapIteratorOfRstMap;
-		%feature("autodoc", "	:rtype: None
-") ChFiKPart_DataMapIteratorOfRstMap;
-		 ChFiKPart_DataMapIteratorOfRstMap ();
-		%feature("compactdefaultargs") ChFiKPart_DataMapIteratorOfRstMap;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: ChFiKPart_RstMap &
-	:rtype: None
-") ChFiKPart_DataMapIteratorOfRstMap;
-		 ChFiKPart_DataMapIteratorOfRstMap (const ChFiKPart_RstMap & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: ChFiKPart_RstMap &
-	:rtype: None
-") Initialize;
-		void Initialize (const ChFiKPart_RstMap & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: int
-") Key;
-		const Standard_Integer & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_Adaptor2d_HCurve2d
-") Value;
-		Handle_Adaptor2d_HCurve2d Value ();
-};
 
-
-%extend ChFiKPart_DataMapIteratorOfRstMap {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ChFiKPart_DataMapNodeOfRstMap;
-class ChFiKPart_DataMapNodeOfRstMap : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") ChFiKPart_DataMapNodeOfRstMap;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:param I:
-	:type I: Handle_Adaptor2d_HCurve2d &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") ChFiKPart_DataMapNodeOfRstMap;
-		 ChFiKPart_DataMapNodeOfRstMap (const Standard_Integer & K,const Handle_Adaptor2d_HCurve2d & I,const TCollection_MapNodePtr & n);
-
-            %feature("autodoc","1");
-            %extend {
-                Standard_Integer GetKey() {
-                return (Standard_Integer) $self->Key();
-                }
-            };
-            %feature("autodoc","1");
-            %extend {
-                void SetKey(Standard_Integer value ) {
-                $self->Key()=value;
-                }
-            };
-            		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_Adaptor2d_HCurve2d
-") Value;
-		Handle_Adaptor2d_HCurve2d Value ();
-};
-
-
-%make_alias(ChFiKPart_DataMapNodeOfRstMap)
-
-%extend ChFiKPart_DataMapNodeOfRstMap {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ChFiKPart_RstMap;
-class ChFiKPart_RstMap : public TCollection_BasicMap {
-	public:
-		%feature("compactdefaultargs") ChFiKPart_RstMap;
-		%feature("autodoc", "	:param NbBuckets: default value is 1
-	:type NbBuckets: int
-	:rtype: None
-") ChFiKPart_RstMap;
-		 ChFiKPart_RstMap (const Standard_Integer NbBuckets = 1);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: ChFiKPart_RstMap &
-	:rtype: ChFiKPart_RstMap
-") Assign;
-		ChFiKPart_RstMap & Assign (const ChFiKPart_RstMap & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: ChFiKPart_RstMap &
-	:rtype: ChFiKPart_RstMap
-") operator =;
-		ChFiKPart_RstMap & operator = (const ChFiKPart_RstMap & Other);
-		%feature("compactdefaultargs") ReSize;
-		%feature("autodoc", "	:param NbBuckets:
-	:type NbBuckets: int
-	:rtype: None
-") ReSize;
-		void ReSize (const Standard_Integer NbBuckets);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:param I:
-	:type I: Handle_Adaptor2d_HCurve2d &
-	:rtype: bool
-") Bind;
-		Standard_Boolean Bind (const Standard_Integer & K,const Handle_Adaptor2d_HCurve2d & I);
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const Standard_Integer & K);
-		%feature("compactdefaultargs") UnBind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: bool
-") UnBind;
-		Standard_Boolean UnBind (const Standard_Integer & K);
-		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Handle_Adaptor2d_HCurve2d
-") Find;
-		Handle_Adaptor2d_HCurve2d Find (const Standard_Integer & K);
-		%feature("compactdefaultargs") ChangeFind;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Handle_Adaptor2d_HCurve2d
-") ChangeFind;
-		Handle_Adaptor2d_HCurve2d ChangeFind (const Standard_Integer & K);
-		%feature("compactdefaultargs") Find1;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Standard_Address
-") Find1;
-		Standard_Address Find1 (const Standard_Integer & K);
-		%feature("compactdefaultargs") ChangeFind1;
-		%feature("autodoc", "	:param K:
-	:type K: int &
-	:rtype: Standard_Address
-") ChangeFind1;
-		Standard_Address ChangeFind1 (const Standard_Integer & K);
-};
-
-
-%extend ChFiKPart_RstMap {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */

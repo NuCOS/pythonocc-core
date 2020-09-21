@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,21 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define SHAPECONSTRUCTDOCSTRING
-"This package provides new algorithms for constructing
-new geometrical objects and topological shapes. It
-complements and extends algorithms available in Open
-CASCADE topological and geometrical toolkist.
-The functionality provided by this package are the
-following:
-projecting curves on surface,
-adjusting curve to have given start and end points. P"
+"ShapeConstruct module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_shapeconstruct.html"
 %enddef
 %module (package="OCC.Core", docstring=SHAPECONSTRUCTDOCSTRING) ShapeConstruct
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -44,149 +35,222 @@ adjusting curve to have given start and end points. P"
 %include ../common/OccHandle.i
 
 
-%include ShapeConstruct_headers.i
+%{
+#include<ShapeConstruct_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<Geom_module.hxx>
+#include<GeomAbs_module.hxx>
+#include<Geom2d_module.hxx>
+#include<TopAbs_module.hxx>
+#include<TopTools_module.hxx>
+#include<TopoDS_module.hxx>
+#include<gp_module.hxx>
+#include<TColStd_module.hxx>
+#include<BRepBuilderAPI_module.hxx>
+#include<TColgp_module.hxx>
+#include<ShapeAnalysis_module.hxx>
+#include<ShapeExtend_module.hxx>
+#include<TCollection_module.hxx>
+#include<BRep_module.hxx>
+#include<Bnd_module.hxx>
+#include<Adaptor2d_module.hxx>
+#include<TColGeom_module.hxx>
+#include<Adaptor3d_module.hxx>
+#include<TopLoc_module.hxx>
+#include<TShort_module.hxx>
+#include<Message_module.hxx>
+#include<Poly_module.hxx>
+#include<BRepTools_module.hxx>
+#include<IntRes2d_module.hxx>
+#include<BRepBuilderAPI_module.hxx>
+#include<GeomAdaptor_module.hxx>
+#include<ShapeAnalysis_module.hxx>
+#include<Geom_module.hxx>
+#include<TopTools_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+%import Geom.i
+%import GeomAbs.i
+%import Geom2d.i
+%import TopAbs.i
+%import TopTools.i
+%import TopoDS.i
+%import gp.i
+%import TColStd.i
+%import BRepBuilderAPI.i
+%import TColgp.i
+%import ShapeAnalysis.i
+%import ShapeExtend.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 /* end public enums declaration */
 
-%wrap_handle(ShapeConstruct_ProjectCurveOnSurface)
+/* python proy classes for enums */
+%pythoncode {
+};
+/* end python proxy for enums */
 
+/* handles */
+%wrap_handle(ShapeConstruct_ProjectCurveOnSurface)
+/* end handles declaration */
+
+/* templates */
+/* end templates declaration */
+
+/* typedefs */
+/* end typedefs declaration */
+
+/***********************
+* class ShapeConstruct *
+***********************/
 %rename(shapeconstruct) ShapeConstruct;
 class ShapeConstruct {
 	public:
+		/****************** ConvertCurveToBSpline ******************/
+		/**** md5 signature: e96a2bc2620f51a54c516074790b0c2a ****/
 		%feature("compactdefaultargs") ConvertCurveToBSpline;
-		%feature("autodoc", "	* Tool for wire triangulation
+		%feature("autodoc", "Tool for wire triangulation.
 
-	:param C3D:
-	:type C3D: Handle_Geom_Curve &
-	:param First:
-	:type First: float
-	:param Last:
-	:type Last: float
-	:param Tol3d:
-	:type Tol3d: float
-	:param Continuity:
-	:type Continuity: GeomAbs_Shape
-	:param MaxSegments:
-	:type MaxSegments: int
-	:param MaxDegree:
-	:type MaxDegree: int
-	:rtype: Handle_Geom_BSplineCurve
+Parameters
+----------
+C3D: Geom_Curve
+First: float
+Last: float
+Tol3d: float
+Continuity: GeomAbs_Shape
+MaxSegments: int
+MaxDegree: int
+
+Returns
+-------
+opencascade::handle<Geom_BSplineCurve>
 ") ConvertCurveToBSpline;
-		static Handle_Geom_BSplineCurve ConvertCurveToBSpline (const Handle_Geom_Curve & C3D,const Standard_Real First,const Standard_Real Last,const Standard_Real Tol3d,const GeomAbs_Shape Continuity,const Standard_Integer MaxSegments,const Standard_Integer MaxDegree);
+		static opencascade::handle<Geom_BSplineCurve> ConvertCurveToBSpline(const opencascade::handle<Geom_Curve> & C3D, const Standard_Real First, const Standard_Real Last, const Standard_Real Tol3d, const GeomAbs_Shape Continuity, const Standard_Integer MaxSegments, const Standard_Integer MaxDegree);
+
+		/****************** ConvertCurveToBSpline ******************/
+		/**** md5 signature: 6affa3a8972ff115e6414cc34e8d7653 ****/
 		%feature("compactdefaultargs") ConvertCurveToBSpline;
-		%feature("autodoc", "	:param C2D:
-	:type C2D: Handle_Geom2d_Curve &
-	:param First:
-	:type First: float
-	:param Last:
-	:type Last: float
-	:param Tol2d:
-	:type Tol2d: float
-	:param Continuity:
-	:type Continuity: GeomAbs_Shape
-	:param MaxSegments:
-	:type MaxSegments: int
-	:param MaxDegree:
-	:type MaxDegree: int
-	:rtype: Handle_Geom2d_BSplineCurve
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+C2D: Geom2d_Curve
+First: float
+Last: float
+Tol2d: float
+Continuity: GeomAbs_Shape
+MaxSegments: int
+MaxDegree: int
+
+Returns
+-------
+opencascade::handle<Geom2d_BSplineCurve>
 ") ConvertCurveToBSpline;
-		static Handle_Geom2d_BSplineCurve ConvertCurveToBSpline (const Handle_Geom2d_Curve & C2D,const Standard_Real First,const Standard_Real Last,const Standard_Real Tol2d,const GeomAbs_Shape Continuity,const Standard_Integer MaxSegments,const Standard_Integer MaxDegree);
+		static opencascade::handle<Geom2d_BSplineCurve> ConvertCurveToBSpline(const opencascade::handle<Geom2d_Curve> & C2D, const Standard_Real First, const Standard_Real Last, const Standard_Real Tol2d, const GeomAbs_Shape Continuity, const Standard_Integer MaxSegments, const Standard_Integer MaxDegree);
+
+		/****************** ConvertSurfaceToBSpline ******************/
+		/**** md5 signature: 56c3fbc2fcbd52cf0207750979158da5 ****/
 		%feature("compactdefaultargs") ConvertSurfaceToBSpline;
-		%feature("autodoc", "	:param surf:
-	:type surf: Handle_Geom_Surface &
-	:param UF:
-	:type UF: float
-	:param UL:
-	:type UL: float
-	:param VF:
-	:type VF: float
-	:param VL:
-	:type VL: float
-	:param Tol3d:
-	:type Tol3d: float
-	:param Continuity:
-	:type Continuity: GeomAbs_Shape
-	:param MaxSegments:
-	:type MaxSegments: int
-	:param MaxDegree:
-	:type MaxDegree: int
-	:rtype: Handle_Geom_BSplineSurface
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+surf: Geom_Surface
+UF: float
+UL: float
+VF: float
+VL: float
+Tol3d: float
+Continuity: GeomAbs_Shape
+MaxSegments: int
+MaxDegree: int
+
+Returns
+-------
+opencascade::handle<Geom_BSplineSurface>
 ") ConvertSurfaceToBSpline;
-		static Handle_Geom_BSplineSurface ConvertSurfaceToBSpline (const Handle_Geom_Surface & surf,const Standard_Real UF,const Standard_Real UL,const Standard_Real VF,const Standard_Real VL,const Standard_Real Tol3d,const GeomAbs_Shape Continuity,const Standard_Integer MaxSegments,const Standard_Integer MaxDegree);
+		static opencascade::handle<Geom_BSplineSurface> ConvertSurfaceToBSpline(const opencascade::handle<Geom_Surface> & surf, const Standard_Real UF, const Standard_Real UL, const Standard_Real VF, const Standard_Real VL, const Standard_Real Tol3d, const GeomAbs_Shape Continuity, const Standard_Integer MaxSegments, const Standard_Integer MaxDegree);
+
+		/****************** JoinCurves ******************/
+		/**** md5 signature: 42f6c6d994f5046d227e89efea81a64e ****/
+		%feature("compactdefaultargs") JoinCurves;
+		%feature("autodoc", "Method for joininig curves 3d. parameters : c3d1,ac3d2 - initial curves orient1, orient2 - initial edges orientations. first1,last1,first2,last2 - parameters for trimming curves (re-calculate with account of orientation edges) c3dout - result curve isrev1,isrev2 - out parameters indicative on possible errors. return value : true - if curves were joined successfully, else - false.
+
+Parameters
+----------
+c3d1: Geom_Curve
+ac3d2: Geom_Curve
+Orient1: TopAbs_Orientation
+Orient2: TopAbs_Orientation
+c3dOut: Geom_Curve
+
+Returns
+-------
+first1: float
+last1: float
+first2: float
+last2: float
+isRev1: bool
+isRev2: bool
+") JoinCurves;
+		static Standard_Boolean JoinCurves(const opencascade::handle<Geom_Curve> & c3d1, const opencascade::handle<Geom_Curve> & ac3d2, const TopAbs_Orientation Orient1, const TopAbs_Orientation Orient2, Standard_Real &OutValue, Standard_Real &OutValue, Standard_Real &OutValue, Standard_Real &OutValue, opencascade::handle<Geom_Curve> & c3dOut, Standard_Boolean &OutValue, Standard_Boolean &OutValue);
+
+		/****************** JoinCurves ******************/
+		/**** md5 signature: b94c3f264bbba3ef8c7cb35ad5f19df9 ****/
+		%feature("compactdefaultargs") JoinCurves;
+		%feature("autodoc", "Method for joininig curves 3d. parameters : c3d1,ac3d2 - initial curves orient1, orient2 - initial edges orientations. first1,last1,first2,last2 - parameters for trimming curves (re-calculate with account of orientation edges) c3dout - result curve isrev1,isrev2 - out parameters indicative on possible errors. iserror - input parameter indicative possible errors due to that one from edges have one vertex return value : true - if curves were joined successfully, else - false.
+
+Parameters
+----------
+c2d1: Geom2d_Curve
+ac2d2: Geom2d_Curve
+Orient1: TopAbs_Orientation
+Orient2: TopAbs_Orientation
+c2dOut: Geom2d_Curve
+isError: bool,optional
+	default value is Standard_False
+
+Returns
+-------
+first1: float
+last1: float
+first2: float
+last2: float
+isRev1: bool
+isRev2: bool
+") JoinCurves;
+		static Standard_Boolean JoinCurves(const opencascade::handle<Geom2d_Curve> & c2d1, const opencascade::handle<Geom2d_Curve> & ac2d2, const TopAbs_Orientation Orient1, const TopAbs_Orientation Orient2, Standard_Real &OutValue, Standard_Real &OutValue, Standard_Real &OutValue, Standard_Real &OutValue, opencascade::handle<Geom2d_Curve> & c2dOut, Standard_Boolean &OutValue, Standard_Boolean &OutValue, const Standard_Boolean isError = Standard_False);
+
+		/****************** JoinPCurves ******************/
+		/**** md5 signature: e9caa72c09cd9d39fbc1b7c2c547c6cd ****/
 		%feature("compactdefaultargs") JoinPCurves;
-		%feature("autodoc", "	* join pcurves of the <theEdge> on the <theFace> try to use pcurves from originas edges <theEdges> Returns false if cannot join pcurves
+		%feature("autodoc", "Join pcurves of the <theedge> on the <theface> try to use pcurves from originas edges <theedges> returns false if cannot join pcurves.
 
-	:param theEdges:
-	:type theEdges: Handle_TopTools_HSequenceOfShape &
-	:param theFace:
-	:type theFace: TopoDS_Face &
-	:param theEdge:
-	:type theEdge: TopoDS_Edge &
-	:rtype: bool
+Parameters
+----------
+theEdges: TopTools_HSequenceOfShape
+theFace: TopoDS_Face
+theEdge: TopoDS_Edge
+
+Returns
+-------
+bool
 ") JoinPCurves;
-		static Standard_Boolean JoinPCurves (const Handle_TopTools_HSequenceOfShape & theEdges,const TopoDS_Face & theFace,TopoDS_Edge & theEdge);
-		%feature("compactdefaultargs") JoinCurves;
-		%feature("autodoc", "	* Method for joininig curves 3D. Parameters : c3d1,ac3d2 - initial curves Orient1, Orient2 - initial edges orientations. first1,last1,first2,last2 - parameters for trimming curves (re-calculate with account of orientation edges) c3dOut - result curve isRev1,isRev2 - out parameters indicative on possible errors. Return value : True - if curves were joined successfully, else - False.
+		static Standard_Boolean JoinPCurves(const opencascade::handle<TopTools_HSequenceOfShape> & theEdges, const TopoDS_Face & theFace, TopoDS_Edge & theEdge);
 
-	:param c3d1:
-	:type c3d1: Handle_Geom_Curve &
-	:param ac3d2:
-	:type ac3d2: Handle_Geom_Curve &
-	:param Orient1:
-	:type Orient1: TopAbs_Orientation
-	:param Orient2:
-	:type Orient2: TopAbs_Orientation
-	:param first1:
-	:type first1: float &
-	:param last1:
-	:type last1: float &
-	:param first2:
-	:type first2: float &
-	:param last2:
-	:type last2: float &
-	:param c3dOut:
-	:type c3dOut: Handle_Geom_Curve &
-	:param isRev1:
-	:type isRev1: bool
-	:param isRev2:
-	:type isRev2: bool
-	:rtype: bool
-") JoinCurves;
-		static Standard_Boolean JoinCurves (const Handle_Geom_Curve & c3d1,const Handle_Geom_Curve & ac3d2,const TopAbs_Orientation Orient1,const TopAbs_Orientation Orient2,Standard_Real &OutValue,Standard_Real &OutValue,Standard_Real &OutValue,Standard_Real &OutValue,Handle_Geom_Curve & c3dOut,Standard_Boolean &OutValue,Standard_Boolean &OutValue);
-		%feature("compactdefaultargs") JoinCurves;
-		%feature("autodoc", "	* Method for joininig curves 3D. Parameters : c3d1,ac3d2 - initial curves Orient1, Orient2 - initial edges orientations. first1,last1,first2,last2 - parameters for trimming curves (re-calculate with account of orientation edges) c3dOut - result curve isRev1,isRev2 - out parameters indicative on possible errors. isError - input parameter indicative possible errors due to that one from edges have one vertex Return value : True - if curves were joined successfully, else - False.
-
-	:param c2d1:
-	:type c2d1: Handle_Geom2d_Curve &
-	:param ac2d2:
-	:type ac2d2: Handle_Geom2d_Curve &
-	:param Orient1:
-	:type Orient1: TopAbs_Orientation
-	:param Orient2:
-	:type Orient2: TopAbs_Orientation
-	:param first1:
-	:type first1: float &
-	:param last1:
-	:type last1: float &
-	:param first2:
-	:type first2: float &
-	:param last2:
-	:type last2: float &
-	:param c2dOut:
-	:type c2dOut: Handle_Geom2d_Curve &
-	:param isRev1:
-	:type isRev1: bool
-	:param isRev2:
-	:type isRev2: bool
-	:param isError: default value is Standard_False
-	:type isError: bool
-	:rtype: bool
-") JoinCurves;
-		static Standard_Boolean JoinCurves (const Handle_Geom2d_Curve & c2d1,const Handle_Geom2d_Curve & ac2d2,const TopAbs_Orientation Orient1,const TopAbs_Orientation Orient2,Standard_Real &OutValue,Standard_Real &OutValue,Standard_Real &OutValue,Standard_Real &OutValue,Handle_Geom2d_Curve & c2dOut,Standard_Boolean &OutValue,Standard_Boolean &OutValue,const Standard_Boolean isError = Standard_False);
 };
 
 
@@ -195,208 +259,139 @@ class ShapeConstruct {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor ShapeConstruct_CompBezierCurves2dToBSplineCurve2d;
-class ShapeConstruct_CompBezierCurves2dToBSplineCurve2d {
-	public:
-		%feature("compactdefaultargs") ShapeConstruct_CompBezierCurves2dToBSplineCurve2d;
-		%feature("autodoc", "	:param AngularTolerance: default value is 1.0e-4
-	:type AngularTolerance: float
-	:rtype: None
-") ShapeConstruct_CompBezierCurves2dToBSplineCurve2d;
-		 ShapeConstruct_CompBezierCurves2dToBSplineCurve2d (const Standard_Real AngularTolerance = 1.0e-4);
-		%feature("compactdefaultargs") AddCurve;
-		%feature("autodoc", "	:param Poles:
-	:type Poles: TColgp_Array1OfPnt2d
-	:rtype: None
-") AddCurve;
-		void AddCurve (const TColgp_Array1OfPnt2d & Poles);
-		%feature("compactdefaultargs") Perform;
-		%feature("autodoc", "	* Computes the algorithm.
 
-	:rtype: None
-") Perform;
-		void Perform ();
-		%feature("compactdefaultargs") Degree;
-		%feature("autodoc", "	:rtype: int
-") Degree;
-		Standard_Integer Degree ();
-		%feature("compactdefaultargs") NbPoles;
-		%feature("autodoc", "	:rtype: int
-") NbPoles;
-		Standard_Integer NbPoles ();
-		%feature("compactdefaultargs") Poles;
-		%feature("autodoc", "	:param Poles:
-	:type Poles: TColgp_Array1OfPnt2d
-	:rtype: None
-") Poles;
-		void Poles (TColgp_Array1OfPnt2d & Poles);
-		%feature("compactdefaultargs") NbKnots;
-		%feature("autodoc", "	:rtype: int
-") NbKnots;
-		Standard_Integer NbKnots ();
-		%feature("compactdefaultargs") KnotsAndMults;
-		%feature("autodoc", "	:param Knots:
-	:type Knots: TColStd_Array1OfReal &
-	:param Mults:
-	:type Mults: TColStd_Array1OfInteger &
-	:rtype: None
-") KnotsAndMults;
-		void KnotsAndMults (TColStd_Array1OfReal & Knots,TColStd_Array1OfInteger & Mults);
-};
-
-
-%extend ShapeConstruct_CompBezierCurves2dToBSplineCurve2d {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor ShapeConstruct_CompBezierCurvesToBSplineCurve;
-class ShapeConstruct_CompBezierCurvesToBSplineCurve {
-	public:
-		%feature("compactdefaultargs") ShapeConstruct_CompBezierCurvesToBSplineCurve;
-		%feature("autodoc", "	:param AngularTolerance: default value is 1.0e-4
-	:type AngularTolerance: float
-	:rtype: None
-") ShapeConstruct_CompBezierCurvesToBSplineCurve;
-		 ShapeConstruct_CompBezierCurvesToBSplineCurve (const Standard_Real AngularTolerance = 1.0e-4);
-		%feature("compactdefaultargs") AddCurve;
-		%feature("autodoc", "	:param Poles:
-	:type Poles: TColgp_Array1OfPnt
-	:rtype: None
-") AddCurve;
-		void AddCurve (const TColgp_Array1OfPnt & Poles);
-		%feature("compactdefaultargs") Perform;
-		%feature("autodoc", "	* Computes the algorithm.
-
-	:rtype: None
-") Perform;
-		void Perform ();
-		%feature("compactdefaultargs") Degree;
-		%feature("autodoc", "	:rtype: int
-") Degree;
-		Standard_Integer Degree ();
-		%feature("compactdefaultargs") NbPoles;
-		%feature("autodoc", "	:rtype: int
-") NbPoles;
-		Standard_Integer NbPoles ();
-		%feature("compactdefaultargs") Poles;
-		%feature("autodoc", "	:param Poles:
-	:type Poles: TColgp_Array1OfPnt
-	:rtype: None
-") Poles;
-		void Poles (TColgp_Array1OfPnt & Poles);
-		%feature("compactdefaultargs") NbKnots;
-		%feature("autodoc", "	:rtype: int
-") NbKnots;
-		Standard_Integer NbKnots ();
-		%feature("compactdefaultargs") KnotsAndMults;
-		%feature("autodoc", "	:param Knots:
-	:type Knots: TColStd_Array1OfReal &
-	:param Mults:
-	:type Mults: TColStd_Array1OfInteger &
-	:rtype: None
-") KnotsAndMults;
-		void KnotsAndMults (TColStd_Array1OfReal & Knots,TColStd_Array1OfInteger & Mults);
-};
-
-
-%extend ShapeConstruct_CompBezierCurvesToBSplineCurve {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
+/*****************************
+* class ShapeConstruct_Curve *
+*****************************/
 class ShapeConstruct_Curve {
 	public:
+		/****************** AdjustCurve ******************/
+		/**** md5 signature: 1f7d7c10e6b8249c15e41e423ec5f10e ****/
 		%feature("compactdefaultargs") AdjustCurve;
-		%feature("autodoc", "	* Modifies a curve in order to make its bounds confused with given points. Works only on lines and B-Splines, returns True in this case, else returns False. For line considers both bounding points, for B-Splines only specified. //! Warning : Does not check if curve should be reversed
+		%feature("autodoc", "Modifies a curve in order to make its bounds confused with given points. works only on lines and b-splines, returns true in this case, else returns false. for line considers both bounding points, for b-splines only specified. //! warning : does not check if curve should be reversed.
 
-	:param C3D:
-	:type C3D: Handle_Geom_Curve &
-	:param P1:
-	:type P1: gp_Pnt
-	:param P2:
-	:type P2: gp_Pnt
-	:param take1: default value is Standard_True
-	:type take1: bool
-	:param take2: default value is Standard_True
-	:type take2: bool
-	:rtype: bool
+Parameters
+----------
+C3D: Geom_Curve
+P1: gp_Pnt
+P2: gp_Pnt
+take1: bool,optional
+	default value is Standard_True
+take2: bool,optional
+	default value is Standard_True
+
+Returns
+-------
+bool
 ") AdjustCurve;
-		Standard_Boolean AdjustCurve (const Handle_Geom_Curve & C3D,const gp_Pnt & P1,const gp_Pnt & P2,const Standard_Boolean take1 = Standard_True,const Standard_Boolean take2 = Standard_True);
-		%feature("compactdefaultargs") AdjustCurveSegment;
-		%feature("autodoc", "	* Modifies a curve in order to make its bounds confused with given points. Works only on lines and B-Splines. //! For lines works as previous method, B-Splines are segmented at the given values and then are adjusted to the points.
+		Standard_Boolean AdjustCurve(const opencascade::handle<Geom_Curve> & C3D, const gp_Pnt & P1, const gp_Pnt & P2, const Standard_Boolean take1 = Standard_True, const Standard_Boolean take2 = Standard_True);
 
-	:param C3D:
-	:type C3D: Handle_Geom_Curve &
-	:param P1:
-	:type P1: gp_Pnt
-	:param P2:
-	:type P2: gp_Pnt
-	:param U1:
-	:type U1: float
-	:param U2:
-	:type U2: float
-	:rtype: bool
-") AdjustCurveSegment;
-		Standard_Boolean AdjustCurveSegment (const Handle_Geom_Curve & C3D,const gp_Pnt & P1,const gp_Pnt & P2,const Standard_Real U1,const Standard_Real U2);
+		/****************** AdjustCurve2d ******************/
+		/**** md5 signature: 0ed4029b1e71b0f5f025a693259e9542 ****/
 		%feature("compactdefaultargs") AdjustCurve2d;
-		%feature("autodoc", "	* Modifies a curve in order to make its bounds confused with given points. Works only on lines and B-Splines, returns True in this case, else returns False. //! For line considers both bounding points, for B-Splines only specified. //! Warning : Does not check if curve should be reversed
+		%feature("autodoc", "Modifies a curve in order to make its bounds confused with given points. works only on lines and b-splines, returns true in this case, else returns false. //! for line considers both bounding points, for b-splines only specified. //! warning : does not check if curve should be reversed.
 
-	:param C2D:
-	:type C2D: Handle_Geom2d_Curve &
-	:param P1:
-	:type P1: gp_Pnt2d
-	:param P2:
-	:type P2: gp_Pnt2d
-	:param take1: default value is Standard_True
-	:type take1: bool
-	:param take2: default value is Standard_True
-	:type take2: bool
-	:rtype: bool
+Parameters
+----------
+C2D: Geom2d_Curve
+P1: gp_Pnt2d
+P2: gp_Pnt2d
+take1: bool,optional
+	default value is Standard_True
+take2: bool,optional
+	default value is Standard_True
+
+Returns
+-------
+bool
 ") AdjustCurve2d;
-		Standard_Boolean AdjustCurve2d (const Handle_Geom2d_Curve & C2D,const gp_Pnt2d & P1,const gp_Pnt2d & P2,const Standard_Boolean take1 = Standard_True,const Standard_Boolean take2 = Standard_True);
+		Standard_Boolean AdjustCurve2d(const opencascade::handle<Geom2d_Curve> & C2D, const gp_Pnt2d & P1, const gp_Pnt2d & P2, const Standard_Boolean take1 = Standard_True, const Standard_Boolean take2 = Standard_True);
+
+		/****************** AdjustCurveSegment ******************/
+		/**** md5 signature: 55a46b78ba47eac061ad1db867f897d3 ****/
+		%feature("compactdefaultargs") AdjustCurveSegment;
+		%feature("autodoc", "Modifies a curve in order to make its bounds confused with given points. works only on lines and b-splines. //! for lines works as previous method, b-splines are segmented at the given values and then are adjusted to the points.
+
+Parameters
+----------
+C3D: Geom_Curve
+P1: gp_Pnt
+P2: gp_Pnt
+U1: float
+U2: float
+
+Returns
+-------
+bool
+") AdjustCurveSegment;
+		Standard_Boolean AdjustCurveSegment(const opencascade::handle<Geom_Curve> & C3D, const gp_Pnt & P1, const gp_Pnt & P2, const Standard_Real U1, const Standard_Real U2);
+
+		/****************** ConvertToBSpline ******************/
+		/**** md5 signature: 19376ff893525dcd6cf5e373ee85abb9 ****/
 		%feature("compactdefaultargs") ConvertToBSpline;
-		%feature("autodoc", "	* Converts a curve of any type (only part from first to last) to bspline. The method of conversion depends on the type of original curve: BSpline -> C.Segment(first,last) Bezier and Line -> GeomConvert::CurveToBSplineCurve(C).Segment(first,last) Conic and Other -> Approx_Curve3d(C[first,last],prec,C1,9,1000)
+		%feature("autodoc", "Converts a curve of any type (only part from first to last) to bspline. the method of conversion depends on the type of original curve: bspline -> c.segment(first,last) bezier and line -> geomconvert::curvetobsplinecurve(c).segment(first,last) conic and other -> approx_curve3d(c[first,last],prec,c1,9,1000).
 
-	:param C:
-	:type C: Handle_Geom_Curve &
-	:param first:
-	:type first: float
-	:param last:
-	:type last: float
-	:param prec:
-	:type prec: float
-	:rtype: Handle_Geom_BSplineCurve
+Parameters
+----------
+C: Geom_Curve
+first: float
+last: float
+prec: float
+
+Returns
+-------
+opencascade::handle<Geom_BSplineCurve>
 ") ConvertToBSpline;
-		Handle_Geom_BSplineCurve ConvertToBSpline (const Handle_Geom_Curve & C,const Standard_Real first,const Standard_Real last,const Standard_Real prec);
+		opencascade::handle<Geom_BSplineCurve> ConvertToBSpline(const opencascade::handle<Geom_Curve> & C, const Standard_Real first, const Standard_Real last, const Standard_Real prec);
+
+		/****************** ConvertToBSpline ******************/
+		/**** md5 signature: 67e22df5c9b6aa1af20547791bd07c17 ****/
 		%feature("compactdefaultargs") ConvertToBSpline;
-		%feature("autodoc", "	* Converts a curve of any type (only part from first to last) to bspline. The method of conversion depends on the type of original curve: BSpline -> C.Segment(first,last) Bezier and Line -> GeomConvert::CurveToBSplineCurve(C).Segment(first,last) Conic and Other -> Approx_Curve2d(C[first,last],prec,C1,9,1000)
+		%feature("autodoc", "Converts a curve of any type (only part from first to last) to bspline. the method of conversion depends on the type of original curve: bspline -> c.segment(first,last) bezier and line -> geomconvert::curvetobsplinecurve(c).segment(first,last) conic and other -> approx_curve2d(c[first,last],prec,c1,9,1000).
 
-	:param C:
-	:type C: Handle_Geom2d_Curve &
-	:param first:
-	:type first: float
-	:param last:
-	:type last: float
-	:param prec:
-	:type prec: float
-	:rtype: Handle_Geom2d_BSplineCurve
+Parameters
+----------
+C: Geom2d_Curve
+first: float
+last: float
+prec: float
+
+Returns
+-------
+opencascade::handle<Geom2d_BSplineCurve>
 ") ConvertToBSpline;
-		Handle_Geom2d_BSplineCurve ConvertToBSpline (const Handle_Geom2d_Curve & C,const Standard_Real first,const Standard_Real last,const Standard_Real prec);
-		%feature("compactdefaultargs") FixKnots;
-		%feature("autodoc", "	:param knots:
-	:type knots: Handle_TColStd_HArray1OfReal &
-	:rtype: bool
-") FixKnots;
-		static Standard_Boolean FixKnots (Handle_TColStd_HArray1OfReal & knots);
-		%feature("compactdefaultargs") FixKnots;
-		%feature("autodoc", "	* Fix bspline knots to ensure that there is enough gap between neighbouring values Returns True if something fixed (by shifting knot)
+		opencascade::handle<Geom2d_BSplineCurve> ConvertToBSpline(const opencascade::handle<Geom2d_Curve> & C, const Standard_Real first, const Standard_Real last, const Standard_Real prec);
 
-	:param knots:
-	:type knots: TColStd_Array1OfReal &
-	:rtype: bool
+		/****************** FixKnots ******************/
+		/**** md5 signature: 2d6b81e7c20061f8b14bd4eab45dd379 ****/
+		%feature("compactdefaultargs") FixKnots;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+knots: TColStd_HArray1OfReal
+
+Returns
+-------
+bool
 ") FixKnots;
-		static Standard_Boolean FixKnots (TColStd_Array1OfReal & knots);
+		static Standard_Boolean FixKnots(opencascade::handle<TColStd_HArray1OfReal> & knots);
+
+		/****************** FixKnots ******************/
+		/**** md5 signature: b95e53e8ec1c41f8c3c30eaff8ebc9e3 ****/
+		%feature("compactdefaultargs") FixKnots;
+		%feature("autodoc", "Fix bspline knots to ensure that there is enough gap between neighbouring values returns true if something fixed (by shifting knot).
+
+Parameters
+----------
+knots: TColStd_Array1OfReal
+
+Returns
+-------
+bool
+") FixKnots;
+		static Standard_Boolean FixKnots(TColStd_Array1OfReal & knots);
+
 };
 
 
@@ -405,33 +400,68 @@ class ShapeConstruct_Curve {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor ShapeConstruct_MakeTriangulation;
+
+/*****************************************
+* class ShapeConstruct_MakeTriangulation *
+*****************************************/
 class ShapeConstruct_MakeTriangulation : public BRepBuilderAPI_MakeShape {
 	public:
+		/****************** ShapeConstruct_MakeTriangulation ******************/
+		/**** md5 signature: a1d799816fdb6a068fe983d47396aaee ****/
 		%feature("compactdefaultargs") ShapeConstruct_MakeTriangulation;
-		%feature("autodoc", "	:param pnts:
-	:type pnts: TColgp_Array1OfPnt
-	:param prec: default value is 0.0
-	:type prec: float
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+pnts: TColgp_Array1OfPnt
+prec: float,optional
+	default value is 0.0
+
+Returns
+-------
+None
 ") ShapeConstruct_MakeTriangulation;
-		 ShapeConstruct_MakeTriangulation (const TColgp_Array1OfPnt & pnts,const Standard_Real prec = 0.0);
+		 ShapeConstruct_MakeTriangulation(const TColgp_Array1OfPnt & pnts, const Standard_Real prec = 0.0);
+
+		/****************** ShapeConstruct_MakeTriangulation ******************/
+		/**** md5 signature: 268d8bbbc20b03fa4d66d26585d7d055 ****/
 		%feature("compactdefaultargs") ShapeConstruct_MakeTriangulation;
-		%feature("autodoc", "	:param wire:
-	:type wire: TopoDS_Wire &
-	:param prec: default value is 0.0
-	:type prec: float
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+wire: TopoDS_Wire
+prec: float,optional
+	default value is 0.0
+
+Returns
+-------
+None
 ") ShapeConstruct_MakeTriangulation;
-		 ShapeConstruct_MakeTriangulation (const TopoDS_Wire & wire,const Standard_Real prec = 0.0);
+		 ShapeConstruct_MakeTriangulation(const TopoDS_Wire & wire, const Standard_Real prec = 0.0);
+
+		/****************** Build ******************/
+		/**** md5 signature: 5ad4569f96377eec0c61c7f10d7c7aa9 ****/
 		%feature("compactdefaultargs") Build;
-		%feature("autodoc", "	:rtype: void
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") Build;
-		virtual void Build ();
+		virtual void Build();
+
+		/****************** IsDone ******************/
+		/**** md5 signature: e2af43c18fdd9d21f5f5de9eae7fc9de ****/
 		%feature("compactdefaultargs") IsDone;
-		%feature("autodoc", "	:rtype: bool
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+bool
 ") IsDone;
-		virtual Standard_Boolean IsDone ();
+		virtual Standard_Boolean IsDone();
+
 };
 
 
@@ -440,147 +470,187 @@ class ShapeConstruct_MakeTriangulation : public BRepBuilderAPI_MakeShape {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor ShapeConstruct_ProjectCurveOnSurface;
-class ShapeConstruct_ProjectCurveOnSurface : public MMgt_TShared {
+
+/*********************************************
+* class ShapeConstruct_ProjectCurveOnSurface *
+*********************************************/
+class ShapeConstruct_ProjectCurveOnSurface : public Standard_Transient {
 	public:
+		/****************** ShapeConstruct_ProjectCurveOnSurface ******************/
+		/**** md5 signature: 4cb4d694dc4ad9b3f95b8440d3b8b9bc ****/
 		%feature("compactdefaultargs") ShapeConstruct_ProjectCurveOnSurface;
-		%feature("autodoc", "	* Empty constructor.
+		%feature("autodoc", "Empty constructor.
 
-	:rtype: None
+Returns
+-------
+None
 ") ShapeConstruct_ProjectCurveOnSurface;
-		 ShapeConstruct_ProjectCurveOnSurface ();
+		 ShapeConstruct_ProjectCurveOnSurface();
+
+
+        %feature("autodoc","1");
+        %extend {
+            Standard_Integer GetAdjustOverDegenMode() {
+            return (Standard_Integer) $self->AdjustOverDegenMode();
+            }
+        };
+        %feature("autodoc","1");
+        %extend {
+            void SetAdjustOverDegenMode(Standard_Integer value) {
+            $self->AdjustOverDegenMode()=value;
+            }
+        };
+
+        %feature("autodoc","1");
+        %extend {
+            Standard_Boolean GetBuildCurveMode() {
+            return (Standard_Boolean) $self->BuildCurveMode();
+            }
+        };
+        %feature("autodoc","1");
+        %extend {
+            void SetBuildCurveMode(Standard_Boolean value) {
+            $self->BuildCurveMode()=value;
+            }
+        };
+		/****************** Init ******************/
+		/**** md5 signature: 1f582cc2d24023b4359dab08f603d2dd ****/
 		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	* Initializes the object with all necessary parameters, i.e. surface and precision
+		%feature("autodoc", "Initializes the object with all necessary parameters, i.e. surface and precision.
 
-	:param surf:
-	:type surf: Handle_Geom_Surface &
-	:param preci:
-	:type preci: float
-	:rtype: void
+Parameters
+----------
+surf: Geom_Surface
+preci: float
+
+Returns
+-------
+None
 ") Init;
-		virtual void Init (const Handle_Geom_Surface & surf,const Standard_Real preci);
+		virtual void Init(const opencascade::handle<Geom_Surface> & surf, const Standard_Real preci);
+
+		/****************** Init ******************/
+		/**** md5 signature: bf33f56618306090b1bb182cce883fc5 ****/
 		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	* Initializes the object with all necessary parameters, i.e. surface and precision
+		%feature("autodoc", "Initializes the object with all necessary parameters, i.e. surface and precision.
 
-	:param surf:
-	:type surf: Handle_ShapeAnalysis_Surface &
-	:param preci:
-	:type preci: float
-	:rtype: void
+Parameters
+----------
+surf: ShapeAnalysis_Surface
+preci: float
+
+Returns
+-------
+None
 ") Init;
-		virtual void Init (const Handle_ShapeAnalysis_Surface & surf,const Standard_Real preci);
-		%feature("compactdefaultargs") SetSurface;
-		%feature("autodoc", "	* Loads a surface (in the form of Geom_Surface) to project on
+		virtual void Init(const opencascade::handle<ShapeAnalysis_Surface> & surf, const Standard_Real preci);
 
-	:param surf:
-	:type surf: Handle_Geom_Surface &
-	:rtype: None
-") SetSurface;
-		void SetSurface (const Handle_Geom_Surface & surf);
-		%feature("compactdefaultargs") SetSurface;
-		%feature("autodoc", "	* Loads a surface (in the form of ShapeAnalysis_Surface) to project on
-
-	:param surf:
-	:type surf: Handle_ShapeAnalysis_Surface &
-	:rtype: None
-") SetSurface;
-		void SetSurface (const Handle_ShapeAnalysis_Surface & surf);
-		%feature("compactdefaultargs") SetPrecision;
-		%feature("autodoc", "	* Sets value for current precision
-
-	:param preci:
-	:type preci: float
-	:rtype: None
-") SetPrecision;
-		void SetPrecision (const Standard_Real preci);
-
-            %feature("autodoc","1");
-            %extend {
-                Standard_Boolean GetBuildCurveMode() {
-                return (Standard_Boolean) $self->BuildCurveMode();
-                }
-            };
-            %feature("autodoc","1");
-            %extend {
-                void SetBuildCurveMode(Standard_Boolean value ) {
-                $self->BuildCurveMode()=value;
-                }
-            };
-            
-            %feature("autodoc","1");
-            %extend {
-                Standard_Integer GetAdjustOverDegenMode() {
-                return (Standard_Integer) $self->AdjustOverDegenMode();
-                }
-            };
-            %feature("autodoc","1");
-            %extend {
-                void SetAdjustOverDegenMode(Standard_Integer value ) {
-                $self->AdjustOverDegenMode()=value;
-                }
-            };
-            		%feature("compactdefaultargs") Status;
-		%feature("autodoc", "	* Returns the status of last Peform
-
-	:param Status:
-	:type Status: ShapeExtend_Status
-	:rtype: bool
-") Status;
-		Standard_Boolean Status (const ShapeExtend_Status Status);
+		/****************** Perform ******************/
+		/**** md5 signature: 9d4fd560cded5434d94dcb5871e6e101 ****/
 		%feature("compactdefaultargs") Perform;
-		%feature("autodoc", "	* Computes the projection of 3d curve onto a surface using the specialized algorithm. Returns False if projector fails, otherwise, if pcurve computed successfully, returns True. The continuity, maxdeg and nbinterval are parameters of call to Approx_CurveOnSurface. If nbinterval is equal to -1 (default), this value is computed depending on source 3d curve and surface. The output curve 2D is guaranteed to be same-parameter with input curve 3D on the interval [First, Last]. If the output curve lies on a direct line the infinite line is returned, in the case same-parameter condition is satisfied.
+		%feature("autodoc", "Computes the projection of 3d curve onto a surface using the specialized algorithm. returns false if projector fails, otherwise, if pcurve computed successfully, returns true. the output curve 2d is guaranteed to be same-parameter with input curve 3d on the interval [first, last]. if the output curve lies on a direct line the infinite line is returned, in the case same-parameter condition is satisfied. tolfirst and tollast are the tolerances at the ends of input curve 3d.
 
-	:param c3d:
-	:type c3d: Handle_Geom_Curve &
-	:param First:
-	:type First: float
-	:param Last:
-	:type Last: float
-	:param c2d:
-	:type c2d: Handle_Geom2d_Curve &
-	:param continuity: default value is GeomAbs_C1
-	:type continuity: GeomAbs_Shape
-	:param maxdeg: default value is 12
-	:type maxdeg: int
-	:param nbinterval: default value is -1
-	:type nbinterval: int
-	:rtype: bool
+Parameters
+----------
+c3d: Geom_Curve
+First: float
+Last: float
+c2d: Geom2d_Curve
+TolFirst: float,optional
+	default value is -1
+TolLast: float,optional
+	default value is -1
+
+Returns
+-------
+bool
 ") Perform;
-		virtual Standard_Boolean Perform (Handle_Geom_Curve & c3d,const Standard_Real First,const Standard_Real Last,Handle_Geom2d_Curve & c2d,const GeomAbs_Shape continuity = GeomAbs_C1,const Standard_Integer maxdeg = 12,const Standard_Integer nbinterval = -1);
+		virtual Standard_Boolean Perform(opencascade::handle<Geom_Curve> & c3d, const Standard_Real First, const Standard_Real Last, opencascade::handle<Geom2d_Curve> & c2d, const Standard_Real TolFirst = -1, const Standard_Real TolLast = -1);
+
+		/****************** PerformByProjLib ******************/
+		/**** md5 signature: 90451a772b63955977e470cddd05bd72 ****/
 		%feature("compactdefaultargs") PerformByProjLib;
-		%feature("autodoc", "	* Computes the projection of 3d curve onto a surface using the standard algorithm from ProjLib. Returns False if standard projector fails or raises an exception or cuts the curve by parametrical bounds of the surface. Else, if pcurve computed successfully, returns True. The continuity, maxdeg and nbinterval are parameters of call to Approx_CurveOnSurface. If nbinterval is equal to -1 (default), this value is computed depending on source 3d curve and surface.
+		%feature("autodoc", "Computes the projection of 3d curve onto a surface using the standard algorithm from projlib. returns false if standard projector fails or raises an exception or cuts the curve by parametrical bounds of the surface. else, if pcurve computed successfully, returns true. the continuity, maxdeg and nbinterval are parameters of call to approx_curveonsurface. if nbinterval is equal to -1 (default), this value is computed depending on source 3d curve and surface.
 
-	:param c3d:
-	:type c3d: Handle_Geom_Curve &
-	:param First:
-	:type First: float
-	:param Last:
-	:type Last: float
-	:param c2d:
-	:type c2d: Handle_Geom2d_Curve &
-	:param continuity: default value is GeomAbs_C1
-	:type continuity: GeomAbs_Shape
-	:param maxdeg: default value is 12
-	:type maxdeg: int
-	:param nbinterval: default value is -1
-	:type nbinterval: int
-	:rtype: bool
+Parameters
+----------
+c3d: Geom_Curve
+First: float
+Last: float
+c2d: Geom2d_Curve
+continuity: GeomAbs_Shape,optional
+	default value is GeomAbs_C1
+maxdeg: int,optional
+	default value is 12
+nbinterval: int,optional
+	default value is -1
+
+Returns
+-------
+bool
 ") PerformByProjLib;
-		Standard_Boolean PerformByProjLib (Handle_Geom_Curve & c3d,const Standard_Real First,const Standard_Real Last,Handle_Geom2d_Curve & c2d,const GeomAbs_Shape continuity = GeomAbs_C1,const Standard_Integer maxdeg = 12,const Standard_Integer nbinterval = -1);
-		%feature("compactdefaultargs") PerformAdvanced;
-		%feature("autodoc", "	* Computes the projection of 3d curve onto a surface using either standard projector (method PerformByProjLib()) or internal one (method Perform()). The selection is done by analyzing the surface and 3d curve and is aimed to filter the cases potentially dangerous for the standard projector. If the standard projector fails, internal one is used.
+		Standard_Boolean PerformByProjLib(opencascade::handle<Geom_Curve> & c3d, const Standard_Real First, const Standard_Real Last, opencascade::handle<Geom2d_Curve> & c2d, const GeomAbs_Shape continuity = GeomAbs_C1, const Standard_Integer maxdeg = 12, const Standard_Integer nbinterval = -1);
 
-	:param c3d:
-	:type c3d: Handle_Geom_Curve &
-	:param First:
-	:type First: float
-	:param Last:
-	:type Last: float
-	:param c2d:
-	:type c2d: Handle_Geom2d_Curve &
-	:rtype: bool
-") PerformAdvanced;
-		Standard_Boolean PerformAdvanced (Handle_Geom_Curve & c3d,const Standard_Real First,const Standard_Real Last,Handle_Geom2d_Curve & c2d);
+		/****************** SetPrecision ******************/
+		/**** md5 signature: a601cf881702916ad1a5bcd1fec314c4 ****/
+		%feature("compactdefaultargs") SetPrecision;
+		%feature("autodoc", "Sets value for current precision.
+
+Parameters
+----------
+preci: float
+
+Returns
+-------
+None
+") SetPrecision;
+		void SetPrecision(const Standard_Real preci);
+
+		/****************** SetSurface ******************/
+		/**** md5 signature: ef3c30882af3f3cdd5459f6b9a1a3525 ****/
+		%feature("compactdefaultargs") SetSurface;
+		%feature("autodoc", "Loads a surface (in the form of geom_surface) to project on.
+
+Parameters
+----------
+surf: Geom_Surface
+
+Returns
+-------
+None
+") SetSurface;
+		void SetSurface(const opencascade::handle<Geom_Surface> & surf);
+
+		/****************** SetSurface ******************/
+		/**** md5 signature: a6a6097a9a1f4fb18a1495928444e79b ****/
+		%feature("compactdefaultargs") SetSurface;
+		%feature("autodoc", "Loads a surface (in the form of shapeanalysis_surface) to project on.
+
+Parameters
+----------
+surf: ShapeAnalysis_Surface
+
+Returns
+-------
+None
+") SetSurface;
+		void SetSurface(const opencascade::handle<ShapeAnalysis_Surface> & surf);
+
+		/****************** Status ******************/
+		/**** md5 signature: 03f2df8a606eef2de1cd56a4ae73f0f0 ****/
+		%feature("compactdefaultargs") Status;
+		%feature("autodoc", "Returns the status of last peform.
+
+Parameters
+----------
+theStatus: ShapeExtend_Status
+
+Returns
+-------
+bool
+") Status;
+		Standard_Boolean Status(const ShapeExtend_Status theStatus);
+
 };
 
 
@@ -591,3 +661,7 @@ class ShapeConstruct_ProjectCurveOnSurface : public MMgt_TShared {
 	__repr__ = _dumps_object
 	}
 };
+
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */

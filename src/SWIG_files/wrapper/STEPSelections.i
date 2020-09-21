@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,15 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define STEPSELECTIONSDOCSTRING
-"-Purpose : Step Selections
-"
+"STEPSelections module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_stepselections.html"
 %enddef
 %module (package="OCC.Core", docstring=STEPSELECTIONSDOCSTRING) STEPSelections
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -38,61 +35,179 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/OccHandle.i
 
 
-%include STEPSelections_headers.i
+%{
+#include<STEPSelections_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<StepShape_module.hxx>
+#include<Interface_module.hxx>
+#include<StepRepr_module.hxx>
+#include<StepBasic_module.hxx>
+#include<IFSelect_module.hxx>
+#include<TCollection_module.hxx>
+#include<XSControl_module.hxx>
+#include<Message_module.hxx>
+#include<StepBasic_module.hxx>
+#include<TopoDS_module.hxx>
+#include<StepGeom_module.hxx>
+#include<TopTools_module.hxx>
+#include<TopLoc_module.hxx>
+#include<Geom_module.hxx>
+#include<Geom2d_module.hxx>
+#include<StepData_module.hxx>
+#include<Transfer_module.hxx>
+#include<MoniTool_module.hxx>
+#include<TopoDS_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+%import StepShape.i
+%import Interface.i
+%import StepRepr.i
+%import StepBasic.i
+%import IFSelect.i
+%import TCollection.i
+%import XSControl.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 /* end public enums declaration */
 
+/* python proy classes for enums */
+%pythoncode {
+};
+/* end python proxy for enums */
+
+/* handles */
 %wrap_handle(STEPSelections_AssemblyComponent)
 %wrap_handle(STEPSelections_AssemblyLink)
-%wrap_handle(STEPSelections_HSequenceOfAssemblyLink)
 %wrap_handle(STEPSelections_SelectAssembly)
 %wrap_handle(STEPSelections_SelectDerived)
 %wrap_handle(STEPSelections_SelectFaces)
 %wrap_handle(STEPSelections_SelectForTransfer)
 %wrap_handle(STEPSelections_SelectGSCurves)
 %wrap_handle(STEPSelections_SelectInstances)
-%wrap_handle(STEPSelections_SequenceNodeOfSequenceOfAssemblyComponent)
-%wrap_handle(STEPSelections_SequenceNodeOfSequenceOfAssemblyLink)
+%wrap_handle(STEPSelections_HSequenceOfAssemblyLink)
+/* end handles declaration */
 
-%nodefaultctor STEPSelections_AssemblyComponent;
-class STEPSelections_AssemblyComponent : public MMgt_TShared {
+/* templates */
+%template(STEPSelections_SequenceOfAssemblyComponent) NCollection_Sequence<opencascade::handle<STEPSelections_AssemblyComponent>>;
+
+%extend NCollection_Sequence<opencascade::handle<STEPSelections_AssemblyComponent>> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+%template(STEPSelections_SequenceOfAssemblyLink) NCollection_Sequence<opencascade::handle<STEPSelections_AssemblyLink>>;
+
+%extend NCollection_Sequence<opencascade::handle<STEPSelections_AssemblyLink>> {
+    %pythoncode {
+    def __len__(self):
+        return self.Size()
+    }
+};
+/* end templates declaration */
+
+/* typedefs */
+typedef NCollection_Sequence<opencascade::handle<STEPSelections_AssemblyComponent>> STEPSelections_SequenceOfAssemblyComponent;
+typedef NCollection_Sequence<opencascade::handle<STEPSelections_AssemblyLink>> STEPSelections_SequenceOfAssemblyLink;
+/* end typedefs declaration */
+
+/*****************************************
+* class STEPSelections_AssemblyComponent *
+*****************************************/
+class STEPSelections_AssemblyComponent : public Standard_Transient {
 	public:
+		/****************** STEPSelections_AssemblyComponent ******************/
+		/**** md5 signature: 32e790d81d59d215db6fe065306bbf2d ****/
 		%feature("compactdefaultargs") STEPSelections_AssemblyComponent;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") STEPSelections_AssemblyComponent;
-		 STEPSelections_AssemblyComponent ();
+		 STEPSelections_AssemblyComponent();
+
+		/****************** STEPSelections_AssemblyComponent ******************/
+		/**** md5 signature: 821e42438f5d9172f23f58083dfdec94 ****/
 		%feature("compactdefaultargs") STEPSelections_AssemblyComponent;
-		%feature("autodoc", "	:param sdr:
-	:type sdr: Handle_StepShape_ShapeDefinitionRepresentation &
-	:param list:
-	:type list: Handle_STEPSelections_HSequenceOfAssemblyLink &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+sdr: StepShape_ShapeDefinitionRepresentation
+list: STEPSelections_HSequenceOfAssemblyLink
+
+Returns
+-------
+None
 ") STEPSelections_AssemblyComponent;
-		 STEPSelections_AssemblyComponent (const Handle_StepShape_ShapeDefinitionRepresentation & sdr,const Handle_STEPSelections_HSequenceOfAssemblyLink & list);
-		%feature("compactdefaultargs") GetSDR;
-		%feature("autodoc", "	:rtype: Handle_StepShape_ShapeDefinitionRepresentation
-") GetSDR;
-		Handle_StepShape_ShapeDefinitionRepresentation GetSDR ();
+		 STEPSelections_AssemblyComponent(const opencascade::handle<StepShape_ShapeDefinitionRepresentation> & sdr, const opencascade::handle<STEPSelections_HSequenceOfAssemblyLink> & list);
+
+		/****************** GetList ******************/
+		/**** md5 signature: baa8fc1d4da39ad20abb9d73054d97b8 ****/
 		%feature("compactdefaultargs") GetList;
-		%feature("autodoc", "	:rtype: Handle_STEPSelections_HSequenceOfAssemblyLink
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<STEPSelections_HSequenceOfAssemblyLink>
 ") GetList;
-		Handle_STEPSelections_HSequenceOfAssemblyLink GetList ();
-		%feature("compactdefaultargs") SetSDR;
-		%feature("autodoc", "	:param sdr:
-	:type sdr: Handle_StepShape_ShapeDefinitionRepresentation &
-	:rtype: None
-") SetSDR;
-		void SetSDR (const Handle_StepShape_ShapeDefinitionRepresentation & sdr);
+		opencascade::handle<STEPSelections_HSequenceOfAssemblyLink> GetList();
+
+		/****************** GetSDR ******************/
+		/**** md5 signature: faabed04bfe8f4d021f36796932db420 ****/
+		%feature("compactdefaultargs") GetSDR;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<StepShape_ShapeDefinitionRepresentation>
+") GetSDR;
+		opencascade::handle<StepShape_ShapeDefinitionRepresentation> GetSDR();
+
+		/****************** SetList ******************/
+		/**** md5 signature: ced6586bf0d104075ad70c1d1486179d ****/
 		%feature("compactdefaultargs") SetList;
-		%feature("autodoc", "	:param list:
-	:type list: Handle_STEPSelections_HSequenceOfAssemblyLink &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+list: STEPSelections_HSequenceOfAssemblyLink
+
+Returns
+-------
+None
 ") SetList;
-		void SetList (const Handle_STEPSelections_HSequenceOfAssemblyLink & list);
+		void SetList(const opencascade::handle<STEPSelections_HSequenceOfAssemblyLink> & list);
+
+		/****************** SetSDR ******************/
+		/**** md5 signature: 6e7bfe74d0634693e540292c51836b91 ****/
+		%feature("compactdefaultargs") SetSDR;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+sdr: StepShape_ShapeDefinitionRepresentation
+
+Returns
+-------
+None
+") SetSDR;
+		void SetSDR(const opencascade::handle<StepShape_ShapeDefinitionRepresentation> & sdr);
+
 };
 
 
@@ -103,21 +218,27 @@ class STEPSelections_AssemblyComponent : public MMgt_TShared {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor STEPSelections_AssemblyExplorer;
+
+/****************************************
+* class STEPSelections_AssemblyExplorer *
+****************************************/
 class STEPSelections_AssemblyExplorer {
 	public:
+		/****************** STEPSelections_AssemblyExplorer ******************/
+		/**** md5 signature: fdc8f8c7910a65f2a71d0b6104c7397a ****/
 		%feature("compactdefaultargs") STEPSelections_AssemblyExplorer;
-		%feature("autodoc", "	:param G:
-	:type G: Interface_Graph &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+G: Interface_Graph
+
+Returns
+-------
+None
 ") STEPSelections_AssemblyExplorer;
-		 STEPSelections_AssemblyExplorer (const Interface_Graph & G);
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	:param G:
-	:type G: Interface_Graph &
-	:rtype: None
-") Init;
-		void Init (const Interface_Graph & G);
+		 STEPSelections_AssemblyExplorer(const Interface_Graph & G);
+
 
         %feature("autodoc", "1");
         %extend{
@@ -126,38 +247,93 @@ class STEPSelections_AssemblyExplorer {
             self->Dump(s);
             return s.str();}
         };
-        		%feature("compactdefaultargs") FindSDRWithProduct;
-		%feature("autodoc", "	:param product:
-	:type product: Handle_StepBasic_ProductDefinition &
-	:rtype: Handle_StepShape_ShapeDefinitionRepresentation
-") FindSDRWithProduct;
-		Handle_StepShape_ShapeDefinitionRepresentation FindSDRWithProduct (const Handle_StepBasic_ProductDefinition & product);
+		/****************** FillListWithGraph ******************/
+		/**** md5 signature: 22e0b69a9c944196630d2867ebc6b70f ****/
 		%feature("compactdefaultargs") FillListWithGraph;
-		%feature("autodoc", "	:param cmp:
-	:type cmp: Handle_STEPSelections_AssemblyComponent &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+cmp: STEPSelections_AssemblyComponent
+
+Returns
+-------
+None
 ") FillListWithGraph;
-		void FillListWithGraph (const Handle_STEPSelections_AssemblyComponent & cmp);
+		void FillListWithGraph(const opencascade::handle<STEPSelections_AssemblyComponent> & cmp);
+
+		/****************** FindItemWithNAUO ******************/
+		/**** md5 signature: e2a54179df4ab2934bcad10c5ac138fd ****/
 		%feature("compactdefaultargs") FindItemWithNAUO;
-		%feature("autodoc", "	:param nauo:
-	:type nauo: Handle_StepRepr_NextAssemblyUsageOccurrence &
-	:rtype: Handle_Standard_Transient
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+nauo: StepRepr_NextAssemblyUsageOccurrence
+
+Returns
+-------
+opencascade::handle<Standard_Transient>
 ") FindItemWithNAUO;
-		Handle_Standard_Transient FindItemWithNAUO (const Handle_StepRepr_NextAssemblyUsageOccurrence & nauo);
+		opencascade::handle<Standard_Transient> FindItemWithNAUO(const opencascade::handle<StepRepr_NextAssemblyUsageOccurrence> & nauo);
+
+		/****************** FindSDRWithProduct ******************/
+		/**** md5 signature: 88a8e6eaf98f8610f6c56d359cbfb155 ****/
+		%feature("compactdefaultargs") FindSDRWithProduct;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+product: StepBasic_ProductDefinition
+
+Returns
+-------
+opencascade::handle<StepShape_ShapeDefinitionRepresentation>
+") FindSDRWithProduct;
+		opencascade::handle<StepShape_ShapeDefinitionRepresentation> FindSDRWithProduct(const opencascade::handle<StepBasic_ProductDefinition> & product);
+
+		/****************** Init ******************/
+		/**** md5 signature: 789fbd47d4f3eae4e3e863adce44c5e6 ****/
+		%feature("compactdefaultargs") Init;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+G: Interface_Graph
+
+Returns
+-------
+None
+") Init;
+		void Init(const Interface_Graph & G);
+
+		/****************** NbAssemblies ******************/
+		/**** md5 signature: dc1428818eb91c6e976d2aeb6e16644c ****/
 		%feature("compactdefaultargs") NbAssemblies;
-		%feature("autodoc", "	* Returns the number of root assemblies;
+		%feature("autodoc", "Returns the number of root assemblies;.
 
-	:rtype: int
+Returns
+-------
+int
 ") NbAssemblies;
-		Standard_Integer NbAssemblies ();
-		%feature("compactdefaultargs") Root;
-		%feature("autodoc", "	* Returns root of assenbly by its rank;
+		Standard_Integer NbAssemblies();
 
-	:param rank: default value is 1
-	:type rank: int
-	:rtype: Handle_STEPSelections_AssemblyComponent
+		/****************** Root ******************/
+		/**** md5 signature: d67d3cf147a9ad9c102eb501ae27dfa6 ****/
+		%feature("compactdefaultargs") Root;
+		%feature("autodoc", "Returns root of assenbly by its rank;.
+
+Parameters
+----------
+rank: int,optional
+	default value is 1
+
+Returns
+-------
+opencascade::handle<STEPSelections_AssemblyComponent>
 ") Root;
-		Handle_STEPSelections_AssemblyComponent Root (const Standard_Integer rank = 1);
+		opencascade::handle<STEPSelections_AssemblyComponent> Root(const Standard_Integer rank = 1);
+
 };
 
 
@@ -166,53 +342,118 @@ class STEPSelections_AssemblyExplorer {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor STEPSelections_AssemblyLink;
-class STEPSelections_AssemblyLink : public MMgt_TShared {
+
+/************************************
+* class STEPSelections_AssemblyLink *
+************************************/
+class STEPSelections_AssemblyLink : public Standard_Transient {
 	public:
+		/****************** STEPSelections_AssemblyLink ******************/
+		/**** md5 signature: 3ceeec835491a573f647ade2fab6ea36 ****/
 		%feature("compactdefaultargs") STEPSelections_AssemblyLink;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") STEPSelections_AssemblyLink;
-		 STEPSelections_AssemblyLink ();
+		 STEPSelections_AssemblyLink();
+
+		/****************** STEPSelections_AssemblyLink ******************/
+		/**** md5 signature: f2f4aae7db5025aac161cc69c8341168 ****/
 		%feature("compactdefaultargs") STEPSelections_AssemblyLink;
-		%feature("autodoc", "	:param nauo:
-	:type nauo: Handle_StepRepr_NextAssemblyUsageOccurrence &
-	:param item:
-	:type item: Handle_Standard_Transient &
-	:param part:
-	:type part: Handle_STEPSelections_AssemblyComponent &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+nauo: StepRepr_NextAssemblyUsageOccurrence
+item: Standard_Transient
+part: STEPSelections_AssemblyComponent
+
+Returns
+-------
+None
 ") STEPSelections_AssemblyLink;
-		 STEPSelections_AssemblyLink (const Handle_StepRepr_NextAssemblyUsageOccurrence & nauo,const Handle_Standard_Transient & item,const Handle_STEPSelections_AssemblyComponent & part);
-		%feature("compactdefaultargs") GetNAUO;
-		%feature("autodoc", "	:rtype: Handle_StepRepr_NextAssemblyUsageOccurrence
-") GetNAUO;
-		Handle_StepRepr_NextAssemblyUsageOccurrence GetNAUO ();
-		%feature("compactdefaultargs") GetItem;
-		%feature("autodoc", "	:rtype: Handle_Standard_Transient
-") GetItem;
-		Handle_Standard_Transient GetItem ();
+		 STEPSelections_AssemblyLink(const opencascade::handle<StepRepr_NextAssemblyUsageOccurrence> & nauo, const opencascade::handle<Standard_Transient> & item, const opencascade::handle<STEPSelections_AssemblyComponent> & part);
+
+		/****************** GetComponent ******************/
+		/**** md5 signature: 139846538b2887742f2dbd35ab86e98c ****/
 		%feature("compactdefaultargs") GetComponent;
-		%feature("autodoc", "	:rtype: Handle_STEPSelections_AssemblyComponent
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<STEPSelections_AssemblyComponent>
 ") GetComponent;
-		Handle_STEPSelections_AssemblyComponent GetComponent ();
-		%feature("compactdefaultargs") SetNAUO;
-		%feature("autodoc", "	:param nauo:
-	:type nauo: Handle_StepRepr_NextAssemblyUsageOccurrence &
-	:rtype: None
-") SetNAUO;
-		void SetNAUO (const Handle_StepRepr_NextAssemblyUsageOccurrence & nauo);
-		%feature("compactdefaultargs") SetItem;
-		%feature("autodoc", "	:param item:
-	:type item: Handle_Standard_Transient &
-	:rtype: None
-") SetItem;
-		void SetItem (const Handle_Standard_Transient & item);
+		opencascade::handle<STEPSelections_AssemblyComponent> GetComponent();
+
+		/****************** GetItem ******************/
+		/**** md5 signature: 257a5e4f8f1fae22af683d8ef7302666 ****/
+		%feature("compactdefaultargs") GetItem;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<Standard_Transient>
+") GetItem;
+		opencascade::handle<Standard_Transient> GetItem();
+
+		/****************** GetNAUO ******************/
+		/**** md5 signature: 7b90e221fdc0670e5cb2da71fe791c94 ****/
+		%feature("compactdefaultargs") GetNAUO;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<StepRepr_NextAssemblyUsageOccurrence>
+") GetNAUO;
+		opencascade::handle<StepRepr_NextAssemblyUsageOccurrence> GetNAUO();
+
+		/****************** SetComponent ******************/
+		/**** md5 signature: 3a621dd54dc444ff167f89bcb90c6bea ****/
 		%feature("compactdefaultargs") SetComponent;
-		%feature("autodoc", "	:param part:
-	:type part: Handle_STEPSelections_AssemblyComponent &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+part: STEPSelections_AssemblyComponent
+
+Returns
+-------
+None
 ") SetComponent;
-		void SetComponent (const Handle_STEPSelections_AssemblyComponent & part);
+		void SetComponent(const opencascade::handle<STEPSelections_AssemblyComponent> & part);
+
+		/****************** SetItem ******************/
+		/**** md5 signature: 4fc3f8ba5fcb4fef8940f14e2c460b45 ****/
+		%feature("compactdefaultargs") SetItem;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+item: Standard_Transient
+
+Returns
+-------
+None
+") SetItem;
+		void SetItem(const opencascade::handle<Standard_Transient> & item);
+
+		/****************** SetNAUO ******************/
+		/**** md5 signature: d41b58ba9b6e97370d7d607d712179d3 ****/
+		%feature("compactdefaultargs") SetNAUO;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+nauo: StepRepr_NextAssemblyUsageOccurrence
+
+Returns
+-------
+None
+") SetNAUO;
+		void SetNAUO(const opencascade::handle<StepRepr_NextAssemblyUsageOccurrence> & nauo);
+
 };
 
 
@@ -223,245 +464,222 @@ class STEPSelections_AssemblyLink : public MMgt_TShared {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor STEPSelections_Counter;
+
+/*******************************
+* class STEPSelections_Counter *
+*******************************/
 class STEPSelections_Counter {
 	public:
+		/****************** STEPSelections_Counter ******************/
+		/**** md5 signature: d7aec9b58d03911c697c408dbf238e6c ****/
 		%feature("compactdefaultargs") STEPSelections_Counter;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") STEPSelections_Counter;
-		 STEPSelections_Counter ();
-		%feature("compactdefaultargs") Count;
-		%feature("autodoc", "	:param graph:
-	:type graph: Interface_Graph &
-	:param start:
-	:type start: Handle_Standard_Transient &
-	:rtype: None
-") Count;
-		void Count (const Interface_Graph & graph,const Handle_Standard_Transient & start);
+		 STEPSelections_Counter();
+
+		/****************** Clear ******************/
+		/**** md5 signature: ae54be580b423a6eadbe062e0bdb44c2 ****/
 		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") NbInstancesOfFaces;
-		%feature("autodoc", "	:rtype: int
-") NbInstancesOfFaces;
-		Standard_Integer NbInstancesOfFaces ();
-		%feature("compactdefaultargs") NbInstancesOfShells;
-		%feature("autodoc", "	:rtype: int
-") NbInstancesOfShells;
-		Standard_Integer NbInstancesOfShells ();
-		%feature("compactdefaultargs") NbInstancesOfSolids;
-		%feature("autodoc", "	:rtype: int
-") NbInstancesOfSolids;
-		Standard_Integer NbInstancesOfSolids ();
+		void Clear();
+
+		/****************** Count ******************/
+		/**** md5 signature: aaae47e9af4058b80ccfbcd9f92cca82 ****/
+		%feature("compactdefaultargs") Count;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+graph: Interface_Graph
+start: Standard_Transient
+
+Returns
+-------
+None
+") Count;
+		void Count(const Interface_Graph & graph, const opencascade::handle<Standard_Transient> & start);
+
+		/****************** NbInstancesOfEdges ******************/
+		/**** md5 signature: 9e707fbb9d2dbae6701f885083bdc38b ****/
 		%feature("compactdefaultargs") NbInstancesOfEdges;
-		%feature("autodoc", "	:rtype: int
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
 ") NbInstancesOfEdges;
-		Standard_Integer NbInstancesOfEdges ();
+		Standard_Integer NbInstancesOfEdges();
+
+		/****************** NbInstancesOfFaces ******************/
+		/**** md5 signature: 851afe6e292ce2fbcadfb6dd5bd38b7a ****/
+		%feature("compactdefaultargs") NbInstancesOfFaces;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
+") NbInstancesOfFaces;
+		Standard_Integer NbInstancesOfFaces();
+
+		/****************** NbInstancesOfShells ******************/
+		/**** md5 signature: bf0aa7a0b515f3507d98dec1da678382 ****/
+		%feature("compactdefaultargs") NbInstancesOfShells;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
+") NbInstancesOfShells;
+		Standard_Integer NbInstancesOfShells();
+
+		/****************** NbInstancesOfSolids ******************/
+		/**** md5 signature: 44ab1c26fdac82059198f4fce331e966 ****/
+		%feature("compactdefaultargs") NbInstancesOfSolids;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
+") NbInstancesOfSolids;
+		Standard_Integer NbInstancesOfSolids();
+
+		/****************** NbInstancesOfWires ******************/
+		/**** md5 signature: 0b36afcebca0c1914bc030f3c253be5b ****/
 		%feature("compactdefaultargs") NbInstancesOfWires;
-		%feature("autodoc", "	:rtype: int
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
 ") NbInstancesOfWires;
-		Standard_Integer NbInstancesOfWires ();
-		%feature("compactdefaultargs") NbSourceFaces;
-		%feature("autodoc", "	:rtype: int
-") NbSourceFaces;
-		Standard_Integer NbSourceFaces ();
-		%feature("compactdefaultargs") NbSourceShells;
-		%feature("autodoc", "	:rtype: int
-") NbSourceShells;
-		Standard_Integer NbSourceShells ();
-		%feature("compactdefaultargs") NbSourceSolids;
-		%feature("autodoc", "	:rtype: int
-") NbSourceSolids;
-		Standard_Integer NbSourceSolids ();
+		Standard_Integer NbInstancesOfWires();
+
+		/****************** NbSourceEdges ******************/
+		/**** md5 signature: 23469679a5d64918a0945574907492ea ****/
 		%feature("compactdefaultargs") NbSourceEdges;
-		%feature("autodoc", "	:rtype: int
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
 ") NbSourceEdges;
-		Standard_Integer NbSourceEdges ();
+		Standard_Integer NbSourceEdges();
+
+		/****************** NbSourceFaces ******************/
+		/**** md5 signature: 21f8e307b8a8a0e510711cf6f11b8373 ****/
+		%feature("compactdefaultargs") NbSourceFaces;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
+") NbSourceFaces;
+		Standard_Integer NbSourceFaces();
+
+		/****************** NbSourceShells ******************/
+		/**** md5 signature: ec3c243700aeed99904be52fc3589dda ****/
+		%feature("compactdefaultargs") NbSourceShells;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
+") NbSourceShells;
+		Standard_Integer NbSourceShells();
+
+		/****************** NbSourceSolids ******************/
+		/**** md5 signature: 12cac9a4b0521efe13743e3b679d14f1 ****/
+		%feature("compactdefaultargs") NbSourceSolids;
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
+") NbSourceSolids;
+		Standard_Integer NbSourceSolids();
+
+		/****************** NbSourceWires ******************/
+		/**** md5 signature: f68145444cef7eff65f860dbccf9bab6 ****/
 		%feature("compactdefaultargs") NbSourceWires;
-		%feature("autodoc", "	:rtype: int
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+int
 ") NbSourceWires;
-		Standard_Integer NbSourceWires ();
+		Standard_Integer NbSourceWires();
+
 };
 
 
 %extend STEPSelections_Counter {
 	%pythoncode {
 	__repr__ = _dumps_object
+
+	@methodnotwrapped
+	def POP(self):
+		pass
+
+	@methodnotwrapped
+	def POP2(self):
+		pass
 	}
 };
-%nodefaultctor STEPSelections_HSequenceOfAssemblyLink;
-class STEPSelections_HSequenceOfAssemblyLink : public MMgt_TShared {
-	public:
-		%feature("compactdefaultargs") STEPSelections_HSequenceOfAssemblyLink;
-		%feature("autodoc", "	:rtype: None
-") STEPSelections_HSequenceOfAssemblyLink;
-		 STEPSelections_HSequenceOfAssemblyLink ();
-		%feature("compactdefaultargs") IsEmpty;
-		%feature("autodoc", "	:rtype: bool
-") IsEmpty;
-		Standard_Boolean IsEmpty ();
-		%feature("compactdefaultargs") Length;
-		%feature("autodoc", "	:rtype: int
-") Length;
-		Standard_Integer Length ();
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param anItem:
-	:type anItem: Handle_STEPSelections_AssemblyLink &
-	:rtype: None
-") Append;
-		void Append (const Handle_STEPSelections_AssemblyLink & anItem);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param aSequence:
-	:type aSequence: Handle_STEPSelections_HSequenceOfAssemblyLink &
-	:rtype: None
-") Append;
-		void Append (const Handle_STEPSelections_HSequenceOfAssemblyLink & aSequence);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param anItem:
-	:type anItem: Handle_STEPSelections_AssemblyLink &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_STEPSelections_AssemblyLink & anItem);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param aSequence:
-	:type aSequence: Handle_STEPSelections_HSequenceOfAssemblyLink &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_STEPSelections_HSequenceOfAssemblyLink & aSequence);
-		%feature("compactdefaultargs") Reverse;
-		%feature("autodoc", "	:rtype: None
-") Reverse;
-		void Reverse ();
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:param anItem:
-	:type anItem: Handle_STEPSelections_AssemblyLink &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer anIndex,const Handle_STEPSelections_AssemblyLink & anItem);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:param aSequence:
-	:type aSequence: Handle_STEPSelections_HSequenceOfAssemblyLink &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer anIndex,const Handle_STEPSelections_HSequenceOfAssemblyLink & aSequence);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:param anItem:
-	:type anItem: Handle_STEPSelections_AssemblyLink &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer anIndex,const Handle_STEPSelections_AssemblyLink & anItem);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:param aSequence:
-	:type aSequence: Handle_STEPSelections_HSequenceOfAssemblyLink &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer anIndex,const Handle_STEPSelections_HSequenceOfAssemblyLink & aSequence);
-		%feature("compactdefaultargs") Exchange;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:param anOtherIndex:
-	:type anOtherIndex: int
-	:rtype: None
-") Exchange;
-		void Exchange (const Standard_Integer anIndex,const Standard_Integer anOtherIndex);
-		%feature("compactdefaultargs") Split;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:rtype: Handle_STEPSelections_HSequenceOfAssemblyLink
-") Split;
-		Handle_STEPSelections_HSequenceOfAssemblyLink Split (const Standard_Integer anIndex);
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:param anItem:
-	:type anItem: Handle_STEPSelections_AssemblyLink &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer anIndex,const Handle_STEPSelections_AssemblyLink & anItem);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:rtype: Handle_STEPSelections_AssemblyLink
-") Value;
-		Handle_STEPSelections_AssemblyLink Value (const Standard_Integer anIndex);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:rtype: Handle_STEPSelections_AssemblyLink
-") ChangeValue;
-		Handle_STEPSelections_AssemblyLink ChangeValue (const Standard_Integer anIndex);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param anIndex:
-	:type anIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer anIndex);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param fromIndex:
-	:type fromIndex: int
-	:param toIndex:
-	:type toIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer fromIndex,const Standard_Integer toIndex);
-		%feature("compactdefaultargs") Sequence;
-		%feature("autodoc", "	:rtype: STEPSelections_SequenceOfAssemblyLink
-") Sequence;
-		const STEPSelections_SequenceOfAssemblyLink & Sequence ();
-		%feature("compactdefaultargs") ChangeSequence;
-		%feature("autodoc", "	:rtype: STEPSelections_SequenceOfAssemblyLink
-") ChangeSequence;
-		STEPSelections_SequenceOfAssemblyLink & ChangeSequence ();
-};
 
-
-%make_alias(STEPSelections_HSequenceOfAssemblyLink)
-
-%extend STEPSelections_HSequenceOfAssemblyLink {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor STEPSelections_SelectAssembly;
+/**************************************
+* class STEPSelections_SelectAssembly *
+**************************************/
 class STEPSelections_SelectAssembly : public IFSelect_SelectExplore {
 	public:
+		/****************** STEPSelections_SelectAssembly ******************/
+		/**** md5 signature: 7b4f6e61189a8d7ed2cd8ac46e0024e9 ****/
 		%feature("compactdefaultargs") STEPSelections_SelectAssembly;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") STEPSelections_SelectAssembly;
-		 STEPSelections_SelectAssembly ();
+		 STEPSelections_SelectAssembly();
+
+		/****************** Explore ******************/
+		/**** md5 signature: 50c4444632fd853033919d1a382f1178 ****/
 		%feature("compactdefaultargs") Explore;
-		%feature("autodoc", "	* Explores an entity, to take its faces Works recursively
+		%feature("autodoc", "Explores an entity, to take its faces works recursively.
 
-	:param level:
-	:type level: int
-	:param ent:
-	:type ent: Handle_Standard_Transient &
-	:param G:
-	:type G: Interface_Graph &
-	:param explored:
-	:type explored: Interface_EntityIterator &
-	:rtype: bool
+Parameters
+----------
+level: int
+ent: Standard_Transient
+G: Interface_Graph
+explored: Interface_EntityIterator
+
+Returns
+-------
+bool
 ") Explore;
-		Standard_Boolean Explore (const Standard_Integer level,const Handle_Standard_Transient & ent,const Interface_Graph & G,Interface_EntityIterator & explored);
-		%feature("compactdefaultargs") ExploreLabel;
-		%feature("autodoc", "	* Returns a text defining the criterium : 'Assembly structures'
+		Standard_Boolean Explore(const Standard_Integer level, const opencascade::handle<Standard_Transient> & ent, const Interface_Graph & G, Interface_EntityIterator & explored);
 
-	:rtype: TCollection_AsciiString
+		/****************** ExploreLabel ******************/
+		/**** md5 signature: 6716492c1a431b7aec766a1b00353622 ****/
+		%feature("compactdefaultargs") ExploreLabel;
+		%feature("autodoc", "Returns a text defining the criterium : 'assembly structures'.
+
+Returns
+-------
+TCollection_AsciiString
 ") ExploreLabel;
-		TCollection_AsciiString ExploreLabel ();
+		TCollection_AsciiString ExploreLabel();
+
 };
 
 
@@ -472,25 +690,41 @@ class STEPSelections_SelectAssembly : public IFSelect_SelectExplore {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor STEPSelections_SelectDerived;
+
+/*************************************
+* class STEPSelections_SelectDerived *
+*************************************/
 class STEPSelections_SelectDerived : public StepSelect_StepType {
 	public:
+		/****************** STEPSelections_SelectDerived ******************/
+		/**** md5 signature: 03ef2b060e52e9f4bc2fc45e1f6e85fb ****/
 		%feature("compactdefaultargs") STEPSelections_SelectDerived;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") STEPSelections_SelectDerived;
-		 STEPSelections_SelectDerived ();
+		 STEPSelections_SelectDerived();
+
+		/****************** Matches ******************/
+		/**** md5 signature: 6cdb41c3b6f4c6d9bbd3a66d390d7419 ****/
 		%feature("compactdefaultargs") Matches;
-		%feature("autodoc", "	:param ent:
-	:type ent: Handle_Standard_Transient &
-	:param model:
-	:type model: Handle_Interface_InterfaceModel &
-	:param text:
-	:type text: TCollection_AsciiString &
-	:param exact:
-	:type exact: bool
-	:rtype: bool
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+ent: Standard_Transient
+model: Interface_InterfaceModel
+text: TCollection_AsciiString
+exact: bool
+
+Returns
+-------
+bool
 ") Matches;
-		virtual Standard_Boolean Matches (const Handle_Standard_Transient & ent,const Handle_Interface_InterfaceModel & model,const TCollection_AsciiString & text,const Standard_Boolean exact);
+		virtual Standard_Boolean Matches(const opencascade::handle<Standard_Transient> & ent, const opencascade::handle<Interface_InterfaceModel> & model, const TCollection_AsciiString & text, const Standard_Boolean exact);
+
 };
 
 
@@ -501,33 +735,52 @@ class STEPSelections_SelectDerived : public StepSelect_StepType {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor STEPSelections_SelectFaces;
+
+/***********************************
+* class STEPSelections_SelectFaces *
+***********************************/
 class STEPSelections_SelectFaces : public IFSelect_SelectExplore {
 	public:
+		/****************** STEPSelections_SelectFaces ******************/
+		/**** md5 signature: 279a363ea2ae04ed1d52829b1fa853a9 ****/
 		%feature("compactdefaultargs") STEPSelections_SelectFaces;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") STEPSelections_SelectFaces;
-		 STEPSelections_SelectFaces ();
+		 STEPSelections_SelectFaces();
+
+		/****************** Explore ******************/
+		/**** md5 signature: 50c4444632fd853033919d1a382f1178 ****/
 		%feature("compactdefaultargs") Explore;
-		%feature("autodoc", "	* Explores an entity, to take its faces Works recursively
+		%feature("autodoc", "Explores an entity, to take its faces works recursively.
 
-	:param level:
-	:type level: int
-	:param ent:
-	:type ent: Handle_Standard_Transient &
-	:param G:
-	:type G: Interface_Graph &
-	:param explored:
-	:type explored: Interface_EntityIterator &
-	:rtype: bool
+Parameters
+----------
+level: int
+ent: Standard_Transient
+G: Interface_Graph
+explored: Interface_EntityIterator
+
+Returns
+-------
+bool
 ") Explore;
-		Standard_Boolean Explore (const Standard_Integer level,const Handle_Standard_Transient & ent,const Interface_Graph & G,Interface_EntityIterator & explored);
-		%feature("compactdefaultargs") ExploreLabel;
-		%feature("autodoc", "	* Returns a text defining the criterium : 'Faces'
+		Standard_Boolean Explore(const Standard_Integer level, const opencascade::handle<Standard_Transient> & ent, const Interface_Graph & G, Interface_EntityIterator & explored);
 
-	:rtype: TCollection_AsciiString
+		/****************** ExploreLabel ******************/
+		/**** md5 signature: 6716492c1a431b7aec766a1b00353622 ****/
+		%feature("compactdefaultargs") ExploreLabel;
+		%feature("autodoc", "Returns a text defining the criterium : 'faces'.
+
+Returns
+-------
+TCollection_AsciiString
 ") ExploreLabel;
-		TCollection_AsciiString ExploreLabel ();
+		TCollection_AsciiString ExploreLabel();
+
 };
 
 
@@ -538,25 +791,53 @@ class STEPSelections_SelectFaces : public IFSelect_SelectExplore {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor STEPSelections_SelectForTransfer;
+
+/*****************************************
+* class STEPSelections_SelectForTransfer *
+*****************************************/
 class STEPSelections_SelectForTransfer : public XSControl_SelectForTransfer {
 	public:
+		/****************** STEPSelections_SelectForTransfer ******************/
+		/**** md5 signature: 4f94e20aa4d7091e128746d57df3cc4c ****/
 		%feature("compactdefaultargs") STEPSelections_SelectForTransfer;
-		%feature("autodoc", "	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+None
 ") STEPSelections_SelectForTransfer;
-		 STEPSelections_SelectForTransfer ();
+		 STEPSelections_SelectForTransfer();
+
+		/****************** STEPSelections_SelectForTransfer ******************/
+		/**** md5 signature: a829b2fdc494f45e8bacb31082d69ded ****/
 		%feature("compactdefaultargs") STEPSelections_SelectForTransfer;
-		%feature("autodoc", "	:param TR:
-	:type TR: Handle_XSControl_TransferReader &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+TR: XSControl_TransferReader
+
+Returns
+-------
+None
 ") STEPSelections_SelectForTransfer;
-		 STEPSelections_SelectForTransfer (const Handle_XSControl_TransferReader & TR);
+		 STEPSelections_SelectForTransfer(const opencascade::handle<XSControl_TransferReader> & TR);
+
+		/****************** RootResult ******************/
+		/**** md5 signature: 06f84f6b90b9fc5b3d5fc4b15404fb86 ****/
 		%feature("compactdefaultargs") RootResult;
-		%feature("autodoc", "	:param G:
-	:type G: Interface_Graph &
-	:rtype: Interface_EntityIterator
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+G: Interface_Graph
+
+Returns
+-------
+Interface_EntityIterator
 ") RootResult;
-		virtual Interface_EntityIterator RootResult (const Interface_Graph & G);
+		virtual Interface_EntityIterator RootResult(const Interface_Graph & G);
+
 };
 
 
@@ -567,31 +848,52 @@ class STEPSelections_SelectForTransfer : public XSControl_SelectForTransfer {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor STEPSelections_SelectGSCurves;
+
+/**************************************
+* class STEPSelections_SelectGSCurves *
+**************************************/
 class STEPSelections_SelectGSCurves : public IFSelect_SelectExplore {
 	public:
+		/****************** STEPSelections_SelectGSCurves ******************/
+		/**** md5 signature: 25ee0997327dc298bc807f5156f8b539 ****/
 		%feature("compactdefaultargs") STEPSelections_SelectGSCurves;
-		%feature("autodoc", "	:rtype: None
-") STEPSelections_SelectGSCurves;
-		 STEPSelections_SelectGSCurves ();
-		%feature("compactdefaultargs") Explore;
-		%feature("autodoc", "	:param level:
-	:type level: int
-	:param ent:
-	:type ent: Handle_Standard_Transient &
-	:param G:
-	:type G: Interface_Graph &
-	:param explored:
-	:type explored: Interface_EntityIterator &
-	:rtype: bool
-") Explore;
-		Standard_Boolean Explore (const Standard_Integer level,const Handle_Standard_Transient & ent,const Interface_Graph & G,Interface_EntityIterator & explored);
-		%feature("compactdefaultargs") ExploreLabel;
-		%feature("autodoc", "	* Returns a text defining the criterium : 'Curves'
+		%feature("autodoc", "No available documentation.
 
-	:rtype: TCollection_AsciiString
+Returns
+-------
+None
+") STEPSelections_SelectGSCurves;
+		 STEPSelections_SelectGSCurves();
+
+		/****************** Explore ******************/
+		/**** md5 signature: 50c4444632fd853033919d1a382f1178 ****/
+		%feature("compactdefaultargs") Explore;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+level: int
+ent: Standard_Transient
+G: Interface_Graph
+explored: Interface_EntityIterator
+
+Returns
+-------
+bool
+") Explore;
+		Standard_Boolean Explore(const Standard_Integer level, const opencascade::handle<Standard_Transient> & ent, const Interface_Graph & G, Interface_EntityIterator & explored);
+
+		/****************** ExploreLabel ******************/
+		/**** md5 signature: 6716492c1a431b7aec766a1b00353622 ****/
+		%feature("compactdefaultargs") ExploreLabel;
+		%feature("autodoc", "Returns a text defining the criterium : 'curves'.
+
+Returns
+-------
+TCollection_AsciiString
 ") ExploreLabel;
-		TCollection_AsciiString ExploreLabel ();
+		TCollection_AsciiString ExploreLabel();
+
 };
 
 
@@ -602,37 +904,67 @@ class STEPSelections_SelectGSCurves : public IFSelect_SelectExplore {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor STEPSelections_SelectInstances;
+
+/***************************************
+* class STEPSelections_SelectInstances *
+***************************************/
 class STEPSelections_SelectInstances : public IFSelect_SelectExplore {
 	public:
+		/****************** STEPSelections_SelectInstances ******************/
+		/**** md5 signature: 8fa67405d3329777b1df0dfa8a1eefd8 ****/
 		%feature("compactdefaultargs") STEPSelections_SelectInstances;
-		%feature("autodoc", "	:rtype: None
-") STEPSelections_SelectInstances;
-		 STEPSelections_SelectInstances ();
-		%feature("compactdefaultargs") RootResult;
-		%feature("autodoc", "	:param G:
-	:type G: Interface_Graph &
-	:rtype: Interface_EntityIterator
-") RootResult;
-		Interface_EntityIterator RootResult (const Interface_Graph & G);
-		%feature("compactdefaultargs") Explore;
-		%feature("autodoc", "	:param level:
-	:type level: int
-	:param ent:
-	:type ent: Handle_Standard_Transient &
-	:param G:
-	:type G: Interface_Graph &
-	:param explored:
-	:type explored: Interface_EntityIterator &
-	:rtype: bool
-") Explore;
-		Standard_Boolean Explore (const Standard_Integer level,const Handle_Standard_Transient & ent,const Interface_Graph & G,Interface_EntityIterator & explored);
-		%feature("compactdefaultargs") ExploreLabel;
-		%feature("autodoc", "	* Returns a text defining the criterium : 'Instances'
+		%feature("autodoc", "No available documentation.
 
-	:rtype: TCollection_AsciiString
+Returns
+-------
+None
+") STEPSelections_SelectInstances;
+		 STEPSelections_SelectInstances();
+
+		/****************** Explore ******************/
+		/**** md5 signature: 50c4444632fd853033919d1a382f1178 ****/
+		%feature("compactdefaultargs") Explore;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+level: int
+ent: Standard_Transient
+G: Interface_Graph
+explored: Interface_EntityIterator
+
+Returns
+-------
+bool
+") Explore;
+		Standard_Boolean Explore(const Standard_Integer level, const opencascade::handle<Standard_Transient> & ent, const Interface_Graph & G, Interface_EntityIterator & explored);
+
+		/****************** ExploreLabel ******************/
+		/**** md5 signature: 6716492c1a431b7aec766a1b00353622 ****/
+		%feature("compactdefaultargs") ExploreLabel;
+		%feature("autodoc", "Returns a text defining the criterium : 'instances'.
+
+Returns
+-------
+TCollection_AsciiString
 ") ExploreLabel;
-		TCollection_AsciiString ExploreLabel ();
+		TCollection_AsciiString ExploreLabel();
+
+		/****************** RootResult ******************/
+		/**** md5 signature: 94d3d2ba84f70a954fe8975e2590bfd2 ****/
+		%feature("compactdefaultargs") RootResult;
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+G: Interface_Graph
+
+Returns
+-------
+Interface_EntityIterator
+") RootResult;
+		Interface_EntityIterator RootResult(const Interface_Graph & G);
+
 };
 
 
@@ -643,343 +975,19 @@ class STEPSelections_SelectInstances : public IFSelect_SelectExplore {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor STEPSelections_SequenceNodeOfSequenceOfAssemblyComponent;
-class STEPSelections_SequenceNodeOfSequenceOfAssemblyComponent : public TCollection_SeqNode {
-	public:
-		%feature("compactdefaultargs") STEPSelections_SequenceNodeOfSequenceOfAssemblyComponent;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_STEPSelections_AssemblyComponent &
-	:param n:
-	:type n: TCollection_SeqNodePtr &
-	:param p:
-	:type p: TCollection_SeqNodePtr &
-	:rtype: None
-") STEPSelections_SequenceNodeOfSequenceOfAssemblyComponent;
-		 STEPSelections_SequenceNodeOfSequenceOfAssemblyComponent (const Handle_STEPSelections_AssemblyComponent & I,const TCollection_SeqNodePtr & n,const TCollection_SeqNodePtr & p);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_STEPSelections_AssemblyComponent
-") Value;
-		Handle_STEPSelections_AssemblyComponent Value ();
+
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */
+class STEPSelections_HSequenceOfAssemblyLink : public STEPSelections_SequenceOfAssemblyLink, public Standard_Transient {
+  public:
+    STEPSelections_HSequenceOfAssemblyLink();
+    STEPSelections_HSequenceOfAssemblyLink(const STEPSelections_SequenceOfAssemblyLink& theOther);
+    const STEPSelections_SequenceOfAssemblyLink& Sequence();
+    void Append (const STEPSelections_SequenceOfAssemblyLink::value_type& theItem);
+    void Append (STEPSelections_SequenceOfAssemblyLink& theSequence);
+    STEPSelections_SequenceOfAssemblyLink& ChangeSequence();
 };
+%make_alias(STEPSelections_HSequenceOfAssemblyLink)
 
 
-%make_alias(STEPSelections_SequenceNodeOfSequenceOfAssemblyComponent)
-
-%extend STEPSelections_SequenceNodeOfSequenceOfAssemblyComponent {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor STEPSelections_SequenceNodeOfSequenceOfAssemblyLink;
-class STEPSelections_SequenceNodeOfSequenceOfAssemblyLink : public TCollection_SeqNode {
-	public:
-		%feature("compactdefaultargs") STEPSelections_SequenceNodeOfSequenceOfAssemblyLink;
-		%feature("autodoc", "	:param I:
-	:type I: Handle_STEPSelections_AssemblyLink &
-	:param n:
-	:type n: TCollection_SeqNodePtr &
-	:param p:
-	:type p: TCollection_SeqNodePtr &
-	:rtype: None
-") STEPSelections_SequenceNodeOfSequenceOfAssemblyLink;
-		 STEPSelections_SequenceNodeOfSequenceOfAssemblyLink (const Handle_STEPSelections_AssemblyLink & I,const TCollection_SeqNodePtr & n,const TCollection_SeqNodePtr & p);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: Handle_STEPSelections_AssemblyLink
-") Value;
-		Handle_STEPSelections_AssemblyLink Value ();
-};
-
-
-%make_alias(STEPSelections_SequenceNodeOfSequenceOfAssemblyLink)
-
-%extend STEPSelections_SequenceNodeOfSequenceOfAssemblyLink {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor STEPSelections_SequenceOfAssemblyComponent;
-class STEPSelections_SequenceOfAssemblyComponent : public TCollection_BaseSequence {
-	public:
-		%feature("compactdefaultargs") STEPSelections_SequenceOfAssemblyComponent;
-		%feature("autodoc", "	:rtype: None
-") STEPSelections_SequenceOfAssemblyComponent;
-		 STEPSelections_SequenceOfAssemblyComponent ();
-		%feature("compactdefaultargs") STEPSelections_SequenceOfAssemblyComponent;
-		%feature("autodoc", "	:param Other:
-	:type Other: STEPSelections_SequenceOfAssemblyComponent &
-	:rtype: None
-") STEPSelections_SequenceOfAssemblyComponent;
-		 STEPSelections_SequenceOfAssemblyComponent (const STEPSelections_SequenceOfAssemblyComponent & Other);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: STEPSelections_SequenceOfAssemblyComponent &
-	:rtype: STEPSelections_SequenceOfAssemblyComponent
-") Assign;
-		const STEPSelections_SequenceOfAssemblyComponent & Assign (const STEPSelections_SequenceOfAssemblyComponent & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: STEPSelections_SequenceOfAssemblyComponent &
-	:rtype: STEPSelections_SequenceOfAssemblyComponent
-") operator =;
-		const STEPSelections_SequenceOfAssemblyComponent & operator = (const STEPSelections_SequenceOfAssemblyComponent & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param T:
-	:type T: Handle_STEPSelections_AssemblyComponent &
-	:rtype: None
-") Append;
-		void Append (const Handle_STEPSelections_AssemblyComponent & T);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param S:
-	:type S: STEPSelections_SequenceOfAssemblyComponent &
-	:rtype: None
-") Append;
-		void Append (STEPSelections_SequenceOfAssemblyComponent & S);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param T:
-	:type T: Handle_STEPSelections_AssemblyComponent &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_STEPSelections_AssemblyComponent & T);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param S:
-	:type S: STEPSelections_SequenceOfAssemblyComponent &
-	:rtype: None
-") Prepend;
-		void Prepend (STEPSelections_SequenceOfAssemblyComponent & S);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: Handle_STEPSelections_AssemblyComponent &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,const Handle_STEPSelections_AssemblyComponent & T);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: STEPSelections_SequenceOfAssemblyComponent &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,STEPSelections_SequenceOfAssemblyComponent & S);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: Handle_STEPSelections_AssemblyComponent &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,const Handle_STEPSelections_AssemblyComponent & T);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: STEPSelections_SequenceOfAssemblyComponent &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,STEPSelections_SequenceOfAssemblyComponent & S);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: Handle_STEPSelections_AssemblyComponent
-") First;
-		Handle_STEPSelections_AssemblyComponent First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: Handle_STEPSelections_AssemblyComponent
-") Last;
-		Handle_STEPSelections_AssemblyComponent Last ();
-		%feature("compactdefaultargs") Split;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param Sub:
-	:type Sub: STEPSelections_SequenceOfAssemblyComponent &
-	:rtype: None
-") Split;
-		void Split (const Standard_Integer Index,STEPSelections_SequenceOfAssemblyComponent & Sub);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Handle_STEPSelections_AssemblyComponent
-") Value;
-		Handle_STEPSelections_AssemblyComponent Value (const Standard_Integer Index);
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param I:
-	:type I: Handle_STEPSelections_AssemblyComponent &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer Index,const Handle_STEPSelections_AssemblyComponent & I);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Handle_STEPSelections_AssemblyComponent
-") ChangeValue;
-		Handle_STEPSelections_AssemblyComponent ChangeValue (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param FromIndex:
-	:type FromIndex: int
-	:param ToIndex:
-	:type ToIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer FromIndex,const Standard_Integer ToIndex);
-};
-
-
-%extend STEPSelections_SequenceOfAssemblyComponent {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor STEPSelections_SequenceOfAssemblyLink;
-class STEPSelections_SequenceOfAssemblyLink : public TCollection_BaseSequence {
-	public:
-		%feature("compactdefaultargs") STEPSelections_SequenceOfAssemblyLink;
-		%feature("autodoc", "	:rtype: None
-") STEPSelections_SequenceOfAssemblyLink;
-		 STEPSelections_SequenceOfAssemblyLink ();
-		%feature("compactdefaultargs") STEPSelections_SequenceOfAssemblyLink;
-		%feature("autodoc", "	:param Other:
-	:type Other: STEPSelections_SequenceOfAssemblyLink &
-	:rtype: None
-") STEPSelections_SequenceOfAssemblyLink;
-		 STEPSelections_SequenceOfAssemblyLink (const STEPSelections_SequenceOfAssemblyLink & Other);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: STEPSelections_SequenceOfAssemblyLink &
-	:rtype: STEPSelections_SequenceOfAssemblyLink
-") Assign;
-		const STEPSelections_SequenceOfAssemblyLink & Assign (const STEPSelections_SequenceOfAssemblyLink & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: STEPSelections_SequenceOfAssemblyLink &
-	:rtype: STEPSelections_SequenceOfAssemblyLink
-") operator =;
-		const STEPSelections_SequenceOfAssemblyLink & operator = (const STEPSelections_SequenceOfAssemblyLink & Other);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param T:
-	:type T: Handle_STEPSelections_AssemblyLink &
-	:rtype: None
-") Append;
-		void Append (const Handle_STEPSelections_AssemblyLink & T);
-		%feature("compactdefaultargs") Append;
-		%feature("autodoc", "	:param S:
-	:type S: STEPSelections_SequenceOfAssemblyLink &
-	:rtype: None
-") Append;
-		void Append (STEPSelections_SequenceOfAssemblyLink & S);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param T:
-	:type T: Handle_STEPSelections_AssemblyLink &
-	:rtype: None
-") Prepend;
-		void Prepend (const Handle_STEPSelections_AssemblyLink & T);
-		%feature("compactdefaultargs") Prepend;
-		%feature("autodoc", "	:param S:
-	:type S: STEPSelections_SequenceOfAssemblyLink &
-	:rtype: None
-") Prepend;
-		void Prepend (STEPSelections_SequenceOfAssemblyLink & S);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: Handle_STEPSelections_AssemblyLink &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,const Handle_STEPSelections_AssemblyLink & T);
-		%feature("compactdefaultargs") InsertBefore;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: STEPSelections_SequenceOfAssemblyLink &
-	:rtype: None
-") InsertBefore;
-		void InsertBefore (const Standard_Integer Index,STEPSelections_SequenceOfAssemblyLink & S);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param T:
-	:type T: Handle_STEPSelections_AssemblyLink &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,const Handle_STEPSelections_AssemblyLink & T);
-		%feature("compactdefaultargs") InsertAfter;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param S:
-	:type S: STEPSelections_SequenceOfAssemblyLink &
-	:rtype: None
-") InsertAfter;
-		void InsertAfter (const Standard_Integer Index,STEPSelections_SequenceOfAssemblyLink & S);
-		%feature("compactdefaultargs") First;
-		%feature("autodoc", "	:rtype: Handle_STEPSelections_AssemblyLink
-") First;
-		Handle_STEPSelections_AssemblyLink First ();
-		%feature("compactdefaultargs") Last;
-		%feature("autodoc", "	:rtype: Handle_STEPSelections_AssemblyLink
-") Last;
-		Handle_STEPSelections_AssemblyLink Last ();
-		%feature("compactdefaultargs") Split;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param Sub:
-	:type Sub: STEPSelections_SequenceOfAssemblyLink &
-	:rtype: None
-") Split;
-		void Split (const Standard_Integer Index,STEPSelections_SequenceOfAssemblyLink & Sub);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Handle_STEPSelections_AssemblyLink
-") Value;
-		Handle_STEPSelections_AssemblyLink Value (const Standard_Integer Index);
-		%feature("compactdefaultargs") SetValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:param I:
-	:type I: Handle_STEPSelections_AssemblyLink &
-	:rtype: None
-") SetValue;
-		void SetValue (const Standard_Integer Index,const Handle_STEPSelections_AssemblyLink & I);
-		%feature("compactdefaultargs") ChangeValue;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: Handle_STEPSelections_AssemblyLink
-") ChangeValue;
-		Handle_STEPSelections_AssemblyLink ChangeValue (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param Index:
-	:type Index: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer Index);
-		%feature("compactdefaultargs") Remove;
-		%feature("autodoc", "	:param FromIndex:
-	:type FromIndex: int
-	:param ToIndex:
-	:type ToIndex: int
-	:rtype: None
-") Remove;
-		void Remove (const Standard_Integer FromIndex,const Standard_Integer ToIndex);
-};
-
-
-%extend STEPSelections_SequenceOfAssemblyLink {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};

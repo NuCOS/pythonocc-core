@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,15 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define XMLMDOCSTDDOCSTRING
-"Driver for TDocStd_XLink
-"
+"XmlMDocStd module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_xmlmdocstd.html"
 %enddef
 %module (package="OCC.Core", docstring=XMLMDOCSTDDOCSTRING) XmlMDocStd
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -38,29 +35,74 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/OccHandle.i
 
 
-%include XmlMDocStd_headers.i
+%{
+#include<XmlMDocStd_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<XmlMDF_module.hxx>
+#include<Message_module.hxx>
+#include<TDF_module.hxx>
+#include<XmlObjMgt_module.hxx>
+#include<Resource_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+%import XmlMDF.i
+%import Message.i
+%import TDF.i
+%import XmlObjMgt.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 /* end public enums declaration */
 
-%wrap_handle(XmlMDocStd_XLinkDriver)
+/* python proy classes for enums */
+%pythoncode {
+};
+/* end python proxy for enums */
 
+/* handles */
+%wrap_handle(XmlMDocStd_XLinkDriver)
+/* end handles declaration */
+
+/* templates */
+/* end templates declaration */
+
+/* typedefs */
+/* end typedefs declaration */
+
+/*******************
+* class XmlMDocStd *
+*******************/
 %rename(xmlmdocstd) XmlMDocStd;
 class XmlMDocStd {
 	public:
+		/****************** AddDrivers ******************/
+		/**** md5 signature: a036f2e24a6710bf8e540cdbbab785d0 ****/
 		%feature("compactdefaultargs") AddDrivers;
-		%feature("autodoc", "	* Adds the attribute drivers to <aDriverTable>.
+		%feature("autodoc", "Adds the attribute drivers to <adrivertable>.
 
-	:param aDriverTable:
-	:type aDriverTable: Handle_XmlMDF_ADriverTable &
-	:param theMessageDriver:
-	:type theMessageDriver: Handle_CDM_MessageDriver &
-	:rtype: void
+Parameters
+----------
+aDriverTable: XmlMDF_ADriverTable
+theMessageDriver: Message_Messenger
+
+Returns
+-------
+None
 ") AddDrivers;
-		static void AddDrivers (const Handle_XmlMDF_ADriverTable & aDriverTable,const Handle_CDM_MessageDriver & theMessageDriver);
+		static void AddDrivers(const opencascade::handle<XmlMDF_ADriverTable> & aDriverTable, const opencascade::handle<Message_Messenger> & theMessageDriver);
+
 };
 
 
@@ -69,39 +111,72 @@ class XmlMDocStd {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor XmlMDocStd_XLinkDriver;
+
+/*******************************
+* class XmlMDocStd_XLinkDriver *
+*******************************/
 class XmlMDocStd_XLinkDriver : public XmlMDF_ADriver {
 	public:
+		/****************** XmlMDocStd_XLinkDriver ******************/
+		/**** md5 signature: 3b002c49904579fe30462df9b4202f0f ****/
 		%feature("compactdefaultargs") XmlMDocStd_XLinkDriver;
-		%feature("autodoc", "	:param theMessageDriver:
-	:type theMessageDriver: Handle_CDM_MessageDriver &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+theMessageDriver: Message_Messenger
+
+Returns
+-------
+None
 ") XmlMDocStd_XLinkDriver;
-		 XmlMDocStd_XLinkDriver (const Handle_CDM_MessageDriver & theMessageDriver);
+		 XmlMDocStd_XLinkDriver(const opencascade::handle<Message_Messenger> & theMessageDriver);
+
+		/****************** NewEmpty ******************/
+		/**** md5 signature: c6d13c9ecc64c6c803b6e119e8216934 ****/
 		%feature("compactdefaultargs") NewEmpty;
-		%feature("autodoc", "	:rtype: Handle_TDF_Attribute
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<TDF_Attribute>
 ") NewEmpty;
-		Handle_TDF_Attribute NewEmpty ();
+		opencascade::handle<TDF_Attribute> NewEmpty();
+
+		/****************** Paste ******************/
+		/**** md5 signature: 3dd41285e4a0d4dafa2b2b321d4fcc26 ****/
 		%feature("compactdefaultargs") Paste;
-		%feature("autodoc", "	:param Source:
-	:type Source: XmlObjMgt_Persistent &
-	:param Target:
-	:type Target: Handle_TDF_Attribute &
-	:param RelocTable:
-	:type RelocTable: XmlObjMgt_RRelocationTable &
-	:rtype: bool
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Source: XmlObjMgt_Persistent
+Target: TDF_Attribute
+RelocTable: XmlObjMgt_RRelocationTable
+
+Returns
+-------
+bool
 ") Paste;
-		Standard_Boolean Paste (const XmlObjMgt_Persistent & Source,const Handle_TDF_Attribute & Target,XmlObjMgt_RRelocationTable & RelocTable);
+		Standard_Boolean Paste(const XmlObjMgt_Persistent & Source, const opencascade::handle<TDF_Attribute> & Target, XmlObjMgt_RRelocationTable & RelocTable);
+
+		/****************** Paste ******************/
+		/**** md5 signature: bfb59b0a8136ec850943b5ad7848f316 ****/
 		%feature("compactdefaultargs") Paste;
-		%feature("autodoc", "	:param Source:
-	:type Source: Handle_TDF_Attribute &
-	:param Target:
-	:type Target: XmlObjMgt_Persistent &
-	:param RelocTable:
-	:type RelocTable: XmlObjMgt_SRelocationTable &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Source: TDF_Attribute
+Target: XmlObjMgt_Persistent
+RelocTable: XmlObjMgt_SRelocationTable
+
+Returns
+-------
+None
 ") Paste;
-		void Paste (const Handle_TDF_Attribute & Source,XmlObjMgt_Persistent & Target,XmlObjMgt_SRelocationTable & RelocTable);
+		void Paste(const opencascade::handle<TDF_Attribute> & Source, XmlObjMgt_Persistent & Target, XmlObjMgt_SRelocationTable & RelocTable);
+
 };
 
 
@@ -112,3 +187,7 @@ class XmlMDocStd_XLinkDriver : public XmlMDF_ADriver {
 	__repr__ = _dumps_object
 	}
 };
+
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */

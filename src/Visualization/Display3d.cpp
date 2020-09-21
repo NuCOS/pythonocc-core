@@ -20,28 +20,16 @@
 #include "Visualization.h"
 
 
-Display3d::Display3d()
-  : myIsOffscreen(false)
-{
-}
-
-Display3d::~Display3d()
-{
-}
-
 static Handle(OpenGl_GraphicDriver)& GetGraphicDriver()
 {
   static Handle(OpenGl_GraphicDriver) aGraphicDriver;
   return aGraphicDriver;
 }
 
-//=========================================================
-// Function : WClass
-// Purpose  :
-//=========================================================
-static const Handle(MMgt_TShared)& WClass()
+
+static const Handle(Standard_Transient)& WClass()
 {
-  static Handle(MMgt_TShared) aWindowClass;
+  static Handle(Standard_Transient) aWindowClass;
 #ifdef WNT
   if (aWindowClass.IsNull())
   {
@@ -53,24 +41,21 @@ static const Handle(MMgt_TShared)& WClass()
   return aWindowClass;
 }
 
-
-Standard_Boolean Display3d::InitOffscreen(int size_x, int size_y)
+Display3d::Display3d()
+  : myIsOffscreen(false), mySizeX(0), mySizeY(0)
 {
   printf(" ###### 3D rendering pipe initialisation #####\n");
   printf("Display3d class initialization starting ...\n");
-
-  myIsOffscreen = true;
-
   // Create graphic driver
   Handle(Aspect_DisplayConnection) aDisplayConnection = new Aspect_DisplayConnection();
   printf("Aspect_DisplayConnection created.\n");
   if (GetGraphicDriver().IsNull())
   {
-    GetGraphicDriver() = new OpenGl_GraphicDriver (aDisplayConnection);
+  GetGraphicDriver() = new OpenGl_GraphicDriver(aDisplayConnection);
   }
   printf("Graphic_Driver created.\n");
   // Create V3dViewer and V3d_View
-  myV3dViewer = new V3d_Viewer(GetGraphicDriver(), (short* const)"viewer");
+  myV3dViewer = new V3d_Viewer(GetGraphicDriver());
   printf("V3d_Viewer created.\n");
   // Create AISInteractiveViewer
   myAISContext = new AIS_InteractiveContext(myV3dViewer);
@@ -78,7 +63,15 @@ Standard_Boolean Display3d::InitOffscreen(int size_x, int size_y)
   // Create view
   myV3dView = myV3dViewer->CreateView();  
   printf("V3d_View created\n");
+}
 
+Display3d::~Display3d()
+{
+}
+
+Standard_Boolean Display3d::InitOffscreen(int size_x, int size_y)
+{
+  myIsOffscreen = true;
   SetSize(size_x, size_y);
 
   printf("Display3d class successfully initialized.\n");
@@ -99,24 +92,24 @@ Standard_Boolean Display3d::SetSize(int size_x, int size_y)
     mySizeY = size_y;
 
 #ifdef WNT
-      myWindow = new WNT_Window ("Python OCC",
-                                    Handle(WNT_WClass)::DownCast (WClass()),
-                                    WS_OVERLAPPEDWINDOW,
-                                    0, 0,
-                                    size_x, size_y,
-                                    Quantity_NOC_BLACK);
+      myWindow = new WNT_Window("PythonOCC",
+                                Handle(WNT_WClass)::DownCast (WClass()),
+                                WS_OVERLAPPEDWINDOW,
+                                0, 0,
+                                size_x, size_y,
+                                Quantity_NOC_BLACK);
       myWindow->SetVirtual (true);
 #elif defined(__APPLE__) && !defined(MACOSX_USE_GLX)
-      myWindow = new Cocoa_Window("Python OCC",
+      myWindow = new Cocoa_Window("PythonOCC",
                                   0, 0,
                                   size_x, size_y);
       printf("Cocoa window created.\n");
       myWindow->SetVirtual (true);
 #else
-      myWindow = new Xw_Window (myAISContext->CurrentViewer()->Driver()->GetDisplayConnection(),
-                                   "Python OCC",
-                                   0, 0,
-                                   size_x, size_y);
+      myWindow = new Xw_Window(myAISContext->CurrentViewer()->Driver()->GetDisplayConnection(),
+                               "PythonOCC",
+                               0, 0,
+                               size_x, size_y);
       myWindow->SetVirtual (true);
 #endif
     myV3dView->SetWindow(myWindow);
@@ -153,25 +146,6 @@ Standard_Boolean Display3d::GetImageData(const char* &data, size_t &size, const 
 
 void Display3d::Init(long window_handle)
 {
-  printf(" ###### 3D rendering pipe initialisation #####\n");
-	printf("Display3d class initialization starting ...\n");
-	// Create graphic driver
-  Handle(Aspect_DisplayConnection) aDisplayConnection = new Aspect_DisplayConnection();
-  printf("Aspect_DisplayConnection created.\n");
-  if (GetGraphicDriver().IsNull())
-  {
-  GetGraphicDriver() = new OpenGl_GraphicDriver (aDisplayConnection);
-  }
-  printf("Graphic_Driver created.\n");
-  // Create V3dViewer and V3d_View
-  myV3dViewer = new V3d_Viewer(GetGraphicDriver(), (short* const)"viewer");
-  printf("V3d_Viewer created.\n");
-  // Create AISInteractiveViewer
-  myAISContext = new AIS_InteractiveContext(myV3dViewer);
-  printf("AIS_InteractiveContext created.\n");
-  // Create view
-  myV3dView = myV3dViewer->CreateView();	
-  printf("V3d_View created\n");
   // Create Graphic Window
   #ifdef WNT
       myWindow = new WNT_Window((Aspect_Handle) window_handle);
@@ -187,7 +161,7 @@ void Display3d::Init(long window_handle)
   myV3dView->SetWindow(myWindow);
   if (!myWindow->IsMapped()) myWindow->Map();
   printf("Display3d class successfully initialized.\n");
-	printf(" ########################################\n");
+  printf(" ########################################\n");
 }
 
 void Display3d::ChangeRenderingParams(int Method,
@@ -213,13 +187,20 @@ void Display3d::ChangeRenderingParams(int Method,
   myV3dView->Redraw();
 }
 
+
+void Display3d::SetNbMsaaSample(int nb)
+{
+  Graphic3d_RenderingParams& aParams = myV3dView->ChangeRenderingParams();
+  aParams.NbMsaaSamples = nb;
+  myV3dView->Redraw();
+}
+
 void Display3d::SetAnaglyphMode(int mode)
 {
   Handle(Graphic3d_Camera) aCamera = myV3dView->Camera();
-  Graphic3d_RenderingParams*   aParams   = &myV3dView->ChangeRenderingParams();
+  Graphic3d_RenderingParams* aParams = &myV3dView->ChangeRenderingParams();
   
   aParams->StereoMode = Graphic3d_StereoMode_Anaglyph;
-  //aParams->AnaglyphFilter = Graphic3d_RenderingParams::Anaglyph_RedCyan_Simple;
   aParams->AnaglyphFilter = (Graphic3d_RenderingParams::Anaglyph)mode;
 
   GetGraphicDriver()->ChangeOptions().contextStereo = true;
@@ -227,12 +208,12 @@ void Display3d::SetAnaglyphMode(int mode)
   myV3dView->Redraw();
 }
 
-void Display3d::SetVBBO()
+void Display3d::EnableVBO()
 {
   GetGraphicDriver()->ChangeOptions().vboDisable = false;
 }
 
-void Display3d::UnsetVBBO()
+void Display3d::DisableVBO()
 {
   GetGraphicDriver()->ChangeOptions().vboDisable = true;
 }
@@ -241,7 +222,7 @@ void Display3d::Test()
 {
       BRepPrimAPI_MakeBox S(100,50,40);
       Handle(AIS_Shape) anAISShape = new AIS_Shape(S.Shape());
-      myAISContext->Display(anAISShape);
+      myAISContext->Display(anAISShape, Standard_False);
       myV3dView->ZFitAll();
       myV3dView->FitAll();
 }

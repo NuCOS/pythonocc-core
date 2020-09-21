@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,22 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define BREPPROJDOCSTRING
-"The BRepProj  package provides  Projection
-Algorithms   like Cylindrical  and Conical
-Projections. Those algorithms have been put in an
-independant package  instead of BRepAlgo  (like
-NormalProjection) because of cyclic reference with
-BRepFill. So this package is not available for
-the moment to BRepFill.
-
-"
+"BRepProj module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_brepproj.html"
 %enddef
 %module (package="OCC.Core", docstring=BREPPROJDOCSTRING) BRepProj
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -45,78 +35,153 @@ the moment to BRepFill.
 %include ../common/OccHandle.i
 
 
-%include BRepProj_headers.i
+%{
+#include<BRepProj_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<TopoDS_module.hxx>
+#include<gp_module.hxx>
+#include<TopLoc_module.hxx>
+#include<Message_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+%import TopoDS.i
+%import gp.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 /* end public enums declaration */
 
+/* python proy classes for enums */
+%pythoncode {
+};
+/* end python proxy for enums */
 
-%nodefaultctor BRepProj_Projection;
+/* handles */
+/* end handles declaration */
+
+/* templates */
+/* end templates declaration */
+
+/* typedefs */
+/* end typedefs declaration */
+
+/****************************
+* class BRepProj_Projection *
+****************************/
 class BRepProj_Projection {
 	public:
+		/****************** BRepProj_Projection ******************/
+		/**** md5 signature: 05a528b4fa808ed3e5606951be3f247c ****/
 		%feature("compactdefaultargs") BRepProj_Projection;
-		%feature("autodoc", "	* Makes a Cylindrical projection of Wire om Shape
+		%feature("autodoc", "Makes a cylindrical projection of wire om shape.
 
-	:param Wire:
-	:type Wire: TopoDS_Shape &
-	:param Shape:
-	:type Shape: TopoDS_Shape &
-	:param D:
-	:type D: gp_Dir
-	:rtype: None
+Parameters
+----------
+Wire: TopoDS_Shape
+Shape: TopoDS_Shape
+D: gp_Dir
+
+Returns
+-------
+None
 ") BRepProj_Projection;
-		 BRepProj_Projection (const TopoDS_Shape & Wire,const TopoDS_Shape & Shape,const gp_Dir & D);
+		 BRepProj_Projection(const TopoDS_Shape & Wire, const TopoDS_Shape & Shape, const gp_Dir & D);
+
+		/****************** BRepProj_Projection ******************/
+		/**** md5 signature: 66694c5d0609b9bd950faaceb10748b1 ****/
 		%feature("compactdefaultargs") BRepProj_Projection;
-		%feature("autodoc", "	* Makes a Conical projection of Wire om Shape
+		%feature("autodoc", "Makes a conical projection of wire om shape.
 
-	:param Wire:
-	:type Wire: TopoDS_Shape &
-	:param Shape:
-	:type Shape: TopoDS_Shape &
-	:param P:
-	:type P: gp_Pnt
-	:rtype: None
+Parameters
+----------
+Wire: TopoDS_Shape
+Shape: TopoDS_Shape
+P: gp_Pnt
+
+Returns
+-------
+None
 ") BRepProj_Projection;
-		 BRepProj_Projection (const TopoDS_Shape & Wire,const TopoDS_Shape & Shape,const gp_Pnt & P);
-		%feature("compactdefaultargs") IsDone;
-		%feature("autodoc", "	* returns False if the section failed
+		 BRepProj_Projection(const TopoDS_Shape & Wire, const TopoDS_Shape & Shape, const gp_Pnt & P);
 
-	:rtype: bool
-") IsDone;
-		Standard_Boolean IsDone ();
-		%feature("compactdefaultargs") Init;
-		%feature("autodoc", "	* Resets the iterator by resulting wires.
-
-	:rtype: None
-") Init;
-		void Init ();
-		%feature("compactdefaultargs") More;
-		%feature("autodoc", "	* Returns True if there is a current result wire
-
-	:rtype: bool
-") More;
-		Standard_Boolean More ();
-		%feature("compactdefaultargs") Next;
-		%feature("autodoc", "	* Move to the next result wire.
-
-	:rtype: None
-") Next;
-		void Next ();
+		/****************** Current ******************/
+		/**** md5 signature: f1373d555d44b8af5f09b63aa71dbac4 ****/
 		%feature("compactdefaultargs") Current;
-		%feature("autodoc", "	* Returns the current result wire.
+		%feature("autodoc", "Returns the current result wire.
 
-	:rtype: TopoDS_Wire
+Returns
+-------
+TopoDS_Wire
 ") Current;
-		TopoDS_Wire Current ();
-		%feature("compactdefaultargs") Shape;
-		%feature("autodoc", "	* Returns the complete result as compound of wires.
+		TopoDS_Wire Current();
 
-	:rtype: TopoDS_Compound
+		/****************** Init ******************/
+		/**** md5 signature: 0de93ef32c53d091768788dca0e281fd ****/
+		%feature("compactdefaultargs") Init;
+		%feature("autodoc", "Resets the iterator by resulting wires.
+
+Returns
+-------
+None
+") Init;
+		void Init();
+
+		/****************** IsDone ******************/
+		/**** md5 signature: ec0624071ec7da54b3d9dacc7bcb05f9 ****/
+		%feature("compactdefaultargs") IsDone;
+		%feature("autodoc", "Returns false if the section failed.
+
+Returns
+-------
+bool
+") IsDone;
+		Standard_Boolean IsDone();
+
+		/****************** More ******************/
+		/**** md5 signature: 6f6e915c9a3dca758c059d9e8af02dff ****/
+		%feature("compactdefaultargs") More;
+		%feature("autodoc", "Returns true if there is a current result wire.
+
+Returns
+-------
+bool
+") More;
+		Standard_Boolean More();
+
+		/****************** Next ******************/
+		/**** md5 signature: f35c0df5f1d7c877986db18081404532 ****/
+		%feature("compactdefaultargs") Next;
+		%feature("autodoc", "Move to the next result wire.
+
+Returns
+-------
+None
+") Next;
+		void Next();
+
+		/****************** Shape ******************/
+		/**** md5 signature: 1b3c03b494fbe92ca2dc8e2599c5e3a1 ****/
+		%feature("compactdefaultargs") Shape;
+		%feature("autodoc", "Returns the complete result as compound of wires.
+
+Returns
+-------
+TopoDS_Compound
 ") Shape;
-		TopoDS_Compound Shape ();
+		TopoDS_Compound Shape();
+
 };
 
 
@@ -125,3 +190,7 @@ class BRepProj_Projection {
 	__repr__ = _dumps_object
 	}
 };
+
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */

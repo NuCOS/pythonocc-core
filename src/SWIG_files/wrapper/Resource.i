@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,16 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define RESOURCEDOCSTRING
-"A RESOURCE is a parameter saved on a file and used to
-initialize a variable.
-"
+"Resource module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_resource.html"
 %enddef
 %module (package="OCC.Core", docstring=RESOURCEDOCSTRING) Resource
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -39,340 +35,118 @@ initialize a variable.
 %include ../common/OccHandle.i
 
 
-%include Resource_headers.i
+%{
+#include<Resource_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<TCollection_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+%import TCollection.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 enum Resource_FormatType {
-	Resource_SJIS = 0,
-	Resource_EUC = 1,
-	Resource_ANSI = 2,
-	Resource_GB = 3,
+	Resource_FormatType_SJIS = 0,
+	Resource_FormatType_EUC = 1,
+	Resource_FormatType_ANSI = 2,
+	Resource_FormatType_GB = 3,
+	Resource_FormatType_UTF8 = 4,
+	Resource_FormatType_SystemLocale = 5,
+	Resource_SJIS = Resource_FormatType_SJIS,
+	Resource_EUC = Resource_FormatType_EUC,
+	Resource_ANSI = Resource_FormatType_ANSI,
+	Resource_GB = Resource_FormatType_GB,
 };
 
 /* end public enums declaration */
 
-%wrap_handle(Resource_DataMapNodeOfDataMapOfAsciiStringAsciiString)
-%wrap_handle(Resource_DataMapNodeOfDataMapOfAsciiStringExtendedString)
+/* python proy classes for enums */
+%pythoncode {
+
+class Resource_FormatType(IntEnum):
+	Resource_FormatType_SJIS = 0
+	Resource_FormatType_EUC = 1
+	Resource_FormatType_ANSI = 2
+	Resource_FormatType_GB = 3
+	Resource_FormatType_UTF8 = 4
+	Resource_FormatType_SystemLocale = 5
+	Resource_SJIS = Resource_FormatType_SJIS
+	Resource_EUC = Resource_FormatType_EUC
+	Resource_ANSI = Resource_FormatType_ANSI
+	Resource_GB = Resource_FormatType_GB
+Resource_FormatType_SJIS = Resource_FormatType.Resource_FormatType_SJIS
+Resource_FormatType_EUC = Resource_FormatType.Resource_FormatType_EUC
+Resource_FormatType_ANSI = Resource_FormatType.Resource_FormatType_ANSI
+Resource_FormatType_GB = Resource_FormatType.Resource_FormatType_GB
+Resource_FormatType_UTF8 = Resource_FormatType.Resource_FormatType_UTF8
+Resource_FormatType_SystemLocale = Resource_FormatType.Resource_FormatType_SystemLocale
+Resource_SJIS = Resource_FormatType.Resource_SJIS
+Resource_EUC = Resource_FormatType.Resource_EUC
+Resource_ANSI = Resource_FormatType.Resource_ANSI
+Resource_GB = Resource_FormatType.Resource_GB
+};
+/* end python proxy for enums */
+
+/* handles */
 %wrap_handle(Resource_Manager)
+/* end handles declaration */
 
-%nodefaultctor Resource_DataMapIteratorOfDataMapOfAsciiStringAsciiString;
-class Resource_DataMapIteratorOfDataMapOfAsciiStringAsciiString : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") Resource_DataMapIteratorOfDataMapOfAsciiStringAsciiString;
-		%feature("autodoc", "	:rtype: None
-") Resource_DataMapIteratorOfDataMapOfAsciiStringAsciiString;
-		 Resource_DataMapIteratorOfDataMapOfAsciiStringAsciiString ();
-		%feature("compactdefaultargs") Resource_DataMapIteratorOfDataMapOfAsciiStringAsciiString;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: Resource_DataMapOfAsciiStringAsciiString &
-	:rtype: None
-") Resource_DataMapIteratorOfDataMapOfAsciiStringAsciiString;
-		 Resource_DataMapIteratorOfDataMapOfAsciiStringAsciiString (const Resource_DataMapOfAsciiStringAsciiString & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: Resource_DataMapOfAsciiStringAsciiString &
-	:rtype: None
-") Initialize;
-		void Initialize (const Resource_DataMapOfAsciiStringAsciiString & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: TCollection_AsciiString
-") Key;
-		const TCollection_AsciiString & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TCollection_AsciiString
-") Value;
-		const TCollection_AsciiString & Value ();
-};
+/* templates */
+%template(Resource_DataMapOfAsciiStringAsciiString) NCollection_DataMap<TCollection_AsciiString,TCollection_AsciiString,TCollection_AsciiString>;
+%template(Resource_DataMapOfAsciiStringExtendedString) NCollection_DataMap<TCollection_AsciiString,TCollection_ExtendedString,TCollection_AsciiString>;
+/* end templates declaration */
 
+/* typedefs */
+typedef NCollection_DataMap<TCollection_AsciiString, TCollection_AsciiString, TCollection_AsciiString>::Iterator Resource_DataMapIteratorOfDataMapOfAsciiStringAsciiString;
+typedef NCollection_DataMap<TCollection_AsciiString, TCollection_ExtendedString, TCollection_AsciiString>::Iterator Resource_DataMapIteratorOfDataMapOfAsciiStringExtendedString;
+typedef NCollection_DataMap<TCollection_AsciiString, TCollection_AsciiString, TCollection_AsciiString> Resource_DataMapOfAsciiStringAsciiString;
+typedef NCollection_DataMap<TCollection_AsciiString, TCollection_ExtendedString, TCollection_AsciiString> Resource_DataMapOfAsciiStringExtendedString;
+/* end typedefs declaration */
 
-%extend Resource_DataMapIteratorOfDataMapOfAsciiStringAsciiString {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor Resource_DataMapIteratorOfDataMapOfAsciiStringExtendedString;
-class Resource_DataMapIteratorOfDataMapOfAsciiStringExtendedString : public TCollection_BasicMapIterator {
-	public:
-		%feature("compactdefaultargs") Resource_DataMapIteratorOfDataMapOfAsciiStringExtendedString;
-		%feature("autodoc", "	:rtype: None
-") Resource_DataMapIteratorOfDataMapOfAsciiStringExtendedString;
-		 Resource_DataMapIteratorOfDataMapOfAsciiStringExtendedString ();
-		%feature("compactdefaultargs") Resource_DataMapIteratorOfDataMapOfAsciiStringExtendedString;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: Resource_DataMapOfAsciiStringExtendedString &
-	:rtype: None
-") Resource_DataMapIteratorOfDataMapOfAsciiStringExtendedString;
-		 Resource_DataMapIteratorOfDataMapOfAsciiStringExtendedString (const Resource_DataMapOfAsciiStringExtendedString & aMap);
-		%feature("compactdefaultargs") Initialize;
-		%feature("autodoc", "	:param aMap:
-	:type aMap: Resource_DataMapOfAsciiStringExtendedString &
-	:rtype: None
-") Initialize;
-		void Initialize (const Resource_DataMapOfAsciiStringExtendedString & aMap);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: TCollection_AsciiString
-") Key;
-		const TCollection_AsciiString & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TCollection_ExtendedString
-") Value;
-		const TCollection_ExtendedString & Value ();
-};
-
-
-%extend Resource_DataMapIteratorOfDataMapOfAsciiStringExtendedString {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor Resource_DataMapNodeOfDataMapOfAsciiStringAsciiString;
-class Resource_DataMapNodeOfDataMapOfAsciiStringAsciiString : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") Resource_DataMapNodeOfDataMapOfAsciiStringAsciiString;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:param I:
-	:type I: TCollection_AsciiString &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") Resource_DataMapNodeOfDataMapOfAsciiStringAsciiString;
-		 Resource_DataMapNodeOfDataMapOfAsciiStringAsciiString (const TCollection_AsciiString & K,const TCollection_AsciiString & I,const TCollection_MapNodePtr & n);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: TCollection_AsciiString
-") Key;
-		TCollection_AsciiString & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TCollection_AsciiString
-") Value;
-		TCollection_AsciiString & Value ();
-};
-
-
-%make_alias(Resource_DataMapNodeOfDataMapOfAsciiStringAsciiString)
-
-%extend Resource_DataMapNodeOfDataMapOfAsciiStringAsciiString {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor Resource_DataMapNodeOfDataMapOfAsciiStringExtendedString;
-class Resource_DataMapNodeOfDataMapOfAsciiStringExtendedString : public TCollection_MapNode {
-	public:
-		%feature("compactdefaultargs") Resource_DataMapNodeOfDataMapOfAsciiStringExtendedString;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:param I:
-	:type I: TCollection_ExtendedString &
-	:param n:
-	:type n: TCollection_MapNodePtr &
-	:rtype: None
-") Resource_DataMapNodeOfDataMapOfAsciiStringExtendedString;
-		 Resource_DataMapNodeOfDataMapOfAsciiStringExtendedString (const TCollection_AsciiString & K,const TCollection_ExtendedString & I,const TCollection_MapNodePtr & n);
-		%feature("compactdefaultargs") Key;
-		%feature("autodoc", "	:rtype: TCollection_AsciiString
-") Key;
-		TCollection_AsciiString & Key ();
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	:rtype: TCollection_ExtendedString
-") Value;
-		TCollection_ExtendedString & Value ();
-};
-
-
-%make_alias(Resource_DataMapNodeOfDataMapOfAsciiStringExtendedString)
-
-%extend Resource_DataMapNodeOfDataMapOfAsciiStringExtendedString {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor Resource_DataMapOfAsciiStringAsciiString;
-class Resource_DataMapOfAsciiStringAsciiString : public TCollection_BasicMap {
-	public:
-		%feature("compactdefaultargs") Resource_DataMapOfAsciiStringAsciiString;
-		%feature("autodoc", "	:param NbBuckets: default value is 1
-	:type NbBuckets: int
-	:rtype: None
-") Resource_DataMapOfAsciiStringAsciiString;
-		 Resource_DataMapOfAsciiStringAsciiString (const Standard_Integer NbBuckets = 1);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: Resource_DataMapOfAsciiStringAsciiString &
-	:rtype: Resource_DataMapOfAsciiStringAsciiString
-") Assign;
-		Resource_DataMapOfAsciiStringAsciiString & Assign (const Resource_DataMapOfAsciiStringAsciiString & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: Resource_DataMapOfAsciiStringAsciiString &
-	:rtype: Resource_DataMapOfAsciiStringAsciiString
-") operator =;
-		Resource_DataMapOfAsciiStringAsciiString & operator = (const Resource_DataMapOfAsciiStringAsciiString & Other);
-		%feature("compactdefaultargs") ReSize;
-		%feature("autodoc", "	:param NbBuckets:
-	:type NbBuckets: int
-	:rtype: None
-") ReSize;
-		void ReSize (const Standard_Integer NbBuckets);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:param I:
-	:type I: TCollection_AsciiString &
-	:rtype: bool
-") Bind;
-		Standard_Boolean Bind (const TCollection_AsciiString & K,const TCollection_AsciiString & I);
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const TCollection_AsciiString & K);
-		%feature("compactdefaultargs") UnBind;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:rtype: bool
-") UnBind;
-		Standard_Boolean UnBind (const TCollection_AsciiString & K);
-		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:rtype: TCollection_AsciiString
-") Find;
-		const TCollection_AsciiString & Find (const TCollection_AsciiString & K);
-		%feature("compactdefaultargs") ChangeFind;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:rtype: TCollection_AsciiString
-") ChangeFind;
-		TCollection_AsciiString & ChangeFind (const TCollection_AsciiString & K);
-		%feature("compactdefaultargs") Find1;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:rtype: Standard_Address
-") Find1;
-		Standard_Address Find1 (const TCollection_AsciiString & K);
-		%feature("compactdefaultargs") ChangeFind1;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:rtype: Standard_Address
-") ChangeFind1;
-		Standard_Address ChangeFind1 (const TCollection_AsciiString & K);
-};
-
-
-%extend Resource_DataMapOfAsciiStringAsciiString {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor Resource_DataMapOfAsciiStringExtendedString;
-class Resource_DataMapOfAsciiStringExtendedString : public TCollection_BasicMap {
-	public:
-		%feature("compactdefaultargs") Resource_DataMapOfAsciiStringExtendedString;
-		%feature("autodoc", "	:param NbBuckets: default value is 1
-	:type NbBuckets: int
-	:rtype: None
-") Resource_DataMapOfAsciiStringExtendedString;
-		 Resource_DataMapOfAsciiStringExtendedString (const Standard_Integer NbBuckets = 1);
-		%feature("compactdefaultargs") Assign;
-		%feature("autodoc", "	:param Other:
-	:type Other: Resource_DataMapOfAsciiStringExtendedString &
-	:rtype: Resource_DataMapOfAsciiStringExtendedString
-") Assign;
-		Resource_DataMapOfAsciiStringExtendedString & Assign (const Resource_DataMapOfAsciiStringExtendedString & Other);
-		%feature("compactdefaultargs") operator =;
-		%feature("autodoc", "	:param Other:
-	:type Other: Resource_DataMapOfAsciiStringExtendedString &
-	:rtype: Resource_DataMapOfAsciiStringExtendedString
-") operator =;
-		Resource_DataMapOfAsciiStringExtendedString & operator = (const Resource_DataMapOfAsciiStringExtendedString & Other);
-		%feature("compactdefaultargs") ReSize;
-		%feature("autodoc", "	:param NbBuckets:
-	:type NbBuckets: int
-	:rtype: None
-") ReSize;
-		void ReSize (const Standard_Integer NbBuckets);
-		%feature("compactdefaultargs") Clear;
-		%feature("autodoc", "	:rtype: None
-") Clear;
-		void Clear ();
-		%feature("compactdefaultargs") Bind;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:param I:
-	:type I: TCollection_ExtendedString &
-	:rtype: bool
-") Bind;
-		Standard_Boolean Bind (const TCollection_AsciiString & K,const TCollection_ExtendedString & I);
-		%feature("compactdefaultargs") IsBound;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:rtype: bool
-") IsBound;
-		Standard_Boolean IsBound (const TCollection_AsciiString & K);
-		%feature("compactdefaultargs") UnBind;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:rtype: bool
-") UnBind;
-		Standard_Boolean UnBind (const TCollection_AsciiString & K);
-		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:rtype: TCollection_ExtendedString
-") Find;
-		const TCollection_ExtendedString & Find (const TCollection_AsciiString & K);
-		%feature("compactdefaultargs") ChangeFind;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:rtype: TCollection_ExtendedString
-") ChangeFind;
-		TCollection_ExtendedString & ChangeFind (const TCollection_AsciiString & K);
-		%feature("compactdefaultargs") Find1;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:rtype: Standard_Address
-") Find1;
-		Standard_Address Find1 (const TCollection_AsciiString & K);
-		%feature("compactdefaultargs") ChangeFind1;
-		%feature("autodoc", "	:param K:
-	:type K: TCollection_AsciiString &
-	:rtype: Standard_Address
-") ChangeFind1;
-		Standard_Address ChangeFind1 (const TCollection_AsciiString & K);
-};
-
-
-%extend Resource_DataMapOfAsciiStringExtendedString {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
-%nodefaultctor Resource_LexicalCompare;
+/********************************
+* class Resource_LexicalCompare *
+********************************/
 class Resource_LexicalCompare {
 	public:
+		/****************** Resource_LexicalCompare ******************/
+		/**** md5 signature: 43d39cb1a0a098b9254c491f2ca1c67a ****/
 		%feature("compactdefaultargs") Resource_LexicalCompare;
-		%feature("autodoc", "	:rtype: None
-") Resource_LexicalCompare;
-		 Resource_LexicalCompare ();
-		%feature("compactdefaultargs") IsLower;
-		%feature("autodoc", "	* Returns True if <Left> is lower than <Right>.
+		%feature("autodoc", "No available documentation.
 
-	:param Left:
-	:type Left: TCollection_AsciiString &
-	:param Right:
-	:type Right: TCollection_AsciiString &
-	:rtype: bool
+Returns
+-------
+None
+") Resource_LexicalCompare;
+		 Resource_LexicalCompare();
+
+		/****************** IsLower ******************/
+		/**** md5 signature: 18ef6ebb123c53ca5a6b5e0e6e18c888 ****/
+		%feature("compactdefaultargs") IsLower;
+		%feature("autodoc", "Returns true if <left> is lower than <right>.
+
+Parameters
+----------
+Left: TCollection_AsciiString
+Right: TCollection_AsciiString
+
+Returns
+-------
+bool
 ") IsLower;
-		Standard_Boolean IsLower (const TCollection_AsciiString & Left,const TCollection_AsciiString & Right);
+		Standard_Boolean IsLower(const TCollection_AsciiString & Left, const TCollection_AsciiString & Right);
+
 };
 
 
@@ -381,129 +155,215 @@ class Resource_LexicalCompare {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor Resource_Manager;
-class Resource_Manager : public MMgt_TShared {
+
+/*************************
+* class Resource_Manager *
+*************************/
+class Resource_Manager : public Standard_Transient {
 	public:
+		/****************** Resource_Manager ******************/
+		/**** md5 signature: 2c3dc4ee36f9982ef8c27d548accdc18 ****/
 		%feature("compactdefaultargs") Resource_Manager;
-		%feature("autodoc", "	* Create a Resource manager. Attempts to find the two following files: $CSF_`aName`Defaults/aName $CSF_`aName`UserDefaults/aName and load them respectively into a reference and a user resource structure. //! If CSF_ResourceVerbose defined, seeked files will be printed. //! FILE SYNTAX The syntax of a resource file is a sequence of resource lines terminated by newline characters or end of file. The syntax of an individual resource line is:
+		%feature("autodoc", "Create a resource manager. attempts to find the two following files: $csf_`aname`defaults/aname $csf_`aname`userdefaults/aname and load them respectively into a reference and a user resource structure. //! if csf_resourceverbose defined, seeked files will be printed. //! file syntax the syntax of a resource file is a sequence of resource lines terminated by newline characters or end of file. the syntax of an individual resource line is:.
 
-	:param aName:
-	:type aName: char *
-	:param Verbose: default value is Standard_False
-	:type Verbose: bool
-	:rtype: None
+Parameters
+----------
+aName: char *
+Verbose: bool,optional
+	default value is Standard_False
+
+Returns
+-------
+None
 ") Resource_Manager;
-		 Resource_Manager (const char * aName,const Standard_Boolean Verbose = Standard_False);
+		 Resource_Manager(const char * aName, const Standard_Boolean Verbose = Standard_False);
+
+		/****************** Resource_Manager ******************/
+		/**** md5 signature: ce1f4090aa08cbeae77bec1df4191dbe ****/
 		%feature("compactdefaultargs") Resource_Manager;
-		%feature("autodoc", "	:param aName:
-	:type aName: char *
-	:param aDefaultsDirectory:
-	:type aDefaultsDirectory: TCollection_AsciiString &
-	:param anUserDefaultsDirectory:
-	:type anUserDefaultsDirectory: TCollection_AsciiString &
-	:param Verbose: default value is Standard_False
-	:type Verbose: bool
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+aName: char *
+aDefaultsDirectory: TCollection_AsciiString
+anUserDefaultsDirectory: TCollection_AsciiString
+Verbose: bool,optional
+	default value is Standard_False
+
+Returns
+-------
+None
 ") Resource_Manager;
-		 Resource_Manager (const char * aName,TCollection_AsciiString & aDefaultsDirectory,TCollection_AsciiString & anUserDefaultsDirectory,const Standard_Boolean Verbose = Standard_False);
-		%feature("compactdefaultargs") Save;
-		%feature("autodoc", "	* Save the user resource structure in the specified file. Creates the file if it does not exist.
+		 Resource_Manager(const char * aName, TCollection_AsciiString & aDefaultsDirectory, TCollection_AsciiString & anUserDefaultsDirectory, const Standard_Boolean Verbose = Standard_False);
 
-	:rtype: bool
-") Save;
-		Standard_Boolean Save ();
-		%feature("compactdefaultargs") Find;
-		%feature("autodoc", "	* returns True if the Resource does exist.
-
-	:param aResource:
-	:type aResource: char *
-	:rtype: bool
-") Find;
-		Standard_Boolean Find (const char * aResource);
-		%feature("compactdefaultargs") Integer;
-		%feature("autodoc", "	* Gets the value of an integer resource according to its instance and its type.
-
-	:param aResourceName:
-	:type aResourceName: char *
-	:rtype: int
-") Integer;
-		virtual Standard_Integer Integer (const char * aResourceName);
-		%feature("compactdefaultargs") Real;
-		%feature("autodoc", "	* Gets the value of a real resource according to its instance and its type.
-
-	:param aResourceName:
-	:type aResourceName: char *
-	:rtype: float
-") Real;
-		virtual Standard_Real Real (const char * aResourceName);
-		%feature("compactdefaultargs") Value;
-		%feature("autodoc", "	* Gets the value of a CString resource according to its instance and its type.
-
-	:param aResourceName:
-	:type aResourceName: char *
-	:rtype: char *
-") Value;
-		virtual const char * Value (const char * aResourceName);
+		/****************** ExtValue ******************/
+		/**** md5 signature: eacb0ae55d7f76df617e14be66e1f1b0 ****/
 		%feature("compactdefaultargs") ExtValue;
-		%feature("autodoc", "	* Gets the value of an ExtString resource according to its instance and its type.
+		%feature("autodoc", "Gets the value of an extstring resource according to its instance and its type.
 
-	:param aResourceName:
-	:type aResourceName: char *
-	:rtype: Standard_ExtString
+Parameters
+----------
+aResourceName: char *
+
+Returns
+-------
+Standard_ExtString
 ") ExtValue;
-		virtual Standard_ExtString ExtValue (const char * aResourceName);
-		%feature("compactdefaultargs") SetResource;
-		%feature("autodoc", "	* Sets the new value of an integer resource. If the resource does not exist, it is created.
+		virtual Standard_ExtString ExtValue(const char * aResourceName);
 
-	:param aResourceName:
-	:type aResourceName: char *
-	:param aValue:
-	:type aValue: int
-	:rtype: void
-") SetResource;
-		virtual void SetResource (const char * aResourceName,const Standard_Integer aValue);
-		%feature("compactdefaultargs") SetResource;
-		%feature("autodoc", "	* Sets the new value of a real resource. If the resource does not exist, it is created.
+		/****************** Find ******************/
+		/**** md5 signature: ad646ce41630b595ea3f002fe0683f59 ****/
+		%feature("compactdefaultargs") Find;
+		%feature("autodoc", "Returns true if the resource does exist.
 
-	:param aResourceName:
-	:type aResourceName: char *
-	:param aValue:
-	:type aValue: float
-	:rtype: void
-") SetResource;
-		virtual void SetResource (const char * aResourceName,const Standard_Real aValue);
-		%feature("compactdefaultargs") SetResource;
-		%feature("autodoc", "	* Sets the new value of an CString resource. If the resource does not exist, it is created.
+Parameters
+----------
+aResource: char *
 
-	:param aResourceName:
-	:type aResourceName: char *
-	:param aValue:
-	:type aValue: char *
-	:rtype: void
-") SetResource;
-		virtual void SetResource (const char * aResourceName,const char * aValue);
-		%feature("compactdefaultargs") SetResource;
-		%feature("autodoc", "	* Sets the new value of an ExtString resource. If the resource does not exist, it is created.
+Returns
+-------
+bool
+") Find;
+		Standard_Boolean Find(const char * aResource);
 
-	:param aResourceName:
-	:type aResourceName: char *
-	:param aValue:
-	:type aValue: Standard_ExtString
-	:rtype: void
-") SetResource;
-		virtual void SetResource (const char * aResourceName,const Standard_ExtString aValue);
+		/****************** GetResourcePath ******************/
+		/**** md5 signature: e37f4ebfe1a5c28a696f168d5c81f4e2 ****/
 		%feature("compactdefaultargs") GetResourcePath;
-		%feature("autodoc", "	* Gets the resource file full path by its name. If corresponding environment variable is not set or file doesn't exist returns empty string.
+		%feature("autodoc", "Gets the resource file full path by its name. if corresponding environment variable is not set or file doesn't exist returns empty string.
 
-	:param aPath:
-	:type aPath: TCollection_AsciiString &
-	:param aName:
-	:type aName: char *
-	:param isUserDefaults:
-	:type isUserDefaults: bool
-	:rtype: void
+Parameters
+----------
+aPath: TCollection_AsciiString
+aName: char *
+isUserDefaults: bool
+
+Returns
+-------
+None
 ") GetResourcePath;
-		static void GetResourcePath (TCollection_AsciiString & aPath,const char * aName,const Standard_Boolean isUserDefaults);
+		static void GetResourcePath(TCollection_AsciiString & aPath, const char * aName, const Standard_Boolean isUserDefaults);
+
+		/****************** Integer ******************/
+		/**** md5 signature: 459f06c743be8fcf9fa4e5326394951e ****/
+		%feature("compactdefaultargs") Integer;
+		%feature("autodoc", "Gets the value of an integer resource according to its instance and its type.
+
+Parameters
+----------
+aResourceName: char *
+
+Returns
+-------
+int
+") Integer;
+		virtual Standard_Integer Integer(const char * aResourceName);
+
+		/****************** Real ******************/
+		/**** md5 signature: b6af1db9d303b345bf398c6e044f1093 ****/
+		%feature("compactdefaultargs") Real;
+		%feature("autodoc", "Gets the value of a real resource according to its instance and its type.
+
+Parameters
+----------
+aResourceName: char *
+
+Returns
+-------
+float
+") Real;
+		virtual Standard_Real Real(const char * aResourceName);
+
+		/****************** Save ******************/
+		/**** md5 signature: c46b0608963cc711253d0dc474525a23 ****/
+		%feature("compactdefaultargs") Save;
+		%feature("autodoc", "Save the user resource structure in the specified file. creates the file if it does not exist.
+
+Returns
+-------
+bool
+") Save;
+		Standard_Boolean Save();
+
+		/****************** SetResource ******************/
+		/**** md5 signature: 5cee39e81388e9738fbd5ea60762445e ****/
+		%feature("compactdefaultargs") SetResource;
+		%feature("autodoc", "Sets the new value of an integer resource. if the resource does not exist, it is created.
+
+Parameters
+----------
+aResourceName: char *
+aValue: int
+
+Returns
+-------
+None
+") SetResource;
+		virtual void SetResource(const char * aResourceName, const Standard_Integer aValue);
+
+		/****************** SetResource ******************/
+		/**** md5 signature: 5adf64f7de0821b4e2982633edbf9ea2 ****/
+		%feature("compactdefaultargs") SetResource;
+		%feature("autodoc", "Sets the new value of a real resource. if the resource does not exist, it is created.
+
+Parameters
+----------
+aResourceName: char *
+aValue: float
+
+Returns
+-------
+None
+") SetResource;
+		virtual void SetResource(const char * aResourceName, const Standard_Real aValue);
+
+		/****************** SetResource ******************/
+		/**** md5 signature: 8beffa88923a65f02524a44eab47c796 ****/
+		%feature("compactdefaultargs") SetResource;
+		%feature("autodoc", "Sets the new value of an cstring resource. if the resource does not exist, it is created.
+
+Parameters
+----------
+aResourceName: char *
+aValue: char *
+
+Returns
+-------
+None
+") SetResource;
+		virtual void SetResource(const char * aResourceName, const char * aValue);
+
+		/****************** SetResource ******************/
+		/**** md5 signature: c3adf5010bcf4e1022068e87a43da2c6 ****/
+		%feature("compactdefaultargs") SetResource;
+		%feature("autodoc", "Sets the new value of an extstring resource. if the resource does not exist, it is created.
+
+Parameters
+----------
+aResourceName: char *
+aValue: Standard_ExtString
+
+Returns
+-------
+None
+") SetResource;
+		virtual void SetResource(const char * aResourceName, const Standard_ExtString aValue);
+
+		/****************** Value ******************/
+		/**** md5 signature: 704eea869ed3ea373c063217f10964ef ****/
+		%feature("compactdefaultargs") Value;
+		%feature("autodoc", "Gets the value of a cstring resource according to its instance and its type.
+
+Parameters
+----------
+aResourceName: char *
+
+Returns
+-------
+char *
+") Value;
+		virtual const char * Value(const char * aResourceName);
+
 };
 
 
@@ -514,191 +374,281 @@ class Resource_Manager : public MMgt_TShared {
 	__repr__ = _dumps_object
 	}
 };
-class Resource_QuickSortOfArray1 {
-	public:
-		%feature("compactdefaultargs") Sort;
-		%feature("autodoc", "	:param TheArray:
-	:type TheArray: TColStd_Array1OfAsciiString &
-	:param Comp:
-	:type Comp: Resource_LexicalCompare &
-	:rtype: void
-") Sort;
-		static void Sort (TColStd_Array1OfAsciiString & TheArray,const Resource_LexicalCompare & Comp);
-};
 
-
-
-%extend Resource_QuickSortOfArray1 {
-    %pythoncode {
-    def __getitem__(self, index):
-        if index + self.Lower() > self.Upper():
-            raise IndexError("index out of range")
-        else:
-            return self.Value(index + self.Lower())
-
-    def __setitem__(self, index, value):
-        if index + self.Lower() > self.Upper():
-            raise IndexError("index out of range")
-        else:
-            self.SetValue(index + self.Lower(), value)
-
-    def __len__(self):
-        return self.Length()
-
-    def __iter__(self):
-        self.low = self.Lower()
-        self.up = self.Upper()
-        self.current = self.Lower() - 1
-        return self
-
-    def next(self):
-        if self.current >= self.Upper():
-            raise StopIteration
-        else:
-            self.current +=1
-        return self.Value(self.current)
-
-    __next__ = next
-
-    }
-};
-%extend Resource_QuickSortOfArray1 {
-	%pythoncode {
-	__repr__ = _dumps_object
-	}
-};
+/*************************
+* class Resource_Unicode *
+*************************/
 class Resource_Unicode {
 	public:
-		%feature("compactdefaultargs") ConvertSJISToUnicode;
-		%feature("autodoc", "	* Converts non-ASCII CString <fromstr> in SJIS format to Unicode ExtendedString <tostr>.
-
-	:param fromstr:
-	:type fromstr: char *
-	:param tostr:
-	:type tostr: TCollection_ExtendedString &
-	:rtype: void
-") ConvertSJISToUnicode;
-		static void ConvertSJISToUnicode (const char * fromstr,TCollection_ExtendedString & tostr);
-		%feature("compactdefaultargs") ConvertEUCToUnicode;
-		%feature("autodoc", "	* Converts non-ASCII CString <fromstr> in EUC format to Unicode ExtendedString <tostr>.
-
-	:param fromstr:
-	:type fromstr: char *
-	:param tostr:
-	:type tostr: TCollection_ExtendedString &
-	:rtype: void
-") ConvertEUCToUnicode;
-		static void ConvertEUCToUnicode (const char * fromstr,TCollection_ExtendedString & tostr);
-		%feature("compactdefaultargs") ConvertGBToUnicode;
-		%feature("autodoc", "	* Converts non-ASCII CString <fromstr> in GB format to Unicode ExtendedString <tostr>.
-
-	:param fromstr:
-	:type fromstr: char *
-	:param tostr:
-	:type tostr: TCollection_ExtendedString &
-	:rtype: void
-") ConvertGBToUnicode;
-		static void ConvertGBToUnicode (const char * fromstr,TCollection_ExtendedString & tostr);
+		/****************** ConvertANSIToUnicode ******************/
+		/**** md5 signature: a675612657f24ea22357a1767c5ea883 ****/
 		%feature("compactdefaultargs") ConvertANSIToUnicode;
-		%feature("autodoc", "	* Converts non-ASCII CString <fromstr> in ANSI format to Unicode ExtendedString <tostr>.
+		%feature("autodoc", "Converts non-ascii cstring <fromstr> in ansi format to unicode extendedstring <tostr>.
 
-	:param fromstr:
-	:type fromstr: char *
-	:param tostr:
-	:type tostr: TCollection_ExtendedString &
-	:rtype: void
+Parameters
+----------
+fromstr: char *
+tostr: TCollection_ExtendedString
+
+Returns
+-------
+None
 ") ConvertANSIToUnicode;
-		static void ConvertANSIToUnicode (const char * fromstr,TCollection_ExtendedString & tostr);
-		%feature("compactdefaultargs") ConvertUnicodeToSJIS;
-		%feature("autodoc", "	* Converts Unicode ExtendedString <fromstr> to non-ASCII CString <tostr> in SJIS format, limited to <maxsize> characters. To translate the whole <fromstr>, use more than twice the length of <fromstr>. Returns true if <maxsize> has not been reached before end of conversion.
+		static void ConvertANSIToUnicode(const char * fromstr, TCollection_ExtendedString & tostr);
 
-	:param fromstr:
-	:type fromstr: TCollection_ExtendedString &
-	:param tostr:
-	:type tostr: Standard_PCharacter &
-	:param maxsize:
-	:type maxsize: int
-	:rtype: bool
-") ConvertUnicodeToSJIS;
-		static Standard_Boolean ConvertUnicodeToSJIS (const TCollection_ExtendedString & fromstr,Standard_PCharacter & tostr,const Standard_Integer maxsize);
-		%feature("compactdefaultargs") ConvertUnicodeToEUC;
-		%feature("autodoc", "	* Converts Unicode ExtendedString <fromstr> to non-ASCII CString <tostr> in EUC format, limited to <maxsize> characters. To translate the whole <fromstr>, use more than twice the length of <fromstr>. Returns true if <maxsize> has not been reached before end of conversion.
+		/****************** ConvertBig5ToUnicode ******************/
+		/**** md5 signature: 4168524e0213960fd803d4807ed33f90 ****/
+		%feature("compactdefaultargs") ConvertBig5ToUnicode;
+		%feature("autodoc", "Converts non-ascii cstring <fromstr> in big5 format to unicode extendedstring <tostr>.
 
-	:param fromstr:
-	:type fromstr: TCollection_ExtendedString &
-	:param tostr:
-	:type tostr: Standard_PCharacter &
-	:param maxsize:
-	:type maxsize: int
-	:rtype: bool
-") ConvertUnicodeToEUC;
-		static Standard_Boolean ConvertUnicodeToEUC (const TCollection_ExtendedString & fromstr,Standard_PCharacter & tostr,const Standard_Integer maxsize);
-		%feature("compactdefaultargs") ConvertUnicodeToGB;
-		%feature("autodoc", "	* Converts Unicode ExtendedString <fromstr> to non-ASCII CString <tostr> in GB format, limited to <maxsize> characters. To translate the whole <fromstr>, use more than twice the length of <fromstr>. Returns true if <maxsize> has not been reached before end of conversion.
+Parameters
+----------
+fromstr: char *
+tostr: TCollection_ExtendedString
 
-	:param fromstr:
-	:type fromstr: TCollection_ExtendedString &
-	:param tostr:
-	:type tostr: Standard_PCharacter &
-	:param maxsize:
-	:type maxsize: int
-	:rtype: bool
-") ConvertUnicodeToGB;
-		static Standard_Boolean ConvertUnicodeToGB (const TCollection_ExtendedString & fromstr,Standard_PCharacter & tostr,const Standard_Integer maxsize);
-		%feature("compactdefaultargs") ConvertUnicodeToANSI;
-		%feature("autodoc", "	* Converts Unicode ExtendedString <fromstr> to non-ASCII CString <tostr> in ANSI format, limited to <maxsize> characters. To translate the whole <fromstr>, use more than twice the length of <fromstr>. Returns true if <maxsize> has not been reached before end of conversion.
+Returns
+-------
+bool
+") ConvertBig5ToUnicode;
+		static Standard_Boolean ConvertBig5ToUnicode(const char * fromstr, TCollection_ExtendedString & tostr);
 
-	:param fromstr:
-	:type fromstr: TCollection_ExtendedString &
-	:param tostr:
-	:type tostr: Standard_PCharacter &
-	:param maxsize:
-	:type maxsize: int
-	:rtype: bool
-") ConvertUnicodeToANSI;
-		static Standard_Boolean ConvertUnicodeToANSI (const TCollection_ExtendedString & fromstr,Standard_PCharacter & tostr,const Standard_Integer maxsize);
-		%feature("compactdefaultargs") SetFormat;
-		%feature("autodoc", "	* Defines the current conversion format as typecode. This conversion format will then be used by the functions ConvertFormatToUnicode and ConvertUnicodeToFormat to convert the strings.
+		/****************** ConvertEUCToUnicode ******************/
+		/**** md5 signature: a47f65202dbb4ad94609e631aefd3e71 ****/
+		%feature("compactdefaultargs") ConvertEUCToUnicode;
+		%feature("autodoc", "Converts non-ascii cstring <fromstr> in euc format to unicode extendedstring <tostr>.
 
-	:param typecode:
-	:type typecode: Resource_FormatType
-	:rtype: void
-") SetFormat;
-		static void SetFormat (const Resource_FormatType typecode);
-		%feature("compactdefaultargs") GetFormat;
-		%feature("autodoc", "	* Returns the current conversion format (either ANSI, EUC, GB or SJIS). The current converting format must be defined in advance with the SetFormat function.
+Parameters
+----------
+fromstr: char *
+tostr: TCollection_ExtendedString
 
-	:rtype: Resource_FormatType
-") GetFormat;
-		static Resource_FormatType GetFormat ();
-		%feature("compactdefaultargs") ReadFormat;
-		%feature("autodoc", "	* Reads converting format from resource 'FormatType' in Resource Manager 'CharSet'
+Returns
+-------
+None
+") ConvertEUCToUnicode;
+		static void ConvertEUCToUnicode(const char * fromstr, TCollection_ExtendedString & tostr);
 
-	:rtype: void
-") ReadFormat;
-		static void ReadFormat ();
+		/****************** ConvertFormatToUnicode ******************/
+		/**** md5 signature: 092af2a29361b36b8f1d60b684d8e660 ****/
 		%feature("compactdefaultargs") ConvertFormatToUnicode;
-		%feature("autodoc", "	* Converts the non-ASCII C string fromstr to the Unicode string of extended characters tostr. fromstr is translated according to the format (either ANSI, EUC, GB or SJIS) returned by the function GetFormat.
+		%feature("autodoc", "Converts the non-ascii c string (as specified by getformat()) to the unicode string of extended characters.
 
-	:param fromstr:
-	:type fromstr: char *
-	:param tostr:
-	:type tostr: TCollection_ExtendedString &
-	:rtype: void
+Parameters
+----------
+theFromStr: char *
+theToStr: TCollection_ExtendedString
+
+Returns
+-------
+None
 ") ConvertFormatToUnicode;
-		static void ConvertFormatToUnicode (const char * fromstr,TCollection_ExtendedString & tostr);
-		%feature("compactdefaultargs") ConvertUnicodeToFormat;
-		%feature("autodoc", "	* Converts the Unicode string of extended characters fromstr to the non-ASCII C string tostr according to the format (either ANSI, EUC, GB or SJIS) returned by the function GetFormat. maxsize limits the size of the string tostr to a maximum number of characters. You need more than twice the length of the string fromstr to complete the conversion. The function returns true if conversion is complete, i.e. the maximum number of characters maxsize is not reached by tostr before the end of conversion of fromstr.
+		static void ConvertFormatToUnicode(const char * theFromStr, TCollection_ExtendedString & theToStr);
 
-	:param fromstr:
-	:type fromstr: TCollection_ExtendedString &
-	:param tostr:
-	:type tostr: Standard_PCharacter &
-	:param maxsize:
-	:type maxsize: int
-	:rtype: bool
+		/****************** ConvertFormatToUnicode ******************/
+		/**** md5 signature: 1a39a61476a07a6c419d95aa2f936c87 ****/
+		%feature("compactdefaultargs") ConvertFormatToUnicode;
+		%feature("autodoc", "Converts the non-ascii c string in specified format to the unicode string of extended characters. @param theformat [in] source encoding @param thefromstr [in] text to convert @param thetostr [out] destination string.
+
+Parameters
+----------
+theFormat: Resource_FormatType
+theFromStr: char *
+theToStr: TCollection_ExtendedString
+
+Returns
+-------
+None
+") ConvertFormatToUnicode;
+		static void ConvertFormatToUnicode(const Resource_FormatType theFormat, const char * theFromStr, TCollection_ExtendedString & theToStr);
+
+		/****************** ConvertGBKToUnicode ******************/
+		/**** md5 signature: 55ed525176f6d874f96d41764a2499d6 ****/
+		%feature("compactdefaultargs") ConvertGBKToUnicode;
+		%feature("autodoc", "Converts non-ascii cstring <fromstr> in gbk format to unicode extendedstring <tostr>.
+
+Parameters
+----------
+fromstr: char *
+tostr: TCollection_ExtendedString
+
+Returns
+-------
+bool
+") ConvertGBKToUnicode;
+		static Standard_Boolean ConvertGBKToUnicode(const char * fromstr, TCollection_ExtendedString & tostr);
+
+		/****************** ConvertGBToUnicode ******************/
+		/**** md5 signature: a22cad6ea4c1a1e6cd398d067edaa57c ****/
+		%feature("compactdefaultargs") ConvertGBToUnicode;
+		%feature("autodoc", "Converts non-ascii cstring <fromstr> in gb format to unicode extendedstring <tostr>.
+
+Parameters
+----------
+fromstr: char *
+tostr: TCollection_ExtendedString
+
+Returns
+-------
+None
+") ConvertGBToUnicode;
+		static void ConvertGBToUnicode(const char * fromstr, TCollection_ExtendedString & tostr);
+
+		/****************** ConvertSJISToUnicode ******************/
+		/**** md5 signature: 3e6f135c27c0b105b7e7e224b4376205 ****/
+		%feature("compactdefaultargs") ConvertSJISToUnicode;
+		%feature("autodoc", "Converts non-ascii cstring <fromstr> in sjis format to unicode extendedstring <tostr>.
+
+Parameters
+----------
+fromstr: char *
+tostr: TCollection_ExtendedString
+
+Returns
+-------
+None
+") ConvertSJISToUnicode;
+		static void ConvertSJISToUnicode(const char * fromstr, TCollection_ExtendedString & tostr);
+
+		/****************** ConvertUnicodeToANSI ******************/
+		/**** md5 signature: becd4b24e1324dac8a09502a0f3b35e3 ****/
+		%feature("compactdefaultargs") ConvertUnicodeToANSI;
+		%feature("autodoc", "Converts unicode extendedstring <fromstr> to non-ascii cstring <tostr> in ansi format, limited to <maxsize> characters. to translate the whole <fromstr>, use more than twice the length of <fromstr>. returns true if <maxsize> has not been reached before end of conversion.
+
+Parameters
+----------
+fromstr: TCollection_ExtendedString
+tostr: Standard_PCharacter
+maxsize: int
+
+Returns
+-------
+bool
+") ConvertUnicodeToANSI;
+		static Standard_Boolean ConvertUnicodeToANSI(const TCollection_ExtendedString & fromstr, Standard_PCharacter & tostr, const Standard_Integer maxsize);
+
+		/****************** ConvertUnicodeToEUC ******************/
+		/**** md5 signature: 3de0636677422237545faabc4b82044a ****/
+		%feature("compactdefaultargs") ConvertUnicodeToEUC;
+		%feature("autodoc", "Converts unicode extendedstring <fromstr> to non-ascii cstring <tostr> in euc format, limited to <maxsize> characters. to translate the whole <fromstr>, use more than twice the length of <fromstr>. returns true if <maxsize> has not been reached before end of conversion.
+
+Parameters
+----------
+fromstr: TCollection_ExtendedString
+tostr: Standard_PCharacter
+maxsize: int
+
+Returns
+-------
+bool
+") ConvertUnicodeToEUC;
+		static Standard_Boolean ConvertUnicodeToEUC(const TCollection_ExtendedString & fromstr, Standard_PCharacter & tostr, const Standard_Integer maxsize);
+
+		/****************** ConvertUnicodeToFormat ******************/
+		/**** md5 signature: 8743e70c9c2a155ce180b78c36c04a71 ****/
+		%feature("compactdefaultargs") ConvertUnicodeToFormat;
+		%feature("autodoc", "Converts the unicode string of extended characters to the non-ascii string according to specified format. you need more than twice the length of the source string to complete the conversion. the function returns true if conversion is complete, i.e. the maximum number of characters is not reached before the end of conversion. @param theformat [in] destination encoding @param thefromstr [in] text to convert @param thetostr [out] destination buffer @param themaxsize [in] destination buffer length.
+
+Parameters
+----------
+theFormat: Resource_FormatType
+theFromStr: TCollection_ExtendedString
+theToStr: Standard_PCharacter
+theMaxSize: int
+
+Returns
+-------
+bool
 ") ConvertUnicodeToFormat;
-		static Standard_Boolean ConvertUnicodeToFormat (const TCollection_ExtendedString & fromstr,Standard_PCharacter & tostr,const Standard_Integer maxsize);
+		static Standard_Boolean ConvertUnicodeToFormat(const Resource_FormatType theFormat, const TCollection_ExtendedString & theFromStr, Standard_PCharacter & theToStr, const Standard_Integer theMaxSize);
+
+		/****************** ConvertUnicodeToFormat ******************/
+		/**** md5 signature: 3a0226ee9a6304b9f55b4674dccd26dc ****/
+		%feature("compactdefaultargs") ConvertUnicodeToFormat;
+		%feature("autodoc", "Converts the unicode string of extended characters to the non-ascii string according to the format returned by the function getformat. @param thefromstr [in] text to convert @param thetostr [out] destination buffer @param themaxsize [in] destination buffer length.
+
+Parameters
+----------
+theFromStr: TCollection_ExtendedString
+theToStr: Standard_PCharacter
+theMaxSize: int
+
+Returns
+-------
+bool
+") ConvertUnicodeToFormat;
+		static Standard_Boolean ConvertUnicodeToFormat(const TCollection_ExtendedString & theFromStr, Standard_PCharacter & theToStr, const Standard_Integer theMaxSize);
+
+		/****************** ConvertUnicodeToGB ******************/
+		/**** md5 signature: e92423028aa69f039e50fc871d72daf2 ****/
+		%feature("compactdefaultargs") ConvertUnicodeToGB;
+		%feature("autodoc", "Converts unicode extendedstring <fromstr> to non-ascii cstring <tostr> in gb format, limited to <maxsize> characters. to translate the whole <fromstr>, use more than twice the length of <fromstr>. returns true if <maxsize> has not been reached before end of conversion.
+
+Parameters
+----------
+fromstr: TCollection_ExtendedString
+tostr: Standard_PCharacter
+maxsize: int
+
+Returns
+-------
+bool
+") ConvertUnicodeToGB;
+		static Standard_Boolean ConvertUnicodeToGB(const TCollection_ExtendedString & fromstr, Standard_PCharacter & tostr, const Standard_Integer maxsize);
+
+		/****************** ConvertUnicodeToSJIS ******************/
+		/**** md5 signature: 405eb61d326bd40b62e69514a5638a62 ****/
+		%feature("compactdefaultargs") ConvertUnicodeToSJIS;
+		%feature("autodoc", "Converts unicode extendedstring <fromstr> to non-ascii cstring <tostr> in sjis format, limited to <maxsize> characters. to translate the whole <fromstr>, use more than twice the length of <fromstr>. returns true if <maxsize> has not been reached before end of conversion.
+
+Parameters
+----------
+fromstr: TCollection_ExtendedString
+tostr: Standard_PCharacter
+maxsize: int
+
+Returns
+-------
+bool
+") ConvertUnicodeToSJIS;
+		static Standard_Boolean ConvertUnicodeToSJIS(const TCollection_ExtendedString & fromstr, Standard_PCharacter & tostr, const Standard_Integer maxsize);
+
+		/****************** GetFormat ******************/
+		/**** md5 signature: b7f0b16e429d16aced2ecaaf3804dc38 ****/
+		%feature("compactdefaultargs") GetFormat;
+		%feature("autodoc", "Returns the current conversion format (either ansi, euc, gb or sjis). the current converting format must be defined in advance with the setformat function.
+
+Returns
+-------
+Resource_FormatType
+") GetFormat;
+		static Resource_FormatType GetFormat();
+
+		/****************** ReadFormat ******************/
+		/**** md5 signature: 9707c87226e3d6fd6486b6673c5e6357 ****/
+		%feature("compactdefaultargs") ReadFormat;
+		%feature("autodoc", "Reads converting format from resource 'formattype' in resource manager 'charset'.
+
+Returns
+-------
+None
+") ReadFormat;
+		static void ReadFormat();
+
+		/****************** SetFormat ******************/
+		/**** md5 signature: 2724b939d7616dbac969aeef0cc09e56 ****/
+		%feature("compactdefaultargs") SetFormat;
+		%feature("autodoc", "Defines the current conversion format as typecode. this conversion format will then be used by the functions convertformattounicode and convertunicodetoformat to convert the strings.
+
+Parameters
+----------
+typecode: Resource_FormatType
+
+Returns
+-------
+None
+") SetFormat;
+		static void SetFormat(const Resource_FormatType typecode);
+
 };
 
 
@@ -707,3 +657,7 @@ class Resource_Unicode {
 	__repr__ = _dumps_object
 	}
 };
+
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */

@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,14 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define APPSTDDOCSTRING
-""
+"AppStd module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_appstd.html"
 %enddef
 %module (package="OCC.Core", docstring=APPSTDDOCSTRING) AppStd
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -37,41 +35,67 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/OccHandle.i
 
 
-%include AppStd_headers.i
+%{
+#include<AppStd_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<TDocStd_module.hxx>
+#include<Resource_module.hxx>
+#include<CDF_module.hxx>
+#include<PCDM_module.hxx>
+#include<TDF_module.hxx>
+#include<CDM_module.hxx>
+#include<Message_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+%import TDocStd.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 /* end public enums declaration */
 
-%wrap_handle(AppStd_Application)
+/* python proy classes for enums */
+%pythoncode {
+};
+/* end python proxy for enums */
 
-%nodefaultctor AppStd_Application;
+/* handles */
+%wrap_handle(AppStd_Application)
+/* end handles declaration */
+
+/* templates */
+/* end templates declaration */
+
+/* typedefs */
+/* end typedefs declaration */
+
+/***************************
+* class AppStd_Application *
+***************************/
 class AppStd_Application : public TDocStd_Application {
 	public:
-		%feature("compactdefaultargs") AppStd_Application;
-		%feature("autodoc", "	:rtype: None
-") AppStd_Application;
-		 AppStd_Application ();
-		%feature("compactdefaultargs") MessageDriver;
-		%feature("autodoc", "	:rtype: Handle_CDM_MessageDriver
-") MessageDriver;
-		virtual Handle_CDM_MessageDriver MessageDriver ();
-		%feature("compactdefaultargs") Formats;
-		%feature("autodoc", "	* returns supported format for application documents.
-
-	:param theFormats:
-	:type theFormats: TColStd_SequenceOfExtendedString &
-	:rtype: void
-") Formats;
-		virtual void Formats (TColStd_SequenceOfExtendedString & theFormats);
+		/****************** ResourcesName ******************/
+		/**** md5 signature: 93814b3160304ee63e9655e18518a289 ****/
 		%feature("compactdefaultargs") ResourcesName;
-		%feature("autodoc", "	* returns the file name which contains application resources
+		%feature("autodoc", "Returns the file name which contains application resources.
 
-	:rtype: char *
+Returns
+-------
+char *
 ") ResourcesName;
-		const char * ResourcesName ();
+		const char * ResourcesName();
+
 };
 
 
@@ -82,3 +106,7 @@ class AppStd_Application : public TDocStd_Application {
 	__repr__ = _dumps_object
 	}
 };
+
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */

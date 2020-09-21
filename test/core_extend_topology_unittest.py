@@ -118,12 +118,9 @@ class TestExtendTopology(unittest.TestCase):
 
 
     def test_vertex_edge(self):
-        vert = next(topo.vertices())
         edge = next(topo.edges())
         verts_from_edge = [i for i in topo.vertices_from_edge(edge)]
         self.assertEqual(len(verts_from_edge), topo.number_of_vertices_from_edge(edge))
-        edges_from_vert = [i for i in topo.edges_from_vertex(vert)]
-        self.assertEqual(len(edges_from_vert), topo.number_of_edges_from_vertex(vert))
 
 
     def test_vertex_face(self):

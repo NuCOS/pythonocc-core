@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-##Copyright 2009-2014 Thomas Paviot (tpaviot@gmail.com)
+##Copyright 2009-2019 Thomas Paviot (tpaviot@gmail.com)
 ##
 ##This file is part of pythonOCC.
 ##
@@ -17,8 +17,7 @@
 ##You should have received a copy of the GNU Lesser General Public License
 ##along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import print_function
-
+import ctypes
 import logging
 import os
 import sys
@@ -27,6 +26,7 @@ from OCC.Display import OCCViewer
 from OCC.Display.backend import get_qt_modules
 
 QtCore, QtGui, QtWidgets, QtOpenGL = get_qt_modules()
+
 # check if signal available, not available
 # on PySide
 HAVE_PYQT_SIGNAL = hasattr(QtCore, 'pyqtSignal')
@@ -38,20 +38,21 @@ log = logging.getLogger(__name__)
 class qtBaseViewer(QtOpenGL.QGLWidget):
     ''' The base Qt Widget for an OCC viewer
     '''
-
     def __init__(self, parent=None):
-        QtOpenGL.QGLWidget.__init__(self, parent)
-        self._display = None
+        super(qtBaseViewer, self).__init__(parent)
+        self._display = OCCViewer.Viewer3d()
         self._inited = False
 
         # enable Mouse Tracking
         self.setMouseTracking(True)
+
         # Strong focus
         self.setFocusPolicy(QtCore.Qt.WheelFocus)
 
-        # required for overpainting the widget
+        self.setAttribute(QtCore.Qt.WA_NativeWindow)
         self.setAttribute(QtCore.Qt.WA_PaintOnScreen)
         self.setAttribute(QtCore.Qt.WA_NoSystemBackground)
+
         self.setAutoFillBackground(False)
 
     def GetHandle(self):
@@ -59,14 +60,12 @@ class qtBaseViewer(QtOpenGL.QGLWidget):
         It must be an integer
         '''
         win_id = self.winId()  # this returns either an int or voitptr
-
         if "%s" % type(win_id) == "<type 'PyCObject'>":  # PySide
             ### with PySide, self.winId() does not return an integer
             if sys.platform == "win32":
                 ## Be careful, this hack is py27 specific
                 ## does not work with python31 or higher
                 ## since the PyCObject api was changed
-                import ctypes
                 ctypes.pythonapi.PyCObject_AsVoidPtr.restype = ctypes.c_void_p
                 ctypes.pythonapi.PyCObject_AsVoidPtr.argtypes = [ctypes.py_object]
                 win_id = ctypes.pythonapi.PyCObject_AsVoidPtr(win_id)
@@ -78,9 +77,11 @@ class qtBaseViewer(QtOpenGL.QGLWidget):
         return win_id
 
     def resizeEvent(self, event):
-        if self._inited:
-            super(qtBaseViewer, self).resizeEvent(event)
-            self._display.OnResize()
+        super(qtBaseViewer, self).resizeEvent(event)
+        self._display.View.MustBeResized()
+
+    def paintEngine(self):
+        return None
 
 
 class qtViewer3d(qtBaseViewer):
@@ -104,7 +105,7 @@ class qtViewer3d(qtBaseViewer):
         self._rightisdown = False
         self._selection = None
         self._drawtext = True
-        self._qApp = QtWidgets.QApplication.instance() 
+        self._qApp = QtWidgets.QApplication.instance()
         self._key_map = {}
         self._current_cursor = "arrow"
         self._available_cursors = {}
@@ -119,19 +120,18 @@ class qtViewer3d(qtBaseViewer):
         self._qApp = value
 
     def InitDriver(self):
-        self._display = OCCViewer.Viewer3d(self.GetHandle())
-        self._display.Create()
+        self._display.Create(window_handle=self.GetHandle(), parent=self)
         # background gradient
-        self._display.set_bg_gradient_color(206, 215, 222, 128, 128, 128)
-        # background gradient
-        self._display.display_trihedron()
         self._display.SetModeShaded()
-        self._display.DisableAntiAliasing()
         self._inited = True
         # dict mapping keys to functions
-        self._SetupKeyMap()
-        #
-        self._display.thisown = False
+        self._key_map = {ord('W'): self._display.SetModeWireFrame,
+                         ord('S'): self._display.SetModeShaded,
+                         ord('A'): self._display.EnableAntiAliasing,
+                         ord('B'): self._display.DisableAntiAliasing,
+                         ord('H'): self._display.SetModeHLR,
+                         ord('F'): self._display.FitAll,
+                         ord('G'): self._display.SetSelectionMode}
         self.createCursors()
 
     def createCursors(self):
@@ -153,25 +153,14 @@ class qtViewer3d(qtBaseViewer):
 
         self._current_cursor = "arrow"
 
-    def _SetupKeyMap(self):
-        self._key_map = {ord('W'): self._display.SetModeWireFrame,
-                         ord('S'): self._display.SetModeShaded,
-                         ord('A'): self._display.EnableAntiAliasing,
-                         ord('B'): self._display.DisableAntiAliasing,
-                         ord('H'): self._display.SetModeHLR,
-                         ord('F'): self._display.FitAll,
-                         ord('G'): self._display.SetSelectionMode}
-
     def keyPressEvent(self, event):
         code = event.key()
         if code in self._key_map:
             self._key_map[code]()
+        elif code in range(256):
+            log.info('key: "%s"(code %i) not mapped to any function' % (chr(code), code))
         else:
-            log.info("key: %s \nnot mapped to any function", code)
-
-    def Test(self):
-        if self._inited:
-            self._display.Test()
+            log.info('key: code %i not mapped to any function' % code)
 
     def focusInEvent(self, event):
         if self._inited:
@@ -182,19 +171,16 @@ class qtViewer3d(qtBaseViewer):
             self._display.Repaint()
 
     def paintEvent(self, event):
-        if self._inited:
-            self._display.Context.UpdateCurrentViewer()
-            # important to allow overpainting of the OCC OpenGL context in Qt
-            self.swapBuffers()
+        if not self._inited:
+            self.InitDriver()
+
+        self._display.Context.UpdateCurrentViewer()
 
         if self._drawbox:
             painter = QtGui.QPainter(self)
-            painter.setPen(QtGui.QPen(QtGui.QColor(0, 0, 0), 1))
+            painter.setPen(QtGui.QPen(QtGui.QColor(0, 0, 0), 2))
             rect = QtCore.QRect(*self._drawbox)
             painter.drawRect(rect)
-
-    def ZoomAll(self, evt):
-        self._display.FitAll()
 
     def wheelEvent(self, event):
         try:  # PyQt4/PySide
@@ -205,11 +191,7 @@ class qtViewer3d(qtBaseViewer):
             zoom_factor = 2.
         else:
             zoom_factor = 0.5
-        self._display.Repaint()
         self._display.ZoomFactor(zoom_factor)
-
-    def dragMoveEvent(self, event):
-        pass
 
     @property
     def cursor(self):
@@ -271,7 +253,7 @@ class qtViewer3d(qtBaseViewer):
         if abs(dx) <= tolerance and abs(dy) <= tolerance:
             return
         self._drawbox = [self.dragStartPosX, self.dragStartPosY, dx, dy]
-        self.update()
+
 
     def mouseMoveEvent(self, evt):
         pt = evt.pos()
@@ -310,11 +292,13 @@ class qtViewer3d(qtBaseViewer):
             self._zoom_area = True
             self.cursor = "zoom-area"
             self.DrawBox(evt)
+            self.update()
         # SELECT AREA
         elif (buttons == QtCore.Qt.LeftButton and
               modifiers == QtCore.Qt.ShiftModifier):
             self._select_area = True
             self.DrawBox(evt)
+            self.update()
         else:
             self._drawbox = False
             self._display.MoveTo(pt.x(), pt.y())

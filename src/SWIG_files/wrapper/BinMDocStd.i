@@ -1,6 +1,5 @@
 /*
-Copyright 2008-2017 Thomas Paviot (tpaviot@gmail.com)
-
+Copyright 2008-2020 Thomas Paviot (tpaviot@gmail.com)
 
 This file is part of pythonOCC.
 pythonOCC is free software: you can redistribute it and/or modify
@@ -15,15 +14,13 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
 along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 %define BINMDOCSTDDOCSTRING
-"Storage and Retrieval drivers for TDocStd modelling attributes.
-"
+"BinMDocStd module, see official documentation at
+https://www.opencascade.com/doc/occt-7.4.0/refman/html/package_binmdocstd.html"
 %enddef
 %module (package="OCC.Core", docstring=BINMDOCSTDDOCSTRING) BinMDocStd
 
-#pragma SWIG nowarn=504,325,503
 
 %{
 #ifdef WNT
@@ -38,29 +35,75 @@ along with pythonOCC.  If not, see <http://www.gnu.org/licenses/>.
 %include ../common/OccHandle.i
 
 
-%include BinMDocStd_headers.i
+%{
+#include<BinMDocStd_module.hxx>
 
-/* typedefs */
-/* end typedefs declaration */
+//Dependencies
+#include<Standard_module.hxx>
+#include<NCollection_module.hxx>
+#include<BinMDF_module.hxx>
+#include<Message_module.hxx>
+#include<TDF_module.hxx>
+#include<BinObjMgt_module.hxx>
+#include<Resource_module.hxx>
+#include<TDF_module.hxx>
+#include<TColgp_module.hxx>
+#include<TColStd_module.hxx>
+#include<TCollection_module.hxx>
+#include<Storage_module.hxx>
+%};
+%import Standard.i
+%import NCollection.i
+%import BinMDF.i
+%import Message.i
+%import TDF.i
+%import BinObjMgt.i
+
+%pythoncode {
+from enum import IntEnum
+from OCC.Core.Exception import *
+};
 
 /* public enums */
 /* end public enums declaration */
 
-%wrap_handle(BinMDocStd_XLinkDriver)
+/* python proy classes for enums */
+%pythoncode {
+};
+/* end python proxy for enums */
 
+/* handles */
+%wrap_handle(BinMDocStd_XLinkDriver)
+/* end handles declaration */
+
+/* templates */
+/* end templates declaration */
+
+/* typedefs */
+/* end typedefs declaration */
+
+/*******************
+* class BinMDocStd *
+*******************/
 %rename(binmdocstd) BinMDocStd;
 class BinMDocStd {
 	public:
+		/****************** AddDrivers ******************/
+		/**** md5 signature: 3b175e0207523895c819eaf3e413231f ****/
 		%feature("compactdefaultargs") AddDrivers;
-		%feature("autodoc", "	* Adds the attribute drivers to <theDriverTable>.
+		%feature("autodoc", "Adds the attribute drivers to <thedrivertable>.
 
-	:param theDriverTable:
-	:type theDriverTable: Handle_BinMDF_ADriverTable &
-	:param aMsgDrv:
-	:type aMsgDrv: Handle_CDM_MessageDriver &
-	:rtype: void
+Parameters
+----------
+theDriverTable: BinMDF_ADriverTable
+aMsgDrv: Message_Messenger
+
+Returns
+-------
+None
 ") AddDrivers;
-		static void AddDrivers (const Handle_BinMDF_ADriverTable & theDriverTable,const Handle_CDM_MessageDriver & aMsgDrv);
+		static void AddDrivers(const opencascade::handle<BinMDF_ADriverTable> & theDriverTable, const opencascade::handle<Message_Messenger> & aMsgDrv);
+
 };
 
 
@@ -69,39 +112,72 @@ class BinMDocStd {
 	__repr__ = _dumps_object
 	}
 };
-%nodefaultctor BinMDocStd_XLinkDriver;
+
+/*******************************
+* class BinMDocStd_XLinkDriver *
+*******************************/
 class BinMDocStd_XLinkDriver : public BinMDF_ADriver {
 	public:
+		/****************** BinMDocStd_XLinkDriver ******************/
+		/**** md5 signature: a5195ef2d9e329387cf15b5356a946a2 ****/
 		%feature("compactdefaultargs") BinMDocStd_XLinkDriver;
-		%feature("autodoc", "	:param theMessageDriver:
-	:type theMessageDriver: Handle_CDM_MessageDriver &
-	:rtype: None
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+theMessageDriver: Message_Messenger
+
+Returns
+-------
+None
 ") BinMDocStd_XLinkDriver;
-		 BinMDocStd_XLinkDriver (const Handle_CDM_MessageDriver & theMessageDriver);
+		 BinMDocStd_XLinkDriver(const opencascade::handle<Message_Messenger> & theMessageDriver);
+
+		/****************** NewEmpty ******************/
+		/**** md5 signature: 8be17a4d2a4deeee198571712e76805e ****/
 		%feature("compactdefaultargs") NewEmpty;
-		%feature("autodoc", "	:rtype: Handle_TDF_Attribute
+		%feature("autodoc", "No available documentation.
+
+Returns
+-------
+opencascade::handle<TDF_Attribute>
 ") NewEmpty;
-		virtual Handle_TDF_Attribute NewEmpty ();
+		virtual opencascade::handle<TDF_Attribute> NewEmpty();
+
+		/****************** Paste ******************/
+		/**** md5 signature: 37851bb93a225f90250afe4fb5e61e60 ****/
 		%feature("compactdefaultargs") Paste;
-		%feature("autodoc", "	:param Source:
-	:type Source: BinObjMgt_Persistent &
-	:param Target:
-	:type Target: Handle_TDF_Attribute &
-	:param RelocTable:
-	:type RelocTable: BinObjMgt_RRelocationTable &
-	:rtype: bool
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Source: BinObjMgt_Persistent
+Target: TDF_Attribute
+RelocTable: BinObjMgt_RRelocationTable
+
+Returns
+-------
+bool
 ") Paste;
-		virtual Standard_Boolean Paste (const BinObjMgt_Persistent & Source,const Handle_TDF_Attribute & Target,BinObjMgt_RRelocationTable & RelocTable);
+		virtual Standard_Boolean Paste(const BinObjMgt_Persistent & Source, const opencascade::handle<TDF_Attribute> & Target, BinObjMgt_RRelocationTable & RelocTable);
+
+		/****************** Paste ******************/
+		/**** md5 signature: da6a0a35498ea18a652c6a19d6364015 ****/
 		%feature("compactdefaultargs") Paste;
-		%feature("autodoc", "	:param Source:
-	:type Source: Handle_TDF_Attribute &
-	:param Target:
-	:type Target: BinObjMgt_Persistent &
-	:param RelocTable:
-	:type RelocTable: BinObjMgt_SRelocationTable &
-	:rtype: void
+		%feature("autodoc", "No available documentation.
+
+Parameters
+----------
+Source: TDF_Attribute
+Target: BinObjMgt_Persistent
+RelocTable: BinObjMgt_SRelocationTable
+
+Returns
+-------
+None
 ") Paste;
-		virtual void Paste (const Handle_TDF_Attribute & Source,BinObjMgt_Persistent & Target,BinObjMgt_SRelocationTable & RelocTable);
+		virtual void Paste(const opencascade::handle<TDF_Attribute> & Source, BinObjMgt_Persistent & Target, BinObjMgt_SRelocationTable & RelocTable);
+
 };
 
 
@@ -112,3 +188,7 @@ class BinMDocStd_XLinkDriver : public BinMDF_ADriver {
 	__repr__ = _dumps_object
 	}
 };
+
+/* harray1 classes */
+/* harray2 classes */
+/* hsequence classes */
